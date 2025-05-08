@@ -1,8 +1,72 @@
-﻿
+﻿﻿@model LordMarket.Models.Urunler
+
 @{
-    ViewBag.Title = "YeniUrun";
+    ViewBag.Title = "Yeni Ürün Ekle";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>YeniUrun</h2>
+
+<div class="card shadow-sm border-light rounded " style="max-width: 600px; margin: 20px auto;">
+    <div class="card-header bg-dark text-white text-center">
+        <h3><b>Yeni Ürün Ekle</b></h3>
+    </div>
+    <form method="post" class="form-group">
+        <div class="card-body">
+
+            <div class="mb-3">
+                <label for="Barkod" class="form-label">Barkod:</label>
+                <input type="text" id="Barkod" name="Barkod" class="form-control" required placeholder="Barkod okutun" />
+            </div>
+
+            <div class="form-group">
+                <label class="fw-bold">Ürün Kategorisi:</label>
+                @Html.DropDownListFor(m => m.KategoriID, ViewBag.Kategoriler as List<SelectListItem>, "Kategori Seçin", new { @class = "form-control" })
+                <br />
+            </div>
+
+            <div class="mb-3">
+                <label for="UrunAd" class="form-label">Ürün Adı:</label>
+                <input type="text" id="UrunAd" name="UrunAd" class="form-control" required placeholder="Ürün Adı Girin" />
+            </div>
+
+            <div class="mb-3">
+                <label for="UrunFiyat" class="form-label">Ürün Fiyat:</label>
+                <input type="text" id="UrunFiyat" name="UrunFiyat" class="form-control" placeholder="Ürün fiyatı girin" />
+            </div>
+
+
+
+
+            <div class="mb-3">
+                <label for="KDVOran" class="form-label">KDVOran:</label>
+                <input type="text" id="KDVOran" name="KDVOran" class="form-control" required placeholder="%18" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Stok" class="form-label">Stok:</label>
+                <input type="text" id="Stok" name="Stok" class="form-control" placeholder="Stok sayısı girin" />
+            </div>
+
+            <div class="mb-3">
+                <label for="UrunResmi" class="form-label">Ürün Resmi:</label>
+                <input type="text" id="UrunResmi" name="UrunResmi" class="form-control"  placeholder="Resim Linki Girin" />
+            </div>
+
+
+
+
+
+
+
+            <input type="hidden" name="Status" value="true" />
+            <input type="hidden" name="EklenmeTarihi" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+
+        </div>
+
+        <div class="card-footer text-center">
+            <a href="/Urun/Urunler/" class="btn btn-danger btn-sm">İptal</a>
+            <button class="btn btn-success btn-sm">Ekle</button>
+        </div>
+    </form>
+</div>
 

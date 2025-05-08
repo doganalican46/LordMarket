@@ -71,6 +71,7 @@
           <Property Name="Barkod" Type="nvarchar" MaxLength="200" />
           <Property Name="KategoriID" Type="int" />
           <Property Name="KDVOran" Type="nvarchar" MaxLength="50" />
+          <Property Name="UrunResmi" Type="nvarchar(max)" />
           <Property Name="UrunAd" Type="nvarchar" MaxLength="250" />
           <Property Name="UrunFiyat" Type="nvarchar" MaxLength="50" />
           <Property Name="Stok" Type="int" />
@@ -236,6 +237,7 @@
           <Property Name="Status" Type="Boolean" />
           <NavigationProperty Name="Kategoriler" Relationship="Self.FK_Urunler_Kategoriler" FromRole="Urunler" ToRole="Kategoriler" />
           <NavigationProperty Name="Satislar" Relationship="Self.FK_Satislar_Urunler" FromRole="Urunler" ToRole="Satislar" />
+          <Property Name="UrunResmi" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Urunler_Kategoriler">
           <End Role="Kategoriler" Type="Self.Kategoriler" Multiplicity="0..1" />
@@ -381,6 +383,7 @@
           <EntitySetMapping Name="Urunler">
             <EntityTypeMapping TypeName="LordMarketDBModel.Urunler">
               <MappingFragment StoreEntitySet="Urunler">
+                <ScalarProperty Name="UrunResmi" ColumnName="UrunResmi" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Barkod" ColumnName="Barkod" />
                 <ScalarProperty Name="KategoriID" ColumnName="KategoriID" />

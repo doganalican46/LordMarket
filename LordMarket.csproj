@@ -266,11 +266,13 @@
     <Content Include="Views\Urun\Urunler.cshtml" />
     <Content Include="Views\Urun\YeniUrun.cshtml" />
     <Content Include="Views\Urun\UrunGetir.cshtml" />
+    <Content Include="Views\Kategori\Kategoriler.cshtml" />
+    <Content Include="Views\Kategori\YeniKategori.cshtml" />
+    <Content Include="Views\Kategori\KategoriGetir.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\GelirGider\" />
-    <Folder Include="Views\Kategori\" />
     <Folder Include="Views\Musteri\" />
     <Folder Include="Views\SatisIslem\" />
     <Folder Include="Views\Satis\" />

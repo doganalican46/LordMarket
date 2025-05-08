@@ -1,18 +1,18 @@
-﻿﻿@model IEnumerable<LordMarket.Models.Urunler>
+﻿﻿@model IEnumerable<LordMarket.Models.Kategoriler>
 @{
-    ViewBag.Title = "Urunler";
+    ViewBag.Title = "Kategoriler";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 
-<h1 class="mt-4">Ürünler</h1>
+<h1 class="mt-2">Kategoriler</h1>
 <ol class="breadcrumb mb-4">
-    <li class="breadcrumb-item active">Ürün Listesi</li>
+    <li class="breadcrumb-item active">Kategori Listesi</li>
 </ol>
 
 <div class="card shadow-sm border-light rounded " style="max-width: 80%; margin: 20px auto;">
     <div class="card-header bg-dark text-white text-center">
-        <h3><b>Ürünler</b></h3>
+        <h3><b>Kategoriler</b></h3>
     </div>
 
     <div class="mt-3 mb-1 d-flex justify-content-end">
@@ -37,33 +37,25 @@
             <table id="DataTable" class="table table-hover text-center align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th>Resim</th>
-                        <th>Ürün</th>
-                        <th>Fiyat</th>
-                        <th>Stok</th>
-                        <th>Durum</th>
-                        <th>İşlem</th>
+                        <th>Kategori</th>
+                        <th>Status</th>
+                        <th>Process</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var urun in Model)
+                    @foreach (var kategori in Model)
                     {
                         <tr>
+                            
+                            <td class="text-truncate" style="max-width: 150px;">@kategori.KategoriAd</td>
                             <td>
-                                <img src="@urun.UrunResmi" alt="User Image" class="rounded-circle img-fluid" style="max-width: 50px; height: auto; object-fit: cover;">
-                            </td>
-                            <td class="text-truncate" style="max-width: 150px;">@urun.UrunAd</td>
-                            <td class="text-truncate" style="max-width: 150px;">@urun.UrunFiyat ₺</td>
-                            <td class="text-truncate" style="max-width: 150px;">@urun.Stok</td>
-
-                            <td>
-                                <span class="badge @(urun.Status==true ? "bg-success" : "bg-danger")">@(urun.Status==true ? "Aktif" : "Pasif")</span>
+                                <span class="badge @(kategori.Status==true ? "bg-success" : "bg-danger")">@(kategori.Status==true ? "Aktif" : "Pasif")</span>
                             </td>
                             <td>
-                                <a href="/Urun/UrunGetir/@urun.ID" class="btn btn-sm btn-warning" title="Güncelle">
+                                <a href="/Kategori/KategoriGetir/@kategori.ID" class="btn btn-sm btn-warning" title="Güncelle">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a href="/Urun/UrunSil/@urun.ID" class="btn btn-sm btn-danger" onclick="return confirm('Ürünü silmek istediğinize emin misiniz??');" title="Sil">
+                                <a href="/Kategori/KategoriSil/@kategori.ID" class="btn btn-sm btn-danger" onclick="return confirm('Kategoriyi silmek istediğinize emin misiniz?');" title="Sil">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </td>
@@ -75,7 +67,7 @@
     </div>
 
     <div class="card-footer text-center">
-        <a href="/Urun/YeniUrun/" class="btn btn-dark">Yeni Ürün Ekle</a>
+        <a href="/Kategori/Yenikategori/" class="btn btn-dark">Yeni Kategori Ekle</a>
     </div>
 </div>
 
@@ -107,7 +99,7 @@
 
         ws['!cols'] = wscols;
         XLSX.utils.book_append_sheet(wb, ws, "Contacts");
-        XLSX.writeFile(wb, "ÜrünListesiRaporExcel.xlsx");
+        XLSX.writeFile(wb, "KategoriListesiRaporExcel.xlsx");
     });
 
 
@@ -163,7 +155,7 @@
             margin: { top: 30, left: 10, right: 10, bottom: 10 }
         });
 
-        doc.save("ÜrünListesiRaporPDF.pdf");
+        doc.save("KategoriListesiRaporPDF.pdf");
     });
 </script>
 
