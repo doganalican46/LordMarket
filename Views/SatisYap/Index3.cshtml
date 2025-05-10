@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lord Tekel Büfe Ödeme Ekranı</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-size: 1rem;
+        }
+
+        .btn-large {
+            padding: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .total-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #dc3545;
+            text-align: right;
+        }
+
+        .product-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid mt-3">
+        <div class="row g-3">
+            <!-- Sol Butonlar -->
+            <div class="col-md-2">
+                <button class="btn btn-success w-100 mb-2">Nakit Satış</button>
+                <button class="btn btn-primary w-100 mb-2">Kart Satış</button>
+                <button class="btn btn-warning w-100 mb-2">Veresiye</button>
+                <button class="btn btn-secondary w-100 mb-2">İşlem Beklet</button>
+                <button class="btn btn-dark w-100 mb-2" data-bs-toggle="modal" data-bs-target="#urunModal">Ürün Girişi</button>
+            </div>
+
+            <!-- Orta Alan -->
+            <div class="col-md-7">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Miktar</span>
+                    <input type="number" class="form-control" value="1">
+                    <span class="input-group-text">Barkod</span>
+                    <input type="text" class="form-control">
+                </div>
+
+                <!-- Ürün Listesi -->
+                <div class="product-list mb-3 border p-2 bg-white">
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th>Fiyat</th>
+                                <th>Adet</th>
+                                <th>Toplam</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="urunListesi">
+                            <!-- JS ile ürünler eklenecek -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Ödenen ve Para Üstü -->
+                <div class="row">
+                    <div class="col">
+                        <label>Ödenen</label>
+                        <input type="text" class="form-control" readonly value="₺0,00">
+                    </div>
+                    <div class="col">
+                        <label>Para Üstü</label>
+                        <input type="text" class="form-control" readonly value="₺0,00">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sağ Hızlı Menü -->
+            <div class="col-md-3">
+                <div class="total-display mb-3">
+                    ₺0,00
+                </div>
+                <div class="row g-2">
+                    <div class="col-6"><button class="btn btn-outline-secondary w-100">Kristal Bardak</button></div>
+                    <div class="col-6"><button class="btn btn-outline-secondary w-100">Pet Bardak</button></div>
+                    <div class="col-6"><button class="btn btn-outline-secondary w-100">Maraş Otu</button></div>
+                    <div class="col-6"><button class="btn btn-outline-secondary w-100">Yogurt</button></div>
+                    <!-- Diğer ürün butonları buraya eklenebilir -->
+                </div>
+                <button class="btn btn-danger w-100 mt-3" data-bs-toggle="modal" data-bs-target="#iskontoModal">
+                    <i class="fa-solid fa-percent"></i> İskonto
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ürün Giriş Modal -->
+    <div class="modal fade" id="urunModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yeni Ürün Girişi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label>Ürün Adı</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label>Fiyat</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- İskonto Modal -->
+    <div class="modal fade" id="iskontoModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">İskonto Oranı (%)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="number" class="form-control" placeholder="Örn: 10">
+                    <button class="btn btn-success mt-3">Uygula</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

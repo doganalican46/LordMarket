@@ -135,6 +135,7 @@
     <Compile Include="Controllers\MusteriController.cs" />
     <Compile Include="Controllers\SatisController.cs" />
     <Compile Include="Controllers\SatisIslemController.cs" />
+    <Compile Include="Controllers\SatisYapController.cs" />
     <Compile Include="Controllers\UrunController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -282,11 +283,16 @@
     <Content Include="Views\User\Kullanici.cshtml" />
     <Content Include="Views\User\YeniKullanici.cshtml" />
     <Content Include="Views\User\KullaniciGetir.cshtml" />
+    <Content Include="Views\Satis\Satis.cshtml" />
+    <Content Include="Views\Satis\YeniSatis.cshtml" />
+    <Content Include="Views\Satis\SatisGetir.cshtml" />
+    <Content Include="Views\SatisYap\Index.cshtml" />
+    <Content Include="Views\SatisYap\Inde2x.cshtml" />
+    <Content Include="Views\SatisYap\Index3.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\SatisIslem\" />
-    <Folder Include="Views\Satis\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
