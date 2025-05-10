@@ -1,18 +1,18 @@
-﻿﻿@model IEnumerable<LordMarket.Models.Urunler>
+﻿﻿@model IEnumerable<LordMarket.Models.Musteriler>
 @{
-    ViewBag.Title = "Urunler";
+    ViewBag.Title = "Musteriler";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 
-<h1 class="mt-4">Ürünler</h1>
+<h1 class="mt-2">Musteriler</h1>
 <ol class="breadcrumb mb-4">
-    <li class="breadcrumb-item active">Ürün Listesi</li>
+    <li class="breadcrumb-item active">Musteri Listesi</li>
 </ol>
 
 <div class="card shadow-sm border-light rounded " style="max-width: 80%; margin: 20px auto;">
     <div class="card-header bg-dark text-white text-center">
-        <h3><b>Ürünler</b></h3>
+        <h3><b>Musteriler</b></h3>
     </div>
 
     <div class="mt-3 mb-1 d-flex justify-content-end">
@@ -21,16 +21,9 @@
                 <i class="fas fa-file-excel"></i>
             </button>
 
-            <button id="exportPDF" class="btn btn-danger me-3" title="PDF'e çevir">
+            <button id="exportPDF" class="btn btn-danger" title="PDF'e çevir">
                 <i class="fas fa-file-pdf"></i>
             </button>
-
-            <a href="/Urun/YeniUrun/" class="btn btn-success me-3" title="Yeni Ürün Ekle">
-                <i class="bi bi-plus-circle"></i>
-            </a>
-
-
-
         </div>
 
         <div class="input-group" style="width: 300px;">
@@ -44,35 +37,42 @@
             <table id="DataTable" class="table table-hover text-center align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th>Resim</th>
-                        <th>Ürün</th>
-                        <th>Fiyat</th>
-                        <th>Stok</th>
+                        <th>Musteri</th>
+                        <th>Toplam Borç</th>
                         <th>Durum</th>
-                        <th>İşlem</th>
+
+                        <th>Process</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var urun in Model)
+                    @foreach (var Musteri in Model)
                     {
                         <tr>
-                            <td>
-                                <img src="@urun.UrunResmi" alt="User Image" class="rounded-circle img-fluid" style="max-width: 50px; height: auto; object-fit: cover;">
-                            </td>
-                            <td class="text-truncate" style="max-width: 150px;">@urun.UrunAd</td>
-                            <td class="text-truncate" style="max-width: 150px;">@urun.UrunFiyat ₺</td>
-                            <td class="text-truncate" style="max-width: 150px;">@urun.Stok</td>
+
+                            <td class="text-truncate" style="max-width: 150px;">@Musteri.MusteriAdSoyad</td>
+                            <td class="text-truncate" style="max-width: 150px;">@Musteri.ToplamBorc ₺</td>
 
                             <td>
-                                <span class="badge @(urun.Status==true ? "bg-success" : "bg-danger")">@(urun.Status==true ? "Aktif" : "Pasif")</span>
+                                <span class="badge @(Musteri.Status==true ? "bg-success" : "bg-danger")">@(Musteri.Status==true ? "Aktif" : "Pasif")</span>
                             </td>
                             <td>
-                                <a href="/Urun/UrunGetir/@urun.ID" class="btn btn-sm btn-warning" title="Güncelle">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a href="/Urun/UrunSil/@urun.ID" class="btn btn-sm btn-danger" onclick="return confirm('Ürünü silmek istediğinize emin misiniz??');" title="Sil">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                <div class="btn-group" role="group">
+                                    <a href="/Musteri/MusteriGetir/@Musteri.ID" class="btn btn-sm btn-warning" title="Güncelle">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <a href="/Musteri/MusteriSil/@Musteri.ID" class="btn btn-sm btn-danger" onclick="return confirm('Musteriyi silmek istediğinize emin misiniz?');" title="Sil">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+
+                                    <a href="/Musteri/BorcOde/@Musteri.ID" class="btn btn-sm btn-success" title="Borç Öde">
+                                        <i class="bi bi-cash-coin"></i> Öde
+                                    </a>
+
+                                    <a href="/Musteri/VeresiyeEkle/@Musteri.ID" class="btn btn-sm btn-info text-white" title="Veresiye Ekle">
+                                        <i class="bi bi-journal-plus"></i> Veresiye
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }
@@ -81,6 +81,9 @@
         </div>
     </div>
 
+    <div class="card-footer text-center">
+        <a href="/Musteri/YeniMusteri/" class="btn btn-dark">Yeni Musteri Ekle</a>
+    </div>
 </div>
 
 <script>
@@ -111,7 +114,7 @@
 
         ws['!cols'] = wscols;
         XLSX.utils.book_append_sheet(wb, ws, "Contacts");
-        XLSX.writeFile(wb, "ÜrünListesiRaporExcel.xlsx");
+        XLSX.writeFile(wb, "MusteriListesiRaporExcel.xlsx");
     });
 
 
@@ -167,7 +170,7 @@
             margin: { top: 30, left: 10, right: 10, bottom: 10 }
         });
 
-        doc.save("ÜrünListesiRaporPDF.pdf");
+        doc.save("MusteriListesiRaporPDF.pdf");
     });
 </script>
 

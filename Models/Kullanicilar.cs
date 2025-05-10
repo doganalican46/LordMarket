@@ -12,18 +12,14 @@ namespace LordMarket.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Satislar
+    public partial class Kullanicilar
     {
         public int ID { get; set; }
-        public Nullable<int> UrunID { get; set; }
-        public Nullable<int> SatisIslemID { get; set; }
-        public string OdemeTipi { get; set; }
-        public Nullable<decimal> Tutar { get; set; }
-        public string SatisTarihi { get; set; }
-        public string BosAlan { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Image { get; set; }
+        public string Role { get; set; }
+        public string SonGuncellenmeTarihi { get; set; }
         public Nullable<bool> Status { get; set; }
-    
-        public virtual SatisIslem SatisIslem { get; set; }
-        public virtual Urunler Urunler { get; set; }
     }
 }

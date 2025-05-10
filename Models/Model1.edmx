@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="GelirGider">
           <Key>
             <PropertyRef Name="ID" />
@@ -27,6 +27,18 @@
           <Property Name="BosAlan" Type="nvarchar" MaxLength="500" />
           <Property Name="Status" Type="bit" />
         </EntityType>
+        <EntityType Name="Kullanicilar">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="Image" Type="nvarchar(max)" />
+          <Property Name="Role" Type="nvarchar" MaxLength="50" />
+          <Property Name="SonGuncellenmeTarihi" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
         <EntityType Name="Musteriler">
           <Key>
             <PropertyRef Name="ID" />
@@ -36,6 +48,7 @@
           <Property Name="SatisIslemID" Type="int" />
           <Property Name="Notlar" Type="nvarchar(max)" />
           <Property Name="ToplamBorc" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SonGuncellenmeTarihi" Type="nvarchar" MaxLength="50" />
           <Property Name="BosAlan" Type="nvarchar" MaxLength="500" />
           <Property Name="Status" Type="bit" />
         </EntityType>
@@ -61,7 +74,7 @@
           <Property Name="Tutar" Type="decimal" Precision="18" Scale="2" />
           <Property Name="SatisTarihi" Type="nvarchar" MaxLength="50" />
           <Property Name="BosAlan" Type="nvarchar" MaxLength="500" />
-          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="bit" />
         </EntityType>
         <EntityType Name="Urunler">
           <Key>
@@ -70,10 +83,10 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Barkod" Type="nvarchar" MaxLength="200" />
           <Property Name="KategoriID" Type="int" />
-          <Property Name="KDVOran" Type="nvarchar" MaxLength="50" />
-          <Property Name="UrunResmi" Type="nvarchar(max)" />
           <Property Name="UrunAd" Type="nvarchar" MaxLength="250" />
           <Property Name="UrunFiyat" Type="nvarchar" MaxLength="50" />
+          <Property Name="UrunResmi" Type="nvarchar(max)" />
+          <Property Name="KDVOran" Type="nvarchar" MaxLength="50" />
           <Property Name="Stok" Type="int" />
           <Property Name="EklenmeTarihi" Type="nvarchar" MaxLength="50" />
           <Property Name="GuncellenmeTarihi" Type="nvarchar" MaxLength="50" />
@@ -131,6 +144,7 @@
         <EntityContainer Name="LordMarketDBModelStoreContainer">
           <EntitySet Name="GelirGider" EntityType="Self.GelirGider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Kategoriler" EntityType="Self.Kategoriler" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Kullanicilar" EntityType="Self.Kullanicilar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Musteriler" EntityType="Self.Musteriler" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SatisIslem" EntityType="Self.SatisIslem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Satislar" EntityType="Self.Satislar" Schema="dbo" store:Type="Tables" />
@@ -152,7 +166,8 @@
             <End Role="Urunler" EntitySet="Urunler" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LordMarketDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -179,6 +194,18 @@
           <Property Name="Status" Type="Boolean" />
           <NavigationProperty Name="Urunler" Relationship="Self.FK_Urunler_Kategoriler" FromRole="Kategoriler" ToRole="Urunler" />
         </EntityType>
+        <EntityType Name="Kullanicilar">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SonGuncellenmeTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Boolean" />
+        </EntityType>
         <EntityType Name="Musteriler">
           <Key>
             <PropertyRef Name="ID" />
@@ -188,9 +215,10 @@
           <Property Name="SatisIslemID" Type="Int32" />
           <Property Name="Notlar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ToplamBorc" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SonGuncellenmeTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Boolean" />
-          <NavigationProperty Name="SatisIslem" Relationship="LordMarketDBModel.FK_Musteriler_SatisIslem" FromRole="Musteriler" ToRole="SatisIslem" />
+          <NavigationProperty Name="SatisIslem" Relationship="Self.FK_Musteriler_SatisIslem" FromRole="Musteriler" ToRole="SatisIslem" />
         </EntityType>
         <EntityType Name="SatisIslem">
           <Key>
@@ -202,8 +230,8 @@
           <Property Name="Tarih" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Boolean" />
+          <NavigationProperty Name="Musteriler" Relationship="Self.FK_Musteriler_SatisIslem" FromRole="SatisIslem" ToRole="Musteriler" />
           <NavigationProperty Name="Satislar" Relationship="Self.FK_Satislar_SatisIslem" FromRole="SatisIslem" ToRole="Satislar" />
-          <NavigationProperty Name="Musteriler" Relationship="LordMarketDBModel.FK_Musteriler_SatisIslem" FromRole="SatisIslem" ToRole="Musteriler" />
         </EntityType>
         <EntityType Name="Satislar">
           <Key>
@@ -216,7 +244,7 @@
           <Property Name="Tutar" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="SatisTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Boolean" />
           <NavigationProperty Name="SatisIslem" Relationship="Self.FK_Satislar_SatisIslem" FromRole="Satislar" ToRole="SatisIslem" />
           <NavigationProperty Name="Urunler" Relationship="Self.FK_Satislar_Urunler" FromRole="Satislar" ToRole="Urunler" />
         </EntityType>
@@ -227,9 +255,10 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Barkod" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="KategoriID" Type="Int32" />
-          <Property Name="KDVOran" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UrunAd" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="UrunFiyat" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UrunResmi" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="KDVOran" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Stok" Type="Int32" />
           <Property Name="EklenmeTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="GuncellenmeTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -237,7 +266,6 @@
           <Property Name="Status" Type="Boolean" />
           <NavigationProperty Name="Kategoriler" Relationship="Self.FK_Urunler_Kategoriler" FromRole="Urunler" ToRole="Kategoriler" />
           <NavigationProperty Name="Satislar" Relationship="Self.FK_Satislar_Urunler" FromRole="Urunler" ToRole="Satislar" />
-          <Property Name="UrunResmi" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Urunler_Kategoriler">
           <End Role="Kategoriler" Type="Self.Kategoriler" Multiplicity="0..1" />
@@ -248,6 +276,18 @@
             </Principal>
             <Dependent Role="Urunler">
               <PropertyRef Name="KategoriID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Musteriler_SatisIslem">
+          <End Role="SatisIslem" Type="Self.SatisIslem" Multiplicity="0..1" />
+          <End Role="Musteriler" Type="Self.Musteriler" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SatisIslem">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Musteriler">
+              <PropertyRef Name="SatisIslemID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -278,6 +318,7 @@
         <EntityContainer Name="LordMarketDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="GelirGider" EntityType="Self.GelirGider" />
           <EntitySet Name="Kategoriler" EntityType="Self.Kategoriler" />
+          <EntitySet Name="Kullanicilar" EntityType="Self.Kullanicilar" />
           <EntitySet Name="Musteriler" EntityType="Self.Musteriler" />
           <EntitySet Name="SatisIslem" EntityType="Self.SatisIslem" />
           <EntitySet Name="Satislar" EntityType="Self.Satislar" />
@@ -285,6 +326,10 @@
           <AssociationSet Name="FK_Urunler_Kategoriler" Association="Self.FK_Urunler_Kategoriler">
             <End Role="Kategoriler" EntitySet="Kategoriler" />
             <End Role="Urunler" EntitySet="Urunler" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Musteriler_SatisIslem" Association="Self.FK_Musteriler_SatisIslem">
+            <End Role="SatisIslem" EntitySet="SatisIslem" />
+            <End Role="Musteriler" EntitySet="Musteriler" />
           </AssociationSet>
           <AssociationSet Name="FK_Satislar_SatisIslem" Association="Self.FK_Satislar_SatisIslem">
             <End Role="SatisIslem" EntitySet="SatisIslem" />
@@ -294,23 +339,7 @@
             <End Role="Urunler" EntitySet="Urunler" />
             <End Role="Satislar" EntitySet="Satislar" />
           </AssociationSet>
-          <AssociationSet Name="FK_Musteriler_SatisIslem" Association="LordMarketDBModel.FK_Musteriler_SatisIslem">
-            <End Role="SatisIslem" EntitySet="SatisIslem" />
-            <End Role="Musteriler" EntitySet="Musteriler" />
-          </AssociationSet>
         </EntityContainer>
-        <Association Name="FK_Musteriler_SatisIslem">
-          <End Type="LordMarketDBModel.SatisIslem" Role="SatisIslem" Multiplicity="0..1" />
-          <End Type="LordMarketDBModel.Musteriler" Role="Musteriler" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SatisIslem">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Musteriler">
-              <PropertyRef Name="SatisIslemID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -341,6 +370,19 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Kullanicilar">
+            <EntityTypeMapping TypeName="LordMarketDBModel.Kullanicilar">
+              <MappingFragment StoreEntitySet="Kullanicilar">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="SonGuncellenmeTarihi" ColumnName="SonGuncellenmeTarihi" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Musteriler">
             <EntityTypeMapping TypeName="LordMarketDBModel.Musteriler">
               <MappingFragment StoreEntitySet="Musteriler">
@@ -349,6 +391,7 @@
                 <ScalarProperty Name="SatisIslemID" ColumnName="SatisIslemID" />
                 <ScalarProperty Name="Notlar" ColumnName="Notlar" />
                 <ScalarProperty Name="ToplamBorc" ColumnName="ToplamBorc" />
+                <ScalarProperty Name="SonGuncellenmeTarihi" ColumnName="SonGuncellenmeTarihi" />
                 <ScalarProperty Name="BosAlan" ColumnName="BosAlan" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
@@ -383,13 +426,13 @@
           <EntitySetMapping Name="Urunler">
             <EntityTypeMapping TypeName="LordMarketDBModel.Urunler">
               <MappingFragment StoreEntitySet="Urunler">
-                <ScalarProperty Name="UrunResmi" ColumnName="UrunResmi" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Barkod" ColumnName="Barkod" />
                 <ScalarProperty Name="KategoriID" ColumnName="KategoriID" />
-                <ScalarProperty Name="KDVOran" ColumnName="KDVOran" />
                 <ScalarProperty Name="UrunAd" ColumnName="UrunAd" />
                 <ScalarProperty Name="UrunFiyat" ColumnName="UrunFiyat" />
+                <ScalarProperty Name="UrunResmi" ColumnName="UrunResmi" />
+                <ScalarProperty Name="KDVOran" ColumnName="KDVOran" />
                 <ScalarProperty Name="Stok" ColumnName="Stok" />
                 <ScalarProperty Name="EklenmeTarihi" ColumnName="EklenmeTarihi" />
                 <ScalarProperty Name="GuncellenmeTarihi" ColumnName="GuncellenmeTarihi" />

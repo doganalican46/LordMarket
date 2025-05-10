@@ -23,15 +23,15 @@ namespace LordMarket.Models
         public int ID { get; set; }
         public string Barkod { get; set; }
         public Nullable<int> KategoriID { get; set; }
-        public string KDVOran { get; set; }
         public string UrunAd { get; set; }
         public string UrunFiyat { get; set; }
+        public string UrunResmi { get; set; }
+        public string KDVOran { get; set; }
         public Nullable<int> Stok { get; set; }
         public string EklenmeTarihi { get; set; }
         public string GuncellenmeTarihi { get; set; }
         public string BosAlan { get; set; }
         public Nullable<bool> Status { get; set; }
-        public string UrunResmi { get; set; }
     
         public virtual Kategoriler Kategoriler { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

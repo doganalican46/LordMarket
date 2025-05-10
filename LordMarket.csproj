@@ -136,6 +136,7 @@
     <Compile Include="Controllers\SatisController.cs" />
     <Compile Include="Controllers\SatisIslemController.cs" />
     <Compile Include="Controllers\UrunController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -143,6 +144,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Kategoriler.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Kullanicilar.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Model1.Context.cs">
@@ -215,8 +219,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Models\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
       <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\Model1.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -269,11 +273,18 @@
     <Content Include="Views\Kategori\Kategoriler.cshtml" />
     <Content Include="Views\Kategori\YeniKategori.cshtml" />
     <Content Include="Views\Kategori\KategoriGetir.cshtml" />
+    <Content Include="Views\Musteri\Musteriler.cshtml" />
+    <Content Include="Views\Musteri\YeniMusteri.cshtml" />
+    <Content Include="Views\Musteri\MusteriGetir.cshtml" />
+    <Content Include="Views\GelirGider\GelirGider.cshtml" />
+    <Content Include="Views\GelirGider\YeniGelirGider.cshtml" />
+    <Content Include="Views\GelirGider\GelirGiderGetir.cshtml" />
+    <Content Include="Views\User\Kullanici.cshtml" />
+    <Content Include="Views\User\YeniKullanici.cshtml" />
+    <Content Include="Views\User\KullaniciGetir.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\GelirGider\" />
-    <Folder Include="Views\Musteri\" />
     <Folder Include="Views\SatisIslem\" />
     <Folder Include="Views\Satis\" />
   </ItemGroup>

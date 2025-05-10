@@ -10,7 +10,7 @@
         <h3><b>Kategori Güncelle</b></h3>
     </div>
 
-    @using (Html.BeginForm("UrunGuncelle", "Urun", FormMethod.Post, new { @class = "form-group" }))
+    @using (Html.BeginForm("KategoriGuncelle", "Kategori", FormMethod.Post, new { @class = "form-group" }))
     {
         <div class="card-body">
             @Html.HiddenFor(k => k.ID)

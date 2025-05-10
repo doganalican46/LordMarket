@@ -17,8 +17,8 @@ namespace LordMarket.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SatisIslem()
         {
-            this.Satislar = new HashSet<Satislar>();
             this.Musteriler = new HashSet<Musteriler>();
+            this.Satislar = new HashSet<Satislar>();
         }
     
         public int ID { get; set; }
@@ -29,8 +29,8 @@ namespace LordMarket.Models
         public Nullable<bool> Status { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Satislar> Satislar { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Musteriler> Musteriler { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Satislar> Satislar { get; set; }
     }
 }

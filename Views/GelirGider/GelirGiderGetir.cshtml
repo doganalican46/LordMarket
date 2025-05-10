@@ -1,0 +1,65 @@
+﻿﻿@model LordMarket.Models.GelirGider
+@{
+    ViewBag.Title = "GelirGider Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="card shadow-sm border-light rounded" style="max-width: 600px; margin: 20px auto;">
+    <div class="card-header bg-dark text-white text-center">
+        <h3><b>GelirGider Güncelle</b></h3>
+    </div>
+
+    @using (Html.BeginForm("GelirGiderGuncelle", "GelirGider", FormMethod.Post, new { @class = "form-group" }))
+    {
+        <div class="card-body">
+            @Html.HiddenFor(k => k.ID)
+
+            <div class="mb-3">
+                <label>Tür:</label>
+                @Html.DropDownListFor(k => k.Tur, new SelectList(new List<string>
+                {
+                    "Gelir",
+                    "Gider",
+                    "Yatırım",
+                    "Borç",
+                    "Alacak",
+                    "Diğer"
+                }), "Tür seçin", new { @class = "form-control", required = "required" })
+            </div>
+
+
+            <div class="mb-3">
+                <label>Notlar:</label>
+                @Html.TextBoxFor(k => k.Notlar, new { @class = "form-control", id = "Notlar", required = "required", placeholder = "Notlar" })
+
+            </div>
+
+            <div class="mb-3">
+                <label>Tutar:</label>
+                @Html.TextBoxFor(k => k.Tutar, new { @class = "form-control", id = "Tutar", required = "required", placeholder = "Tutar" })
+
+            </div>
+
+
+
+
+
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label>
+                @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Akif", Value = "true" },
+                    new SelectListItem { Text = "Pasif", Value = "false" }
+                }, new { @class = "form-select", id = "status", required = "required" })
+            </div>
+        </div>
+
+        <div class="card-footer text-center">
+            <a href="/GelirGider/GelirGider/" class="btn btn-danger btn-sm">İptal</a>
+            <button class="btn btn-success btn-sm">Güncelle</button>
+        </div>
+    }
+</div>
+
+
