@@ -113,146 +113,129 @@
         <!-- Üst Bilgi Alanı -->
         <div class="row header py-2">
             <div class="col-12">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
-                    <input type="text" class="form-control barcode-input" placeholder="Barkod okuyun veya ürün adı girin" autofocus>
-                    <button class="btn btn-primary" type="button"><i class="bi bi-search"></i></button>
-                </div>
+                <form method="get" asp-action="Index" asp-controller="Home">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                        <input type="text" id="barkodInput" name="barkod" class="form-control barcode-input"
+                               placeholder="Barkod okuyun veya ürün adı girin" autofocus
+                               value="@Context.Request.["barkod"]">
+                        <button id="barkodAraBtn" class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                    </div>
+                </form>
+
             </div>
         </div>
 
-        <div class="row mx-0 mt-3">
-            <!-- Sol Taraf - Ürün Listesi -->
-            <div class="col-md-8 pe-md-3">
-                <!-- Ürün Tablosu -->
-                <div class="card mb-3">
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th width="40%">ÜRÜN ADI</th>
-                                        <th>FİYAT</th>
-                                        <th>ADET</th>
-                                        <th>TOPLAM</th>
-                                        <th>SİL</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="product-card">
-                                        <td>Kristal Bardak</td>
-                                        <td>₺1,50</td>
-                                        <td>
-                                            <div class="input-group input-group-sm" style="width: 100px;">
-                                                <button class="btn btn-outline-secondary" type="button">-</button>
-                                                <input type="text" class="form-control text-center" value="2">
-                                                <button class="btn btn-outline-secondary" type="button">+</button>
-                                            </div>
-                                        </td>
-                                        <td>₺3,00</td>
-                                        <td><button class="delete-btn"><i class="bi bi-trash-fill"></i></button></td>
-                                    </tr>
-                                    <tr class="product-card">
-                                        <td>Ekmek</td>
-                                        <td>₺12,50</td>
-                                        <td>
-                                            <div class="input-group input-group-sm" style="width: 100px;">
-                                                <button class="btn btn-outline-secondary" type="button">-</button>
-                                                <input type="text" class="form-control text-center" value="1">
-                                                <button class="btn btn-outline-secondary" type="button">+</button>
-                                            </div>
-                                        </td>
-                                        <td>₺12,50</td>
-                                        <td><button class="delete-btn"><i class="bi bi-trash-fill"></i></button></td>
-                                    </tr>
-                                    <tr class="product-card">
-                                        <td>Yoğurt</td>
-                                        <td>₺150,00</td>
-                                        <td>
-                                            <div class="input-group input-group-sm" style="width: 100px;">
-                                                <button class="btn btn-outline-secondary" type="button">-</button>
-                                                <input type="text" class="form-control text-center" value="1">
-                                                <button class="btn btn-outline-secondary" type="button">+</button>
-                                            </div>
-                                        </td>
-                                        <td>₺150,00</td>
-                                        <td><button class="delete-btn"><i class="bi bi-trash-fill"></i></button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sağ Taraf - Ödeme Alanı -->
-            <div class="col-md-4 ps-md-3 mt-3 mt-md-0">
-                <div class="payment-card p-3 mb-3">
-                    <h5 class="text-center mb-4">ÖDEME BİLGİLERİ</h5>
-
-                    <div class="mb-3">
-                        <label class="form-label payment-label">TOPLAM TUTAR</label>
-                        <input type="text" class="form-control payment-input total-amount text-end fw-bold" value="₺165,50" readonly>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label payment-label">İSKONTO</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control payment-input" value="₺0,00" readonly>
-                            <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#discountModal">Uygula</button>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label payment-label">ÖDENEN</label>
-                        <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label payment-label">PARA ÜSTÜ</label>
-                        <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00" readonly>
-                    </div>
-
-                    <div class="d-grid gap-2 mb-3">
-                        <button class="btn btn-success action-btn py-2" data-bs-toggle="modal" data-bs-target="#paymentModal">
-                            <i class="bi bi-check-circle-fill"></i> SATIŞI TAMAMLA
-                        </button>
-                    </div>
-                </div>
-
-                <!-- İşlem Butonları -->
-                <div class="row g-2">
-                    <div class="col-6">
-                        <button class="btn btn-danger action-btn w-100"><i class="bi bi-x-circle-fill"></i> SATIŞ İPTAL</button>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-warning action-btn w-100"><i class="bi bi-pause-fill"></i> İŞLEM BEKLET</button>
-                    </div>
-                    <div class="col-12">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
-                            Yeni Ürün Ekle
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Hızlı Ürün Butonları -->
-                <div class="quick-products-container mt-3">
-                    <h6 class="mb-2">HIZLI ÜRÜNLER</h6>
-                    <div class="row g-2">
-                        @foreach (var urun in Model.Urunler.Where(u => u.HizliUrunMu == true))
-                        {
-                            <div class="col-6">
-                                <button class="btn quick-product-btn w-100 py-2">
-                                    <div>@urun.UrunAd</div>
-                                    <div class="fw-bold">₺@string.Format("{0:N2}", urun.UrunFiyat)</div>
-                                </button>
+        @if (Model != null && Model.Urunler.Count > 0)
+        {
+            <div class="row mx-0 mt-3">
+                <div class="col-md-8 pe-md-3">
+                    <div class="card mb-3">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th width="40%">ÜRÜN ADI</th>
+                                            <th>FİYAT</th>
+                                            <th>ADET</th>
+                                            <th>TOPLAM</th>
+                                            <th>SİL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="urunListesi">
+                                        @foreach (var urun in Model.Urunler)
+                                        {
+                                            <tr class="product-card" data-id="@urun.ID">
+                                                <td>@urun.UrunAd</td>
+                                                <td>₺@urun.UrunFiyat</td>
+                                                <td>
+                                                    <div class="input-group input-group-sm" style="width: 100px;">
+                                                        <button class="btn btn-outline-secondary adet-azalt" type="button">-</button>
+                                                        <input type="text" class="form-control text-center adet-input" value="1">
+                                                        <button class="btn btn-outline-secondary adet-artir" type="button">+</button>
+                                                    </div>
+                                                </td>
+                                                <td class="urun-toplam">₺@urun.UrunFiyat</td>
+                                                <td><button class="delete-btn"><i class="bi bi-trash-fill"></i></button></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
                             </div>
-                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Sağ Taraf - Ödeme Alanı -->
+        <div class="col-md-4 ps-md-3 mt-3 mt-md-0">
+            <div class="payment-card p-3 mb-3">
+                <h5 class="text-center mb-4">ÖDEME BİLGİLERİ</h5>
+
+                <div class="mb-3">
+                    <label class="form-label payment-label">TOPLAM TUTAR</label>
+                    <input type="text" class="form-control payment-input total-amount text-end fw-bold" value="₺165,50" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label payment-label">İSKONTO</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control payment-input" value="₺0,00" readonly>
+                        <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#discountModal">Uygula</button>
                     </div>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label payment-label">ÖDENEN</label>
+                    <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00">
+                </div>
 
+                <div class="mb-4">
+                    <label class="form-label payment-label">PARA ÜSTÜ</label>
+                    <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00" readonly>
+                </div>
+
+                <div class="d-grid gap-2 mb-3">
+                    <button class="btn btn-success action-btn py-2" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                        <i class="bi bi-check-circle-fill"></i> SATIŞI TAMAMLA
+                    </button>
+                </div>
             </div>
+
+            <!-- İşlem Butonları -->
+            <div class="row g-2">
+                <div class="col-6">
+                    <button class="btn btn-danger action-btn w-100"><i class="bi bi-x-circle-fill"></i> SATIŞ İPTAL</button>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-warning action-btn w-100"><i class="bi bi-pause-fill"></i> İŞLEM BEKLET</button>
+                </div>
+                <div class="col-12">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
+                        Yeni Ürün Ekle
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hızlı Ürün Butonları -->
+            <div class="quick-products-container mt-3">
+                <h6 class="mb-2">HIZLI ÜRÜNLER</h6>
+                <div class="row g-2">
+                    @foreach (var urun in Model.Urunler.Where(u => u.HizliUrunMu == true))
+                    {
+                        <div class="col-6">
+                            <button class="btn quick-product-btn w-100 py-2">
+                                <div>@urun.UrunAd</div>
+                                <div class="fw-bold">@urun.UrunFiyat ₺</div>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+
         </div>
     </div>
 
@@ -375,26 +358,36 @@
         });
     </script>
 
-    <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8/dist/sweetalert2.all.min.js"></script>
+
+   
+    <script>
+    document.getElementById("barkodInput").addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            document.getElementById("barkodAraBtn").click();
+        }
+    });
+</script>
 
 
     <script>
-    $(document).ready(function() {
-        // Check if there's a success message in TempData
-        var successMessage = '@TempData["SuccessMessage"]';
+        // Barkod alanına odaklan
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('.barcode-input').focus();
+        });
 
-        if (successMessage) {
-            // Trigger the SweetAlert2 modal
-            Swal.fire({
-                icon: 'success',
-                title: 'Başarılı',
-                text: successMessage,
-                confirmButtonText: 'Tamam'
-            });
-        }
-    });
+        
+
+
+        // Enter tuşu ile arama yapma
+        document.getElementById("barkodInput").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                document.getElementById("barkodAraBtn").click();
+            }
+        });
     </script>
+
 
 </body>
 </html>
