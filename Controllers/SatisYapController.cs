@@ -29,13 +29,6 @@ namespace LordMarket.Controllers
             return View();
         }
 
-        public ActionResult Inde2x()
-        {
-            return View();
-        }
-        public ActionResult Index3()
-        {
-            return View();
-        }
+      
     }
 }

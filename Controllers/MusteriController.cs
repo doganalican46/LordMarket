@@ -32,7 +32,7 @@ namespace LordMarket.Controllers
             if (ModelState.IsValid)
             {
                 Musteri.Status = true;
-                Musteri.SonGuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy");
+                Musteri.SonGuncellenmeTarihi =DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 db.Musteriler.Add(Musteri);
                 db.SaveChanges();
                 return RedirectToAction("Musteriler");
@@ -75,7 +75,7 @@ namespace LordMarket.Controllers
                 Musteri.SatisIslemID = y.SatisIslemID;
                 Musteri.Notlar = y.Notlar;
                 Musteri.ToplamBorc = y.ToplamBorc;
-                Musteri.SonGuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy");
+                Musteri.SonGuncellenmeTarihi =DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 Musteri.Status = y.Status;
 
                 db.SaveChanges();

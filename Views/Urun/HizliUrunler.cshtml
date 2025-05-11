@@ -8,12 +8,12 @@
     <!-- Başlık ve Breadcrumb -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-0"><i class="fas fa-boxes me-2 text-primary"></i>Ürün Yönetimi</h1>
+            <h1 class="h3 mb-0"><i class="fas fa-boxes me-2 text-primary"></i>Hızlı Ürün Yönetimi</h1>
         </div>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 bg-transparent p-0">
                 <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
-                <li class="breadcrumb-item active">Ürünler</li>
+                <li class="breadcrumb-item active">Hızlı Ürünler</li>
             </ol>
         </nav>
     </div>
@@ -49,7 +49,7 @@
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table id="DataTable" class="table table-hover align-middle mb-0" style="min-width: 100%;">
-                    <thead class="table-dark">
+                    <thead class="table-light">
                         <tr>
                             <th width="60px" class="text-center">Barkod</th>
                             <th width="80px">Resim</th>
@@ -94,7 +94,7 @@
                                         <a href="/Urun/UrunSil/@urun.ID" class="btn btn-sm btn-danger" onclick="return confirm('Bu ürünü silmek istediğinizden emin misiniz?');" title="Sil">
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
-                                        <a href="/Urun/HizliUrunYap/@urun.ID" class="btn btn-sm @(urun.HizliUrunMu ==true ? "btn-info" : "btn-info")"onclick="return confirm('Bu ürünün hızlı ürün durumunu güncellemek istiyor musunuz?');" title="Hızlı Ürün">
+                                        <a href="/Urun/HizliUrunYap/@urun.ID" class="btn btn-sm @(urun.HizliUrunMu ==true ? "btn-info" : "btn-info")" onclick="return confirm('Bu ürünün hızlı ürün durumunu güncellemek istiyor musunuz?');" title="Hızlı Ürün">
                                             <i class="fas fa-bolt"></i>
                                         </a>
                                     </div>

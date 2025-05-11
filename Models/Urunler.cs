@@ -32,6 +32,7 @@ namespace LordMarket.Models
         public string GuncellenmeTarihi { get; set; }
         public string BosAlan { get; set; }
         public Nullable<bool> Status { get; set; }
+        public Nullable<bool> HizliUrunMu { get; set; }
     
         public virtual Kategoriler Kategoriler { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

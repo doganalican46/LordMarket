@@ -14,7 +14,15 @@ namespace LordMarket.Controllers
         // Listeleme
         public ActionResult Urunler()
         {
+            ViewBag.Kategoriler = GetKategoriSelectList();
             var urunler = db.Urunler.ToList();
+            return View(urunler);
+        }
+
+        public ActionResult HizliUrunler()
+        {
+            ViewBag.Kategoriler = GetKategoriSelectList();
+            var urunler = db.Urunler.Where(m=>m.HizliUrunMu==true).ToList();
             return View(urunler);
         }
 
@@ -33,7 +41,7 @@ namespace LordMarket.Controllers
             if (ModelState.IsValid)
             {
                 urun.Status = true;
-                urun.EklenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy");
+                urun.EklenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 db.Urunler.Add(urun);
                 db.SaveChanges();
                 return RedirectToAction("Urunler");
@@ -81,16 +89,36 @@ namespace LordMarket.Controllers
                 urun.UrunResmi = y.UrunResmi;
                 urun.KDVOran = y.KDVOran;
                 urun.Stok = y.Stok;
-                urun.GuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy");
+                urun.GuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 urun.Status = y.Status;
 
                 db.SaveChanges();
+
+                TempData["GuncellemeBasarili"] = "Ürün başarıyla güncellendi!";
                 return RedirectToAction("Urunler");
             }
 
             ViewBag.Kategoriler = GetKategoriSelectList();
             return View("UrunGetir", y);
         }
+
+
+        [HttpGet]
+        public ActionResult HizliUrunYap(int id)
+        {
+            var urun = db.Urunler.Find(id);
+            if (urun == null)
+                return HttpNotFound();
+
+            // Toggle işlemi
+            urun.HizliUrunMu = !urun.HizliUrunMu;
+            urun.GuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+
+            db.SaveChanges();
+            return RedirectToAction("Urunler");
+        }
+
+
 
         // Kategorileri dropdown için getirir
         private List<SelectListItem> GetKategoriSelectList()

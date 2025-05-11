@@ -287,8 +287,7 @@
     <Content Include="Views\Satis\YeniSatis.cshtml" />
     <Content Include="Views\Satis\SatisGetir.cshtml" />
     <Content Include="Views\SatisYap\Index.cshtml" />
-    <Content Include="Views\SatisYap\Inde2x.cshtml" />
-    <Content Include="Views\SatisYap\Index3.cshtml" />
+    <Content Include="Views\Urun\HizliUrunler.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

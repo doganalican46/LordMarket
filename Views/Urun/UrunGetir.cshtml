@@ -1,43 +1,37 @@
-﻿﻿@model LordMarket.Models.Urunler
+﻿@model LordMarket.Models.Urunler
 @{
     ViewBag.Title = "Ürün Güncelle";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
 
 <div class="card shadow-sm border-light rounded" style="max-width: 600px; margin: 20px auto;">
     <div class="card-header bg-dark text-white text-center">
         <h3><b>Ürün Güncelle</b></h3>
     </div>
 
-    @using (Html.BeginForm("UrunGuncelle", "Urun", FormMethod.Post, new { @class = "form-group" }))
+    @using (Html.BeginForm("UrunGuncelle", "Urun", FormMethod.Post))
     {
         <div class="card-body">
             @Html.HiddenFor(k => k.ID)
-
 
             <div class="mb-3">
                 <label for="Barkod" class="form-label">Barkod:</label>
                 @Html.TextBoxFor(k => k.Barkod, new { @class = "form-control", id = "Barkod", required = "required", placeholder = "Barkod" })
             </div>
 
-
-            <div class="form-group">
-                <label class="mb-3 fw-bold">Ürün Kategorisi:</label>
-                @Html.DropDownListFor(k => k.KategoriID, (List<SelectListItem>)ViewBag.Kategoriler, new { @class = "form-control" })
-                <br />
+            <div class="mb-3">
+                <label class="form-label">Ürün Kategorisi:</label>
+                @Html.DropDownListFor(k => k.KategoriID, (List<SelectListItem>)ViewBag.Kategoriler, new { @class = "form-select" })
             </div>
 
             <div class="mb-3">
                 <label>Ürün Adı:</label>
                 @Html.TextBoxFor(k => k.UrunAd, new { @class = "form-control", id = "UrunAd", required = "required", placeholder = "Ürün Adı" })
-
             </div>
 
             <div class="mb-3">
                 <label>Ürün Fiyatı:</label>
                 @Html.TextBoxFor(k => k.UrunFiyat, new { @class = "form-control", id = "UrunFiyat", required = "required", placeholder = "Ürün Fiyatı" })
-
             </div>
 
             <div class="mb-3">
@@ -47,10 +41,6 @@
                     <img id="preview" class="rounded border" style="max-width: 300px; max-height: 200px; display: none;" />
                 </div>
             </div>
-
-            
-
-
 
             <div class="mb-3">
                 <label for="KDVOran" class="form-label">KDV Oranı:</label>
@@ -62,18 +52,11 @@
                 @Html.TextBoxFor(k => k.Stok, new { @class = "form-control", id = "Stok", required = "required", placeholder = "Stok" })
             </div>
 
-
-
-
-
-
-
-
             <div class="mb-3">
                 <label for="status" class="form-label">Status:</label>
                 @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
                 {
-                    new SelectListItem { Text = "Akif", Value = "true" },
+                    new SelectListItem { Text = "Aktif", Value = "true" },
                     new SelectListItem { Text = "Pasif", Value = "false" }
                 }, new { @class = "form-select", id = "status", required = "required" })
             </div>
@@ -81,17 +64,15 @@
 
         <div class="card-footer text-center">
             <a href="/Urun/Urunler/" class="btn btn-danger btn-sm">İptal</a>
-            <button class="btn btn-success btn-sm">Güncelle</button>
+            <button type="submit" class="btn btn-success btn-sm">Güncelle</button>
         </div>
     }
 </div>
-
 
 <script>
     function previewImage() {
         var url = document.getElementById('UrunResmi').value;
         var preview = document.getElementById('preview');
-
         if (url) {
             preview.src = url;
             preview.style.display = "block";
@@ -99,9 +80,5 @@
             preview.style.display = "none";
         }
     }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        previewImage();
-    });
+    document.addEventListener("DOMContentLoaded", previewImage);
 </script>
-

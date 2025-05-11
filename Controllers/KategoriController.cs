@@ -32,7 +32,7 @@ namespace LordMarket.Controllers
             if (ModelState.IsValid)
             {
                 Kategori.Status = true;
-                Kategori.SonGuncellemeTarihi = DateTime.Now.ToString("dd/MM/yyyy");
+                Kategori.SonGuncellemeTarihi =DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 db.Kategoriler.Add(Kategori);
                 db.SaveChanges();
                 return RedirectToAction("Kategoriler");
@@ -73,7 +73,7 @@ namespace LordMarket.Controllers
 
                 Kategori.KategoriAd = y.KategoriAd;
               
-                Kategori.SonGuncellemeTarihi = DateTime.Now.ToString("dd/MM/yyyy");
+                Kategori.SonGuncellemeTarihi =DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 Kategori.Status = y.Status;
 
                 db.SaveChanges();
