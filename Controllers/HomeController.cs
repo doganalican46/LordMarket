@@ -33,9 +33,8 @@ namespace LordMarket.Controllers
                 Musteriler = db.Musteriler.Where(h => h.Status == true).ToList(),
                 Satislar = db.Satislar.Where(h => h.Status == true).ToList(),
                 SatisIslem = db.SatisIslem.Where(h => h.Status == true).ToList(),
-                Urunler = string.IsNullOrEmpty(barkod)
-                    ? new List<Urunler>()
-                    : db.Urunler.Where(u => u.Barkod == barkod && u.Status == true).ToList()
+                Urunler = db.Urunler.Where(h => h.Status == true).ToList(),
+
             };
 
             ViewBag.Kategoriler = GetKategoriSelectList();
@@ -53,12 +52,6 @@ namespace LordMarket.Controllers
                     Value = k.ID.ToString()
                 }).ToList();
         }
-
-
-
-
-
-
 
 
 
@@ -92,24 +85,7 @@ namespace LordMarket.Controllers
 
 
 
-        [HttpPost]
-        public ActionResult BarkodAra(string barkod)
-        {
-            var urun = db.Urunler.FirstOrDefault(u => u.Barkod == barkod);
 
-            var model = new SatisIslemViewModel1
-            {
-                Urunler = urun != null ? new List<Urunler> { urun } : new List<Urunler>()
-            };
-
-            return View("Index", model); // Aynı sayfaya dönüyoruz
-        }
-
-        [HttpGet]
-        public ActionResult BarkodAra()
-        {
-            return View(new List<Urunler>());
-        }
 
     }
 }
