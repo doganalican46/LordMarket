@@ -8,7 +8,6 @@
     <title>Lord Büfe</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -20,268 +19,359 @@
         body {
             background-color: #f5f5f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 15px;
+            margin: 0;
         }
 
         .header {
             background-color: var(--primary-color);
             color: white;
+            padding: 12px 0;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .main-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: calc(100vh - 60px);
+            overflow: hidden;
         }
 
         .payment-card {
             background-color: var(--secondary-color);
             color: white;
-            border-radius: 10px;
+            border-radius: 5px;
+            padding: 15px;
+            height: 100%;
         }
 
         .product-card {
-            border-left: 4px solid var(--accent-color);
+            border-left: 3px solid var(--accent-color);
         }
 
         .quick-product-btn {
             background-color: var(--light-color);
             border: none;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            padding: 8px;
+            font-size: 0.9rem;
+            margin: 2px;
         }
 
             .quick-product-btn:hover {
                 background-color: #bdc3c7;
-                transform: translateY(-2px);
+                transform: translateY(-1px);
             }
 
         .action-btn {
             font-weight: bold;
-            letter-spacing: 0.5px;
+            padding: 8px;
+            font-size: 0.9rem;
+            margin: 2px;
         }
 
         .delete-btn {
             color: var(--accent-color);
             background: none;
             border: none;
+            padding: 0 5px;
         }
 
         .payment-input {
             background-color: rgba(255,255,255,0.1);
             color: white;
             border: none;
-            border-bottom: 2px solid white;
+            border-bottom: 1px solid white;
             border-radius: 0;
-            font-size: 1.2rem;
-            height: 45px;
+            height: 38px;
+            padding: 5px;
+            font-size: 1rem;
         }
 
             .payment-input:focus {
                 background-color: rgba(255,255,255,0.2);
                 color: white;
                 box-shadow: none;
-                border-bottom: 2px solid var(--accent-color);
+                border-bottom: 1px solid var(--accent-color);
             }
 
         .payment-label {
-            font-size: 1rem;
+            font-size: 0.85rem;
+            margin-bottom: 3px;
         }
 
         .total-amount {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: bold;
         }
 
         .barcode-input {
-            font-size: 1.1rem;
-            height: 45px;
-        }
-
-        .payment-methods-nav {
-            background-color: var(--light-color);
+            font-size: 0.95rem;
+            height: 38px;
         }
 
         .quick-products-container {
-            margin-top: 20px;
+            margin-top: 12px;
             border-top: 1px solid #dee2e6;
-            padding-top: 15px;
+            padding-top: 12px;
+        }
+
+        .product-table {
+            font-size: 0.92rem;
+        }
+
+            .product-table th {
+                padding: 8px;
+            }
+
+            .product-table td {
+                padding: 8px;
+                vertical-align: middle;
+            }
+
+        .quantity-control {
+            width: 90px;
+        }
+
+            .quantity-control .btn {
+                padding: 0 6px;
+            }
+
+            .quantity-control input {
+                text-align: center;
+                padding: 0 3px;
+            }
+
+        .compact-modal .modal-body {
+            padding: 15px;
+        }
+
+        .compact-modal .modal-footer,
+        .compact-modal .modal-header {
+            padding: 12px 15px;
+        }
+
+        .left-column {
+            padding: 15px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-column {
+            padding: 15px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-list-container {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .quick-products-wrapper {
+            flex-shrink: 0;
         }
     </style>
 </head>
 <body>
-    <div class="row header text-center">
-        <div class="col">
-            <h4>LORDTEKEL - SATIŞ EKRANI</h4>
-        </div>
-    </div>
-    <div class="container-fluid p-0">
-        <!-- Üst Bilgi Alanı -->
-        <div class="row header py-2">
-            <div class="col-12">
-                <form method="get" asp-action="Index" asp-controller="Home">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
-                        <input type="text" id="barkodInput" name="Barkod" class="form-control barcode-input"
-                               placeholder="Barkod okuyun veya ürün adı girin" autofocus />
-                               
-                        <button id="barkodAraBtn" class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
-                    </div>
-                </form>
-
+    <div class="main-container">
+        <!-- Başlık -->
+        <div class="row header text-center m-0">
+            <div class="col p-0">
+                <h5 class="m-0">LORDTEKEL - SATIŞ EKRANI</h5>
             </div>
         </div>
 
-        @if (Model != null && Model.Urunler.Count > 0)
-        {
-            <div class="row mx-0 mt-3">
-                <div class="col-md-8 pe-md-3">
-                    <div class="card mb-3">
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th width="40%">ÜRÜN ADI</th>
-                                            <th>FİYAT</th>
-                                            <th>ADET</th>
-                                            <th>TOPLAM</th>
-                                            <th>SİL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="urunListesi">
-                                        @foreach (var urun in Model.Urunler.Where(u=>u.HizliUrunMu==true))
-                                        {
-                                            <tr class="product-card" data-id="@urun.ID">
-                                                <td>@urun.UrunAd</td>
-                                                <td>₺@urun.UrunFiyat</td>
-                                                <td>
-                                                    <div class="input-group input-group-sm" style="width: 100px;">
-                                                        <button class="btn btn-outline-secondary adet-azalt" type="button">-</button>
-                                                        <input type="text" class="form-control text-center adet-input" value="1">
-                                                        <button class="btn btn-outline-secondary adet-artir" type="button">+</button>
-                                                    </div>
-                                                </td>
-                                                <td class="urun-toplam">₺@urun.UrunFiyat</td>
-                                                <td><button class="delete-btn"><i class="bi bi-trash-fill"></i></button></td>
+        <div class="row m-0" style="height: calc(100% - 55px);">
+            <!-- Sol Taraf - Ürün Listesi (8 birim) -->
+            <div class="col-md-8 p-0">
+                <div class="left-column">
+                    <!-- Barkod Arama -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <form method="get" asp-action="Index" asp-controller="Home">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                                    <input type="text" id="barkodInput" name="Barkod" class="form-control barcode-input"
+                                           placeholder="Barkod okuyun veya ürün adı girin" autofocus />
+                                    <button id="barkodAraBtn" class="btn btn-primary" type="submit">
+                                        <i class="bi bi-search"></i> Ara
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Ürün Listesi -->
+                    <div class="product-list-container">
+                        <div class="card h-100">
+                            <div class="card-body p-2">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0 product-table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th width="40%">ÜRÜN</th>
+                                                <th>FİYAT</th>
+                                                <th>ADET</th>
+                                                <th>TOPLAM</th>
+                                                <th width="5%"></th>
                                             </tr>
-                                        }
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody id="urunListesi">
+                                            @foreach (var urun in Model.Urunler.Where(u => u.HizliUrunMu == true))
+                                            {
+                                                <tr class="product-card" data-id="@urun.ID">
+                                                    <td>@urun.UrunAd</td>
+                                                    <td>₺@urun.UrunFiyat</td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm quantity-control">
+                                                            <button class="btn btn-outline-secondary adet-azalt" type="button">-</button>
+                                                            <input type="text" class="form-control text-center adet-input" value="1">
+                                                            <button class="btn btn-outline-secondary adet-artir" type="button">+</button>
+                                                        </div>
+                                                    </td>
+                                                    <td class="urun-toplam">₺@urun.UrunFiyat</td>
+                                                    <td><button class="delete-btn"><i class="bi bi-trash-fill"></i></button></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hızlı Ürün Butonları -->
+                    <div class="quick-products-wrapper">
+                        <div class="quick-products-container">
+                            <h6 class="mb-2"><i class="bi bi-lightning-charge-fill"></i> HIZLI ÜRÜNLER</h6>
+                            <div class="row g-2">
+                                @foreach (var urun in Model.Urunler.Where(u => u.HizliUrunMu == true))
+                                {
+                                    <div class="col-3">
+                                        <button class="btn quick-product-btn w-100">
+                                            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.85rem;">@urun.UrunAd</div>
+                                            <div class="fw-bold" style="font-size: 0.9rem;">@urun.UrunFiyat ₺</div>
+                                        </button>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        }
 
-        <!-- Sağ Taraf - Ödeme Alanı -->
-        <div class="col-md-4 ps-md-3 mt-3 mt-md-0">
-            <div class="payment-card p-3 mb-3">
-                <h5 class="text-center mb-4">ÖDEME BİLGİLERİ</h5>
+            <!-- Sağ Taraf - Ödeme Alanı (4 birim) -->
+            <div class="col-md-4 p-0 border-start">
+                <div class="right-column">
+                    <!-- Ödeme Bilgileri -->
+                    <div class="payment-card mb-3">
+                        <h6 class="text-center mb-3"><i class="bi bi-credit-card"></i> ÖDEME BİLGİLERİ</h6>
 
-                <div class="mb-3">
-                    <label class="form-label payment-label">TOPLAM TUTAR</label>
-                    <input type="text" class="form-control payment-input total-amount text-end fw-bold" value="₺165,50" readonly>
-                </div>
+                        <div class="mb-3">
+                            <label class="form-label payment-label">TOPLAM TUTAR</label>
+                            <input type="text" class="form-control payment-input total-amount text-end fw-bold" value="₺0,00" readonly>
+                        </div>
 
-               
+                        <div class="mb-3">
+                            <label class="form-label payment-label">ÖDENEN</label>
+                            <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00">
+                        </div>
 
-                <div class="mb-3">
-                    <label class="form-label payment-label">ÖDENEN</label>
-                    <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00">
-                </div>
+                        <div class="mb-4">
+                            <label class="form-label payment-label">PARA ÜSTÜ</label>
+                            <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00" readonly>
+                        </div>
 
-                <div class="mb-4">
-                    <label class="form-label payment-label">PARA ÜSTÜ</label>
-                    <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00" readonly>
-                </div>
-
-                <div class="d-grid gap-2 mb-3">
-                    <button class="btn btn-success action-btn py-2" data-bs-toggle="modal" data-bs-target="#paymentModal">
-                        <i class="bi bi-check-circle-fill"></i> SATIŞI TAMAMLA
-                    </button>
-                </div>
-            </div>
-
-            <!-- İşlem Butonları -->
-            <div class="row g-2">
-                <div class="col-6">
-                    <button class="btn btn-danger action-btn w-100"><i class="bi bi-x-circle-fill"></i> SATIŞ İPTAL</button>
-                </div>
-                <div class="col-6">
-                    <button class="btn btn-warning action-btn w-100"><i class="bi bi-pause-fill"></i> İŞLEM BEKLET</button>
-                </div>
-
-                <div class="col-6">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
-                        Yeni Ürün Ekle
-                    </button>
-                </div>
-                <div class="col-6">
-                    <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#discountModal">İSKONTO YAP</button>
-                </div>
-            </div>
-
-            <!-- Hızlı Ürün Butonları -->
-            <div class="quick-products-container mt-3">
-                <h6 class="mb-2">HIZLI ÜRÜNLER</h6>
-                <div class="row g-2">
-                    @foreach (var urun in Model.Urunler.Where(u => u.HizliUrunMu == true))
-                    {
-                        <div class="col-6">
-                            <button class="btn quick-product-btn w-100 py-2">
-                                <div>@urun.UrunAd</div>
-                                <div class="fw-bold">@urun.UrunFiyat ₺</div>
+                        <div class="d-grid gap-2 mb-3">
+                            <button class="btn btn-success action-btn py-2" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                                <i class="bi bi-check-circle-fill"></i> SATIŞI TAMAMLA
                             </button>
                         </div>
-                    }
+                    </div>
+
+                    <!-- İşlem Butonları -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <button class="btn btn-danger action-btn w-100">
+                                <i class="bi bi-x-circle-fill"></i> İPTAL
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-warning action-btn w-100">
+                                <i class="bi bi-pause-fill"></i> BEKLET
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button class="btn btn-primary action-btn w-100" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
+                                <i class="bi bi-plus-circle"></i> ÜRÜN EKLE
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-warning action-btn w-100" data-bs-toggle="modal" data-bs-target="#discountModal">
+                                <i class="bi bi-percent"></i> İSKONTO
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 
+    <!-- Modaller -->
+    <!-- Ürün Ekle Modal -->
     <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
-
                 <form action="/SatisYap/YeniUrun" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
-
-                        <div class="mb-3">
-                            <label for="Barkod" class="form-label">Barkod</label>
-                            <input type="text" name="Barkod" class="form-control" required />
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="Barkod" class="form-label">Barkod</label>
+                                    <input type="text" name="Barkod" class="form-control" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="KategoriID" class="form-label">Kategori</label>
+                                    <select name="KategoriID" class="form-select" required>
+                                        <option disabled selected>Seçin</option>
+                                        @foreach (SelectListItem item in ViewBag.Kategoriler)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="UrunAd" class="form-label">Ürün Adı</label>
+                                    <input type="text" name="UrunAd" class="form-control" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="UrunFiyat" class="form-label">Fiyat</label>
+                                    <input type="text" name="UrunFiyat" class="form-control" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="UrunResmi" class="form-label">Resim</label>
+                                    <input type="file" name="UrunResmiFile" class="form-control" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="Stok" class="form-label">Stok</label>
+                                    <input type="number" name="Stok" class="form-control" required />
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="KategoriID" class="form-label">Ürün Kategorisi</label>
-                            <select name="KategoriID" class="form-select" required>
-                                <option disabled selected>Kategori Seçin</option>
-                                @foreach (SelectListItem item in ViewBag.Kategoriler)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="UrunAd" class="form-label">Ürün Adı</label>
-                            <input type="text" name="UrunAd" class="form-control" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="UrunFiyat" class="form-label">Ürün Fiyatı</label>
-                            <input type="text" name="UrunFiyat" class="form-control" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="UrunResmi" class="form-label">Ürün Resmi</label>
-                            <input type="file" name="UrunResmiFile" class="form-control" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="Stok" class="form-label">Stok</label>
-                            <input type="number" name="Stok" class="form-control" required />
-                        </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">Kaydet</button>
@@ -312,7 +402,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="button" class="btn btn-warning">İskontoyu Uygula</button>
+                    <button type="button" class="btn btn-warning">Uygula</button>
                 </div>
             </div>
         </div>
@@ -348,12 +438,17 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Barkod alanına odaklan
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('.barcode-input').focus();
         });
     </script>
-
-
 </body>
 </html>
+
+
+
+
+
+
+
+

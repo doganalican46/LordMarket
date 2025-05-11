@@ -23,7 +23,6 @@ namespace LordMarket.Controllers
         }
 
 
-        // GET: SatisYap
         public ActionResult Index(string barkod = null)
         {
             var viewModel = new SatisIslemViewModel1
@@ -54,14 +53,13 @@ namespace LordMarket.Controllers
         }
 
 
-
-
         [HttpGet]
         public ActionResult YeniUrun()
         {
             ViewBag.Kategoriler = GetKategoriSelectList();
             return View();
         }
+
 
         [HttpPost]
         public ActionResult YeniUrun(Urunler urun)
@@ -73,19 +71,11 @@ namespace LordMarket.Controllers
                 db.Urunler.Add(urun);
                 db.SaveChanges();
 
-                // Set success message in TempData
-                TempData["SuccessMessage"] = "Ürün başarıyla eklendi!";
-
                 return RedirectToAction("Index");
             }
 
             ViewBag.Kategoriler = GetKategoriSelectList();
             return View(urun);
         }
-
-
-
-
-
     }
 }
