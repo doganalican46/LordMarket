@@ -1,161 +1,193 @@
-﻿﻿@model IEnumerable<LordMarket.Models.Kategoriler>
+﻿@model IEnumerable<LordMarket.Models.Kategoriler>
 @{
-    ViewBag.Title = "Kategoriler";
+    ViewBag.Title = "Kategori Yönetimi";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-
-<h1 class="mt-2">Kategoriler</h1>
-<ol class="breadcrumb mb-4">
-    <li class="breadcrumb-item active">Kategori Listesi</li>
-</ol>
-
-<div class="card shadow-sm border-light rounded " style="max-width: 80%; margin: 20px auto;">
-    <div class="card-header bg-dark text-white text-center">
-        <h3><b>Kategoriler</b></h3>
+<div class="container-fluid px-4">
+    <!-- Başlık ve Breadcrumb -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0"><i class="fas fa-boxes me-2 text-dark"></i>Kategori Yönetimi</h1>
+        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item active">Kategoriler</li>
+            </ol>
+        </nav>
     </div>
 
-    <div class="mt-3 mb-1 d-flex justify-content-end">
-        <div class="btn-group me-2">
-            <button id="exportExcel" class="btn btn-success me-3" title="Excel'e aktar">
-                <i class="fas fa-file-excel"></i>
-            </button>
+    <!-- Ana Kart -->
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <!-- Kart Başlık -->
+        <div class="card-header bg-white border-bottom py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-semibold">Kategori Listesi</h5>
+                <div class="d-flex gap-2">
+                    @*<div class="input-group" style="width: 250px;">
+                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                            <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Kategori ara...">
+                        </div>*@
+                    <div class="btn-group">
+                        <button id="exportExcel" class="btn btn-success btn-sm me-2" title="Excel'e Aktar">
+                            <i class="fas fa-file-excel me-1"></i> Excel
+                        </button>
+                        <button id="exportPDF" class="btn btn-danger btn-sm me-2" title="PDF Oluştur">
+                            <i class="fas fa-file-pdf me-1"></i> PDF
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kategoriEkleModal">
+                            Yeni Kategori Ekle
+                        </button>
+                    </div>
 
-            <button id="exportPDF" class="btn btn-danger" title="PDF'e çevir">
-                <i class="fas fa-file-pdf"></i>
-            </button>
+                </div>
+            </div>
         </div>
 
-        <div class="input-group" style="width: 300px;">
-            <span class="input-group-text"><i class="fas fa-search"></i></span>
-            <input type="text" id="searchInput" class="form-control" placeholder="Ara...">
-        </div>
-    </div>
-
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="DataTable" class="table table-hover text-center align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Kategori</th>
-                        <th>Status</th>
-                        <th>Process</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var kategori in Model)
-                    {
+        <!-- Tablo -->
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="DataTable" class="table table-hover align-middle mb-0" style="min-width: 100%;">
+                    <thead class="table-dark">
                         <tr>
-                            
-                            <td class="text-truncate" style="max-width: 150px;">@kategori.KategoriAd</td>
-                            <td>
-                                <span class="badge @(kategori.Status==true ? "bg-success" : "bg-danger")">@(kategori.Status==true ? "Aktif" : "Pasif")</span>
-                            </td>
-                            <td>
-                                <a href="/Kategori/KategoriGetir/@kategori.ID" class="btn btn-sm btn-warning" title="Güncelle">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a href="/Kategori/KategoriSil/@kategori.ID" class="btn btn-sm btn-danger" onclick="return confirm('Kategoriyi silmek istediğinize emin misiniz?');" title="Sil">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </td>
+                            <th>Kategori Adı</th>
+                            <th width="100px" class="text-center">Durum</th>
+                            <th width="150px" class="text-center">İşlemler</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+                    </thead>
+                    <tbody>
+                        @foreach (var kategori in Model)
+                        {
+                            <tr>
+                                
+                                <td class="fw-semibold">@kategori.KategoriAd</td>
+                                <td>
+                                    <span class="badge @(kategori.Status==true ? "bg-success" : "bg-danger")">@(kategori.Status==true ? "Aktif" : "Pasif")</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="/Kategori/KategoriGetir/@kategori.ID" class="btn btn-sm btn-warning" title="Düzenle">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="/Kategori/KategoriSil/@kategori.ID" class="btn btn-sm btn-danger" onclick="return confirm('Bu kategoriyi silmek istediğinizden emin misiniz?');" title="Sil">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
 
-    <div class="card-footer text-center">
-        <a href="/Kategori/Yenikategori/" class="btn btn-dark">Yeni Kategori Ekle</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
-<script>
-    document.getElementById('exportExcel').addEventListener('click', function () {
-        let table = document.getElementById('DataTable');
-        let wb = XLSX.utils.book_new();
-        let ws = XLSX.utils.table_to_sheet(table);
+@section Scripts {
+    <script>
+        // Excel Export
+        document.getElementById('exportExcel').addEventListener('click', function () {
+            const table = document.getElementById('DataTable');
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Kategoriler" });
+            XLSX.writeFile(wb, `Kategoriler_${new Date().toLocaleDateString()}.xlsx`);
+        });
 
-        let wscols = [];
-        let range = XLSX.utils.decode_range(ws['!ref']);
+        // PDF Export
+        document.getElementById('exportPDF').addEventListener('click', function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm'
+            });
 
-        for (let C = range.s.c; C <= range.e.c; C++) {
-            let maxWidth = 10; // Minimum genişlik
+            // Başlık
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(16);
+            doc.text('Kategori Listesi', 14, 15);
 
-            for (let R = range.s.r; R <= range.e.r; R++) {
-                let cell_address = XLSX.utils.encode_cell({ r: R, c: C });
-                let cell = ws[cell_address];
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text(`Oluşturulma Tarihi: ${new Date().toLocaleDateString()}`, 14, 22);
 
-                if (cell && cell.v) {
-                    let cellLength = cell.v.toString().length;
-                    if (cellLength > maxWidth) {
-                        maxWidth = cellLength + 2;
-                    }
-                }
-            }
-            wscols.push({ wch: maxWidth });
-        }
+            // Tablo verileri
+            const table = document.getElementById('DataTable');
+            const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.innerText.trim());
+            const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => {
+                return Array.from(tr.querySelectorAll('td')).map(td => td.innerText.trim());
+            });
 
-        ws['!cols'] = wscols;
-        XLSX.utils.book_append_sheet(wb, ws, "Contacts");
-        XLSX.writeFile(wb, "KategoriListesiRaporExcel.xlsx");
-    });
+            // PDF oluşturma
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 30,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [41, 128, 185],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                },
+                columnStyles: {
+                    0: { cellWidth: 10 },
+                    1: { cellWidth: 15 },
+                    2: { cellWidth: 'auto' },
+                    3: { cellWidth: 20 },
+                    4: { cellWidth: 15 },
+                    5: { cellWidth: 15 },
+                    6: { cellWidth: 25 }
+                },
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 2,
+                    halign: 'center'
+                },
+                margin: { top: 30 }
+            });
 
+            doc.save(`Kategoriler_${new Date().toLocaleDateString()}.pdf`);
+        });
 
+        // Arama fonksiyonu
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#DataTable tbody tr');
 
-    document.getElementById('exportPDF').addEventListener('click', function () {
-        const { jsPDF } = window.jspdf;
-        let doc = new jsPDF();
-
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        doc.text("AlleySoftware", 20, 20);
-
-        doc.setFont('helvetica', 'normal');
-        let table = document.getElementById('DataTable');
-        let data = [];
-        let headers = [];
-
-        let headerCells = table.querySelectorAll("thead th");
-        headerCells.forEach(header => headers.push(header.innerText.trim() || ''));
-        data.push(headers);
-
-        let rows = table.querySelectorAll("tbody tr");
-        rows.forEach(row => {
-            let rowData = [];
-            let cells = row.querySelectorAll("td");
-            cells.forEach(cell => rowData.push(cell.innerText.trim() || ''));
-            data.push(rowData);
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+            });
         });
 
 
-        doc.autoTable({
-            head: [headers],
-            body: data.slice(1),
-            theme: 'grid',
-            styles: {
-                font: 'helvetica',
-                fontSize: 10,
-                cellPadding: 3,
-                halign: 'center',
-                valign: 'middle',
-                textColor: 0,
-            },
-            headStyles: {
-                fillColor: [255, 255, 255],
-                textColor: 0,
-                fontStyle: 'bold'
-            },
-            bodyStyles: {
-                lineWidth: 0.1,
-                lineColor: [0, 0, 0],
-                fillColor: [255, 255, 255]
-            },
-            margin: { top: 30, left: 10, right: 10, bottom: 10 }
-        });
+    </script>
+}
 
-        doc.save("KategoriListesiRaporPDF.pdf");
-    });
-</script>
 
+
+<!-- Modal -->
+<div class="modal fade" id="kategoriEkleModal" tabindex="-1" aria-labelledby="kategoriEkleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="kategoriEkleModalLabel">Yeni Kategori Ekle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+
+            <form action="/Kategori/YeniKategori" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="KategoriAd" class="form-label">Kategori Adı</label>
+                        <input type="text" name="KategoriAd" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
