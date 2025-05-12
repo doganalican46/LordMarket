@@ -17,7 +17,6 @@ namespace LordMarket.Models
         public int ID { get; set; }
         public Nullable<int> UrunID { get; set; }
         public Nullable<int> SatisIslemID { get; set; }
-        public string OdemeTipi { get; set; }
         public Nullable<decimal> Tutar { get; set; }
         public string SatisTarihi { get; set; }
         public string BosAlan { get; set; }

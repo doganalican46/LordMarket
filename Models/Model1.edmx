@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="GelirGider">
           <Key>
             <PropertyRef Name="ID" />
@@ -57,8 +57,9 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SatisNo" Type="int" />
+          <Property Name="SatisNo" Type="nvarchar" MaxLength="50" />
           <Property Name="ToplamTutar" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="OdemeTipi" Type="nvarchar" MaxLength="50" />
           <Property Name="Tarih" Type="nvarchar" MaxLength="50" />
           <Property Name="BosAlan" Type="nvarchar" MaxLength="500" />
           <Property Name="Status" Type="bit" />
@@ -70,7 +71,6 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UrunID" Type="int" />
           <Property Name="SatisIslemID" Type="int" />
-          <Property Name="OdemeTipi" Type="nvarchar" MaxLength="100" />
           <Property Name="Tutar" Type="decimal" Precision="18" Scale="2" />
           <Property Name="SatisTarihi" Type="nvarchar" MaxLength="50" />
           <Property Name="BosAlan" Type="nvarchar" MaxLength="500" />
@@ -142,6 +142,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="SatisYap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OdemeTipi" Type="nvarchar" Mode="In" />
+          <Parameter Name="Tarih" Type="datetime" Mode="In" />
+        </Function>
         <EntityContainer Name="LordMarketDBModelStoreContainer">
           <EntitySet Name="GelirGider" EntityType="Self.GelirGider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Kategoriler" EntityType="Self.Kategoriler" Schema="dbo" store:Type="Tables" />
@@ -167,7 +171,8 @@
             <End Role="Urunler" EntitySet="Urunler" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LordMarketDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -225,8 +230,9 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SatisNo" Type="Int32" />
+          <Property Name="SatisNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ToplamTutar" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="OdemeTipi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Tarih" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Boolean" />
@@ -240,7 +246,6 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UrunID" Type="Int32" />
           <Property Name="SatisIslemID" Type="Int32" />
-          <Property Name="OdemeTipi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Tutar" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="SatisTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
@@ -263,10 +268,10 @@
           <Property Name="EklenmeTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="GuncellenmeTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="HizliUrunMu" Type="Boolean" />
           <Property Name="Status" Type="Boolean" />
           <NavigationProperty Name="Kategoriler" Relationship="Self.FK_Urunler_Kategoriler" FromRole="Urunler" ToRole="Kategoriler" />
           <NavigationProperty Name="Satislar" Relationship="Self.FK_Satislar_Urunler" FromRole="Urunler" ToRole="Satislar" />
-          <Property Name="HizliUrunMu" Type="Boolean" />
         </EntityType>
         <Association Name="FK_Urunler_Kategoriler">
           <End Role="Kategoriler" Type="Self.Kategoriler" Multiplicity="0..1" />
@@ -340,6 +345,10 @@
             <End Role="Urunler" EntitySet="Urunler" />
             <End Role="Satislar" EntitySet="Satislar" />
           </AssociationSet>
+          <FunctionImport Name="SatisYap">
+            <Parameter Name="OdemeTipi" Mode="In" Type="String" />
+            <Parameter Name="Tarih" Mode="In" Type="DateTime" />
+          </FunctionImport>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -404,6 +413,7 @@
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="SatisNo" ColumnName="SatisNo" />
                 <ScalarProperty Name="ToplamTutar" ColumnName="ToplamTutar" />
+                <ScalarProperty Name="OdemeTipi" ColumnName="OdemeTipi" />
                 <ScalarProperty Name="Tarih" ColumnName="Tarih" />
                 <ScalarProperty Name="BosAlan" ColumnName="BosAlan" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -416,7 +426,6 @@
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="UrunID" ColumnName="UrunID" />
                 <ScalarProperty Name="SatisIslemID" ColumnName="SatisIslemID" />
-                <ScalarProperty Name="OdemeTipi" ColumnName="OdemeTipi" />
                 <ScalarProperty Name="Tutar" ColumnName="Tutar" />
                 <ScalarProperty Name="SatisTarihi" ColumnName="SatisTarihi" />
                 <ScalarProperty Name="BosAlan" ColumnName="BosAlan" />
@@ -427,7 +436,6 @@
           <EntitySetMapping Name="Urunler">
             <EntityTypeMapping TypeName="LordMarketDBModel.Urunler">
               <MappingFragment StoreEntitySet="Urunler">
-                <ScalarProperty Name="HizliUrunMu" ColumnName="HizliUrunMu" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Barkod" ColumnName="Barkod" />
                 <ScalarProperty Name="KategoriID" ColumnName="KategoriID" />
@@ -439,10 +447,12 @@
                 <ScalarProperty Name="EklenmeTarihi" ColumnName="EklenmeTarihi" />
                 <ScalarProperty Name="GuncellenmeTarihi" ColumnName="GuncellenmeTarihi" />
                 <ScalarProperty Name="BosAlan" ColumnName="BosAlan" />
+                <ScalarProperty Name="HizliUrunMu" ColumnName="HizliUrunMu" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SatisYap" FunctionName="LordMarketDBModel.Store.SatisYap" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

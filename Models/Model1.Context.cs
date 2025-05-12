@@ -12,6 +12,8 @@ namespace LordMarket.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class LordMarketDBEntities : DbContext
     {
@@ -32,5 +34,18 @@ namespace LordMarket.Models
         public virtual DbSet<SatisIslem> SatisIslem { get; set; }
         public virtual DbSet<Satislar> Satislar { get; set; }
         public virtual DbSet<Urunler> Urunler { get; set; }
+    
+        public virtual int SatisYap(string odemeTipi, Nullable<System.DateTime> tarih)
+        {
+            var odemeTipiParameter = odemeTipi != null ?
+                new ObjectParameter("OdemeTipi", odemeTipi) :
+                new ObjectParameter("OdemeTipi", typeof(string));
+    
+            var tarihParameter = tarih.HasValue ?
+                new ObjectParameter("Tarih", tarih) :
+                new ObjectParameter("Tarih", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SatisYap", odemeTipiParameter, tarihParameter);
+        }
     }
 }

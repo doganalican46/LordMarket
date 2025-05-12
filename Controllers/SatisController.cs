@@ -73,7 +73,6 @@ namespace LordMarket.Controllers
 
                 Satis.UrunID = y.UrunID;
                 Satis.SatisIslemID = y.SatisIslemID;
-                Satis.OdemeTipi = y.OdemeTipi;
                 Satis.Tutar = y.Tutar;
                 Satis.SatisTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
 

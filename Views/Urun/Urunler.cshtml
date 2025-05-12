@@ -54,6 +54,8 @@
                             <th width="60px" class="text-center">Barkod</th>
                             <th width="80px">Resim</th>
                             <th>Ürün Adı</th>
+
+                            <th>Kategori</th>
                             <th width="120px" class="text-end">Fiyat</th>
                             <th width="100px" class="text-center">Stok</th>
                             <th width="100px" class="text-center">Durum</th>
@@ -77,6 +79,8 @@
                                     </div>
                                 </td>
                                 <td class="fw-semibold">@urun.UrunAd</td>
+
+                                <td class="fw-semibold">@urun.KategoriID</td>
                                 <td class="text-end">@urun.UrunFiyat ₺</td>
                                 <td class="text-center">
                                     <span class="badge @(urun.Stok > 0 ? "bg-success" : "bg-secondary") rounded-pill">
