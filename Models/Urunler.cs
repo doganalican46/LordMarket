@@ -24,7 +24,10 @@ namespace LordMarket.Models
         public string Barkod { get; set; }
         public Nullable<int> KategoriID { get; set; }
         public string UrunAd { get; set; }
+        public string Adet { get; set; }
+
         public string UrunFiyat { get; set; }
+
         public string UrunResmi { get; set; }
         public string KDVOran { get; set; }
         public Nullable<int> Stok { get; set; }

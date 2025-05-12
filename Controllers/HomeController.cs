@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 
@@ -23,7 +24,7 @@ namespace LordMarket.Controllers
         }
 
 
-        public ActionResult Index(string barkod = null)
+        public ActionResult Index()
         {
             var viewModel = new SatisIslemViewModel1
             {
@@ -77,5 +78,29 @@ namespace LordMarket.Controllers
             ViewBag.Kategoriler = GetKategoriSelectList();
             return View(urun);
         }
+
+        [HttpPost]
+        public JsonResult BarkodAra(string barkod)
+        {
+            var urun = db.Urunler.FirstOrDefault(u => u.Barkod == barkod);
+            if (urun != null)
+            {
+                return Json(new
+                {
+                    success = true,
+                    urun = new
+                    {
+                        ID = urun.ID,
+                        UrunAd = urun.UrunAd,
+                        UrunFiyat = urun.UrunFiyat
+                    }
+                });
+            }
+            return Json(new { success = false });
+        }
+
+
+
+
     }
 }
