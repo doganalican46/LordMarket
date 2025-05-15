@@ -14,14 +14,13 @@ namespace LordMarket.Controllers
         // Listeleme
         public ActionResult Urunler()
         {
-            ViewBag.Kategoriler = GetKategoriSelectList();
+            //ViewBag.Kategoriler = GetKategoriSelectList();
             var urunler = db.Urunler.ToList();
             return View(urunler);
         }
 
         public ActionResult HizliUrunler()
         {
-            ViewBag.Kategoriler = GetKategoriSelectList();
             var urunler = db.Urunler.Where(m=>m.HizliUrunMu==true).ToList();
             return View(urunler);
         }
@@ -30,7 +29,6 @@ namespace LordMarket.Controllers
         [HttpGet]
         public ActionResult YeniUrun()
         {
-            ViewBag.Kategoriler = GetKategoriSelectList();
             return View();
         }
 
@@ -47,7 +45,6 @@ namespace LordMarket.Controllers
                 return RedirectToAction("Urunler");
             }
 
-            ViewBag.Kategoriler = GetKategoriSelectList();
             return View(urun);
         }
 
@@ -69,7 +66,6 @@ namespace LordMarket.Controllers
             var urun = db.Urunler.Find(id);
             if (urun == null) return HttpNotFound();
 
-            ViewBag.Kategoriler = GetKategoriSelectList();
             return View(urun);
         }
 
@@ -83,7 +79,6 @@ namespace LordMarket.Controllers
                 if (urun == null) return HttpNotFound();
 
                 urun.Barkod = y.Barkod;
-                urun.KategoriID = y.KategoriID;
                 urun.UrunAd = y.UrunAd;
                 urun.UrunFiyat = y.UrunFiyat;
                 urun.UrunResmi = y.UrunResmi;
@@ -98,7 +93,6 @@ namespace LordMarket.Controllers
                 return RedirectToAction("Urunler");
             }
 
-            ViewBag.Kategoriler = GetKategoriSelectList();
             return View("UrunGetir", y);
         }
 
@@ -121,16 +115,16 @@ namespace LordMarket.Controllers
 
 
         // Kategorileri dropdown için getirir
-        private List<SelectListItem> GetKategoriSelectList()
-        {
-            return db.Kategoriler
-                .Where(k => k.Status == true)
-                .Select(k => new SelectListItem
-                {
-                    Text = k.KategoriAd,
-                    Value = k.ID.ToString()
-                }).ToList();
-        }
+        //private List<SelectListItem> GetKategoriSelectList()
+        //{
+        //    return db.Kategoriler
+        //        .Where(k => k.Status == true)
+        //        .Select(k => new SelectListItem
+        //        {
+        //            Text = k.KategoriAd,
+        //            Value = k.ID.ToString()
+        //        }).ToList();
+        //}
 
     }
 }

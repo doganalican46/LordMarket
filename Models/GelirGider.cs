@@ -18,7 +18,7 @@ namespace LordMarket.Models
         public string Tur { get; set; }
         public Nullable<decimal> Tutar { get; set; }
         public string Notlar { get; set; }
-        public string Tarih { get; set; }
+        public Nullable<System.DateTime> Tarih { get; set; }
         public string BosAlan { get; set; }
         public Nullable<bool> Status { get; set; }
     }

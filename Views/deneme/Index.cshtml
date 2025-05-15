@@ -1,0 +1,232 @@
+﻿@model LordMarket.Controllers.denemeController.SatisIslemViewModel1
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Barkodlu Satış</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <h2>Barkodlu Satış Ekranı</h2>
+
+    <label>Barkod Girin:</label>
+    <input type="text" id="barkodInput" placeholder="Barkod okutunuz" class="form-control" />
+
+    <button onclick="barkodAra()">Ekle</button>
+
+    <hr />
+
+    <table border="1" id="urunListesi">
+        <thead>
+            <tr>
+                <th>Ürün Adı</th>
+                <th>Fiyat</th>
+                <th>Adet</th>
+                <th>Toplam</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h3>Genel Toplam: <span id="toplamFiyat">0</span> ₺</h3>
+
+    <label>Ödeme Tipi:</label>
+    <select id="odemeTipi">
+        <option value="Nakit">Nakit</option>
+        <option value="Kart">Kart</option>
+        <option value="Veresiye">Veresiye</option>
+    </select>
+
+    <button onclick="satisYap()">Satış Yap</button>
+
+
+
+    <br /> <br />
+
+    <h3>Hızlı Ürünler</h3>
+    <div id="hizliUrunler" style="display: flex; flex-wrap: wrap; gap: 10px;">
+        @foreach (var item in Model.HizliUrunler)
+        {
+            <button class="btn btn-warning"
+                    onclick="hizliUrunEkle('@item.Barkod')"
+                    style="min-width: 100px; margin:5px;">
+                @item.UrunAd <br />
+                @item.UrunFiyat ₺
+            </button>
+        }
+    </div>
+
+
+
+
+
+    <script>
+        var toplam = 0;
+
+        function updateGenelToplam() {
+            let toplamYeni = 0;
+            $('#urunListesi tbody tr').each(function () {
+                let satirToplam = parseFloat($(this).find('.satirToplam').text());
+                toplamYeni += satirToplam;
+            });
+            toplam = toplamYeni;
+            $('#toplamFiyat').text(toplam.toFixed(2));
+        }
+
+        function barkodAra() {
+            var barkod = $('#barkodInput').val();
+            if (barkod.trim() === "") return;
+
+            // Aynı barkoddan varsa sadece adet artır
+            let mevcutSatir = $(`#urunListesi tbody tr[data-barkod='${barkod}']`);
+            if (mevcutSatir.length > 0) {
+                let adetCell = mevcutSatir.find('.adet');
+                let yeniAdet = parseInt(adetCell.text()) + 1;
+                adetCell.text(yeniAdet);
+
+                let fiyat = parseFloat(mevcutSatir.find('.fiyat').text());
+                mevcutSatir.find('.satirToplam').text((yeniAdet * fiyat).toFixed(2));
+
+                updateGenelToplam();
+                $('#barkodInput').val("").focus();
+                return;
+            }
+
+            // Ajax ile ürün bilgisi al
+            $.ajax({
+                url: '/deneme/BarkodAra',
+                type: 'POST',
+                data: { barkod: barkod },
+                success: function (res) {
+                    if (res.success) {
+                        let toplamSatir = res.fiyat;
+
+                        $('#urunListesi tbody').append(
+                            `<tr data-barkod="${barkod}">
+                                                        <td>${res.urunAd}</td>
+                                                        <td class="fiyat">${res.fiyat}</td>
+                                                        <td class="adet">1</td>
+                                                        <td class="satirToplam">${toplamSatir}</td>
+                                                        <td>
+                                                            <button onclick="adetDegistir(this, 1)">+</button>
+                                                            <button onclick="adetDegistir(this, -1)">-</button>
+                                                            <button onclick="sil(this)">Sil</button>
+                                                        </td>
+                                                    </tr>`
+                        );
+                        updateGenelToplam();
+                        $('#barkodInput').val("").focus();
+                    } else {
+                        alert("Ürün bulunamadı.");
+                        $('#barkodInput').val("").focus();
+                    }
+                },
+                error: function () {
+                    alert("Bir hata oluştu.");
+                }
+            });
+        }
+
+        function adetDegistir(btn, degisim) {
+            let satir = $(btn).closest('tr');
+            let adetCell = satir.find('.adet');
+            let adet = parseInt(adetCell.text());
+
+            adet += degisim;
+            if (adet < 1) return;
+
+            adetCell.text(adet);
+
+            let fiyat = parseFloat(satir.find('.fiyat').text());
+            satir.find('.satirToplam').text((adet * fiyat).toFixed(2));
+
+            updateGenelToplam();
+        }
+
+        function sil(btn) {
+            $(btn).closest('tr').remove();
+            updateGenelToplam();
+        }
+
+        // Enter tuşu ile ekleme
+        $('#barkodInput').keypress(function (e) {
+            if (e.which == 13) {
+                barkodAra();
+                e.preventDefault();
+            }
+        });
+
+        function satisYap() {
+            let odemeTipi = $('#odemeTipi').val();
+            let toplamTutar = toplam;
+            let urunlerText = '';
+
+            $('#urunListesi tbody tr').each(function () {
+                let urunAd = $(this).find('td:eq(0)').text();
+                let adet = $(this).find('.adet').text();
+                let fiyat = $(this).find('.fiyat').text();
+                urunlerText += `${urunAd} - ${adet} Adet - ${fiyat}₺\n`;
+            });
+
+            $.ajax({
+                url: '/deneme/SatisYap',
+                type: 'POST',
+                data: {
+                    OdemeTipi: odemeTipi,
+                    ToplamTutar: toplamTutar,
+                    UrunListesi: urunlerText
+                },
+                success: function (res) {
+                    if (res.success) {
+                        alert("Satış tamamlandı!");
+                        $('#urunListesi tbody').empty();
+                        $('#toplamFiyat').text("0");
+                        toplam = 0;
+                    } else {
+                        alert("Hata: " + res.message);
+                    }
+                },
+                error: function () {
+                    alert("Satış işlemi sırasında hata oluştu.");
+                }
+            });
+        }
+
+
+
+        function hizliUrunEkle(barkod) {
+            $('#barkodInput').val(barkod);
+            barkodEkle(); // Var olan fonksiyonu çağırıyoruz
+        }
+
+
+
+        $(document).ready(function () {
+            $('#barkodInput').on('keypress', function (e) {
+                if (e.which == 13) { // Enter tuşu (barkod okuyucular genelde bunu yollar)
+                    e.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
+                    barkodEkle(); // Direkt ürünü ekle
+                }
+            });
+        });
+
+        $('#barkodInput').val('').focus();
+
+
+
+
+
+    </script>
+
+
+
+
+</body>
+</html>

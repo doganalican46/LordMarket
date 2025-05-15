@@ -28,11 +28,9 @@ namespace LordMarket.Models
         }
     
         public virtual DbSet<GelirGider> GelirGider { get; set; }
-        public virtual DbSet<Kategoriler> Kategoriler { get; set; }
         public virtual DbSet<Kullanicilar> Kullanicilar { get; set; }
         public virtual DbSet<Musteriler> Musteriler { get; set; }
         public virtual DbSet<SatisIslem> SatisIslem { get; set; }
-        public virtual DbSet<Satislar> Satislar { get; set; }
         public virtual DbSet<Urunler> Urunler { get; set; }
     
         public virtual int SatisYap(string odemeTipi, Nullable<System.DateTime> tarih)

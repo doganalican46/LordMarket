@@ -14,9 +14,7 @@ namespace LordMarket.Controllers
         public class SatisIslemViewModel
         {
             public List<GelirGider> GelirGider { get; set; }
-            public List<Kategoriler> Kategoriler { get; set; }
             public List<Musteriler> Musteriler { get; set; }
-            public List<Satislar> Satislar { get; set; }
             public List<SatisIslem> SatisIslem { get; set; }
             public List<Urunler> Urunler { get; set; }
 
@@ -29,30 +27,17 @@ namespace LordMarket.Controllers
             var viewModel = new SatisIslemViewModel
             {
                 GelirGider = db.GelirGider.Where(h => h.Status == true).ToList(),
-                Kategoriler = db.Kategoriler.Where(h => h.Status == true).ToList(),
                 Musteriler = db.Musteriler.Where(h => h.Status == true).ToList(),
-                Satislar = db.Satislar.Where(h => h.Status == true).ToList(),
                 SatisIslem = db.SatisIslem.Where(h => h.Status == true).ToList(),
                 Urunler = db.Urunler.Where(h => h.Status == true).ToList()
             };
 
-            ViewBag.Kategoriler = GetKategoriSelectList();
 
 
             return View(viewModel); // Eksik olan kısım burasıydı
         }
 
 
-        private List<SelectListItem> GetKategoriSelectList()
-        {
-            return db.Kategoriler
-                .Where(k => k.Status == true)
-                .Select(k => new SelectListItem
-                {
-                    Text = k.KategoriAd,
-                    Value = k.ID.ToString()
-                }).ToList();
-        }
 
 
 
@@ -66,7 +51,6 @@ namespace LordMarket.Controllers
         [HttpGet]
         public ActionResult YeniUrun()
         {
-            ViewBag.Kategoriler = GetKategoriSelectList();
             return View();
         }
 
@@ -86,7 +70,6 @@ namespace LordMarket.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Kategoriler = GetKategoriSelectList();
             return View(urun);
         }
 

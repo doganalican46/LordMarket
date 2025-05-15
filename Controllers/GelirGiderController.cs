@@ -32,7 +32,7 @@ namespace LordMarket.Controllers
             if (ModelState.IsValid)
             {
                 GelirGider.Status = true;
-                GelirGider.Tarih =DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                GelirGider.Tarih =DateTime.Now;
                 db.GelirGider.Add(GelirGider);
                 db.SaveChanges();
                 return RedirectToAction("GelirGider");

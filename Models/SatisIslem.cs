@@ -14,24 +14,16 @@ namespace LordMarket.Models
     
     public partial class SatisIslem
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public SatisIslem()
-        {
-            this.Musteriler = new HashSet<Musteriler>();
-            this.Satislar = new HashSet<Satislar>();
-        }
-    
         public int ID { get; set; }
-        public string SatisNo { get; set; }
+        public Nullable<int> SatisNo { get; set; }
         public Nullable<decimal> ToplamTutar { get; set; }
         public string OdemeTipi { get; set; }
-        public string Tarih { get; set; }
+        public Nullable<System.DateTime> Tarih { get; set; }
+        public string UrunListesi { get; set; }
+        public Nullable<int> MusteriID { get; set; }
         public string BosAlan { get; set; }
         public Nullable<bool> Status { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Musteriler> Musteriler { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Satislar> Satislar { get; set; }
+        public virtual Musteriler Musteriler { get; set; }
     }
 }

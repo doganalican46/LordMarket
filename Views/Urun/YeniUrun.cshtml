@@ -18,10 +18,7 @@
                 <input type="text" id="Barkod" name="Barkod" class="form-control" placeholder="Barkod okutun" required />
             </div>
 
-            <div class="mb-3">
-                <label for="KategoriID" class="form-label fw-semibold">Ürün Kategorisi</label>
-                @Html.DropDownListFor(m => m.KategoriID, ViewBag.Kategoriler as List<SelectListItem>, "Kategori Seçin", new { @class = "form-select" })
-            </div>
+    
 
             <div class="mb-3">
                 <label for="UrunAd" class="form-label fw-semibold">Ürün Adı</label>

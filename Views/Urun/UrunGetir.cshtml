@@ -19,10 +19,7 @@
                 @Html.TextBoxFor(k => k.Barkod, new { @class = "form-control", id = "Barkod", required = "required", placeholder = "Barkod" })
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Ürün Kategorisi:</label>
-                @Html.DropDownListFor(k => k.KategoriID, (List<SelectListItem>)ViewBag.Kategoriler, new { @class = "form-select" })
-            </div>
+
 
             <div class="mb-3">
                 <label>Ürün Adı:</label>

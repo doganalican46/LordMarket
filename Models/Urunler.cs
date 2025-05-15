@@ -14,20 +14,10 @@ namespace LordMarket.Models
     
     public partial class Urunler
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Urunler()
-        {
-            this.Satislar = new HashSet<Satislar>();
-        }
-    
         public int ID { get; set; }
         public string Barkod { get; set; }
-        public Nullable<int> KategoriID { get; set; }
         public string UrunAd { get; set; }
-        public string Adet { get; set; }
-
         public string UrunFiyat { get; set; }
-
         public string UrunResmi { get; set; }
         public string KDVOran { get; set; }
         public Nullable<int> Stok { get; set; }
@@ -36,9 +26,5 @@ namespace LordMarket.Models
         public string BosAlan { get; set; }
         public Nullable<bool> HizliUrunMu { get; set; }
         public Nullable<bool> Status { get; set; }
-    
-        public virtual Kategoriler Kategoriler { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Satislar> Satislar { get; set; }
     }
 }

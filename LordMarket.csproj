@@ -129,11 +129,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\denemeController.cs" />
     <Compile Include="Controllers\GelirGiderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\KategoriController.cs" />
     <Compile Include="Controllers\MusteriController.cs" />
-    <Compile Include="Controllers\SatisController.cs" />
     <Compile Include="Controllers\SatisIslemController.cs" />
     <Compile Include="Controllers\SatisYapController.cs" />
     <Compile Include="Controllers\UrunController.cs" />
@@ -142,9 +141,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\GelirGider.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Kategoriler.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Kullanicilar.cs">
@@ -169,9 +165,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SatisIslem.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Satislar.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Urunler.cs">
@@ -269,9 +262,6 @@
     <Content Include="Views\Urun\Urunler.cshtml" />
     <Content Include="Views\Urun\YeniUrun.cshtml" />
     <Content Include="Views\Urun\UrunGetir.cshtml" />
-    <Content Include="Views\Kategori\Kategoriler.cshtml" />
-    <Content Include="Views\Kategori\YeniKategori.cshtml" />
-    <Content Include="Views\Kategori\KategoriGetir.cshtml" />
     <Content Include="Views\Musteri\Musteriler.cshtml" />
     <Content Include="Views\Musteri\YeniMusteri.cshtml" />
     <Content Include="Views\Musteri\MusteriGetir.cshtml" />
@@ -281,11 +271,9 @@
     <Content Include="Views\User\Kullanici.cshtml" />
     <Content Include="Views\User\YeniKullanici.cshtml" />
     <Content Include="Views\User\KullaniciGetir.cshtml" />
-    <Content Include="Views\Satis\Satis.cshtml" />
-    <Content Include="Views\Satis\YeniSatis.cshtml" />
-    <Content Include="Views\Satis\SatisGetir.cshtml" />
     <Content Include="Views\SatisYap\Index.cshtml" />
     <Content Include="Views\Urun\HizliUrunler.cshtml" />
+    <Content Include="Views\deneme\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
