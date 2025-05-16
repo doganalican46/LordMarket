@@ -168,7 +168,14 @@
             let toplamTutar = toplam;
             let urunlerText = '';
 
-            $('#urunListesi tbody tr').each(function () {
+            // Ürün satırı sayısını kontrol et
+            let urunSatirlari = $('#urunListesi tbody tr');
+            if (urunSatirlari.length === 0) {
+                alert("Ürün listesi boş! Lütfen önce ürün ekleyin.");
+                return; // İşlem devam etmesin
+            }
+
+            urunSatirlari.each(function () {
                 let urunAd = $(this).find('td:eq(0)').text();
                 let adet = $(this).find('.adet').text();
                 let fiyat = $(this).find('.fiyat').text();
@@ -201,10 +208,12 @@
 
 
 
+
         function hizliUrunEkle(barkod) {
             $('#barkodInput').val(barkod);
-            barkodEkle(); // Var olan fonksiyonu çağırıyoruz
+            barkodAra(); // doğru fonksiyon
         }
+
 
 
 
