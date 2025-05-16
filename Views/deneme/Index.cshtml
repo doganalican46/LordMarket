@@ -68,6 +68,17 @@
         }
     </div>
 
+    <h3>Barkodsuz Ürün Satış</h3>
+    <label>Ürün Adı:</label>
+    <input type="text" id="digerUrunAd" class="form-control" placeholder="Ürün adı (isteğe bağlı)" />
+
+    <label>Fiyat:</label>
+    <input type="number" step="0.01" id="digerUrunFiyat" class="form-control" placeholder="Fiyat girin" />
+
+    <button onclick="digerUrunEkle()">Diğer Ürün Ekle</button>
+
+
+
     <script>
         var toplam = 0;
 
@@ -106,17 +117,17 @@
                 success: function (res) {
                     if (res.success) {
                         $('#urunListesi tbody').append(`
-                                    <tr data-barkod="${barkod}">
-                                        <td>${res.urunAd}</td>
-                                        <td class="fiyat">${res.fiyat}</td>
-                                        <td class="adet">1</td>
-                                        <td class="satirToplam">${res.fiyat}</td>
-                                        <td>
-                                            <button onclick="adetDegistir(this, 1)">+</button>
-                                            <button onclick="adetDegistir(this, -1)">-</button>
-                                            <button onclick="sil(this)">Sil</button>
-                                        </td>
-                                    </tr>`);
+                                                <tr data-barkod="${barkod}">
+                                                    <td>${res.urunAd}</td>
+                                                    <td class="fiyat">${res.fiyat}</td>
+                                                    <td class="adet">1</td>
+                                                    <td class="satirToplam">${res.fiyat}</td>
+                                                    <td>
+                                                        <button onclick="adetDegistir(this, 1)">+</button>
+                                                        <button onclick="adetDegistir(this, -1)">-</button>
+                                                        <button onclick="sil(this)">Sil</button>
+                                                    </td>
+                                                </tr>`);
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
                     } else {
@@ -150,6 +161,12 @@
         }
 
         function satisYap() {
+            // Eğer tabloda hiç ürün yoksa uyarı ver
+            if ($('#urunListesi tbody tr').length === 0) {
+                alert("Lütfen ürün ekleyin.");
+                return;
+            }
+
             let odemeTipi = $('#odemeTipi').val();
             let toplamTutar = toplam;
             let musteriId = odemeTipi === "Veresiye" ? $('#MusteriID').val() : null;
@@ -210,6 +227,46 @@
 
             $('#barkodInput').val('').focus();
         });
+
+        function digerUrunEkle() {
+            var urunAd = $('#digerUrunAd').val().trim();
+            var fiyat = parseFloat($('#digerUrunFiyat').val());
+
+            if (isNaN(fiyat) || fiyat <= 0) {
+                alert("Geçerli bir fiyat giriniz.");
+                return;
+            }
+
+            if (urunAd === "") {
+                urunAd = "Diğer Ürün";
+            }
+
+            var barkod = "diger-" + new Date().getTime(); // benzersiz barkod üret
+
+            $('#urunListesi tbody').append(`
+            <tr data-barkod="${barkod}">
+                <td>${urunAd}</td>
+                <td class="fiyat">${fiyat.toFixed(2)}</td>
+                <td class="adet">1</td>
+                <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                <td>
+                    <button onclick="adetDegistir(this, 1)">+</button>
+                    <button onclick="adetDegistir(this, -1)">-</button>
+                    <button onclick="sil(this)">Sil</button>
+                </td>
+            </tr>
+        `);
+
+            updateGenelToplam();
+
+            $('#digerUrunAd').val('');
+            $('#digerUrunFiyat').val('');
+        }
+
+
+
+
+
     </script>
 </body>
 </html>

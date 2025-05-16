@@ -1,0 +1,45 @@
+﻿@model LordMarket.Models.LordMarketDBEntities
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fiş</title>
+    <style>
+        body {
+            font-family: Arial;
+            font-size: 14px;
+        }
+
+        .fis {
+            width: 300px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body onload="window.print(); window.close();">
+    <div class="fis">
+        <h3>Fiş</h3>
+        <p><strong>Satış No:</strong> @Model.ID</p>
+        <p><strong>Tarih:</strong> @Model.Tarih.ToString("g")</p>
+        <p><strong>Ödeme Tipi:</strong> @Model.OdemeTipi</p>
+
+        <table style="width:100%; border-collapse: collapse;" border="1">
+            <tr>
+                <th>Ürün</th>
+                <th>Adet</th>
+                <th>Fiyat</th>
+            </tr>
+            @foreach (var item in Model.SatisDetaylar)
+            {
+                <tr>
+                    <td>@item.UrunAdi</td>
+                    <td>@item.Adet</td>
+                    <td>@item.Fiyat ₺</td>
+                </tr>
+            }
+        </table>
+
+        <p><strong>Toplam:</strong> @Model.Toplam ₺</p>
+    </div>
+</body>
+</html>

@@ -274,6 +274,7 @@
     <Content Include="Views\SatisYap\Index.cshtml" />
     <Content Include="Views\Urun\HizliUrunler.cshtml" />
     <Content Include="Views\deneme\Index.cshtml" />
+    <Content Include="Views\deneme\FisYazdir.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
