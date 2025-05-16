@@ -36,14 +36,6 @@ namespace LordMarket.Controllers
 
             };
 
-            ViewBag.MusteriListesi = db.Musteriler
-            .Select(m => new
-            {
-                ID = m.ID,
-                MusteriAdSoyad = m.MusteriAdSoyad
-            })
-            .ToList();
-
             return View(viewModel);
         }
 
@@ -68,15 +60,8 @@ namespace LordMarket.Controllers
 
 
         [HttpPost]
-        public JsonResult SatisYap(string OdemeTipi, decimal ToplamTutar, string UrunListesi, int? MusteriID)
+        public JsonResult SatisYap(string OdemeTipi, decimal ToplamTutar, string UrunListesi)
         {
-            ViewBag.MusteriListesi = db.Musteriler
-            .Select(m => new
-            {
-                ID = m.ID,
-                MusteriAdSoyad = m.MusteriAdSoyad
-            })
-            .ToList();
             try
             {
                 SatisIslem yeniSatis = new SatisIslem
@@ -85,26 +70,12 @@ namespace LordMarket.Controllers
                     OdemeTipi = OdemeTipi,
                     UrunListesi = UrunListesi,
                     Tarih = DateTime.Now,
-                    Status = true,
-                    MusteriID = MusteriID
+                    Status = true
                 };
 
                 db.SatisIslem.Add(yeniSatis);
-
-                // Veresiye işlemi ise müşteriye borç yaz ve notları güncelle
-                if (OdemeTipi == "Veresiye" && MusteriID.HasValue)
-                {
-                    var musteri = db.Musteriler.FirstOrDefault(m => m.ID == MusteriID.Value && m.Status == true);
-                    if (musteri != null)
-                    {
-                        musteri.ToplamBorc += ToplamTutar;
-                        musteri.Notlar += "\n" + UrunListesi;
-                        musteri.SonGuncellenmeTarihi = DateTime.Now;
-                        db.Entry(musteri).State = System.Data.Entity.EntityState.Modified;
-                    }
-                }
-
                 db.SaveChanges();
+
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -112,8 +83,6 @@ namespace LordMarket.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-
-
 
 
 

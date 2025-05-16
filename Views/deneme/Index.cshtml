@@ -1,4 +1,5 @@
-﻿@model LordMarket.Controllers.denemeController.SatisIslemViewModel1
+﻿﻿@model LordMarket.Controllers.denemeController.SatisIslemViewModel1
+
 @{
     Layout = null;
 }
@@ -10,14 +11,13 @@
     <title>Barkodlu Satış</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-
-
 <body>
 
     <h2>Barkodlu Satış Ekranı</h2>
 
     <label>Barkod Girin:</label>
     <input type="text" id="barkodInput" placeholder="Barkod okutunuz" class="form-control" />
+
     <button onclick="barkodAra()">Ekle</button>
 
     <hr />
@@ -37,113 +37,38 @@
 
     <h3>Genel Toplam: <span id="toplamFiyat">0</span> ₺</h3>
 
-    <h3>Ödeme Tipi:</h3>
-    <div id="odemeButonlari">
-        <button class="odeme-btn" data-tip="Nakit" onclick="odemeSec(this)">Nakit</button>
-        <button class="odeme-btn" data-tip="Kart" onclick="odemeSec(this)">Kart</button>
-        <button class="odeme-btn" data-tip="Veresiye" onclick="odemeSec(this)">Veresiye</button>
-    </div>
-
-    <div id="musteriSecimAlani" style="display:none; margin-top:10px;">
-        <label>Müşteri Seçin</label>
-        <select id="MusteriID" name="MusteriID" class="form-control">
-            <option value="">Müşteri Seçiniz</option>
-            @foreach (var m in Model.Musteriler)
-            {
-                <option value="@m.ID">@m.MusteriAdSoyad</option>
-            }
-        </select>
-    </div>
-
-
-
-
+    <label>Ödeme Tipi:</label>
+    <select id="odemeTipi">
+        <option value="Nakit">Nakit</option>
+        <option value="Kart">Kart</option>
+        <option value="Veresiye">Veresiye</option>
+    </select>
 
     <button onclick="satisYap()">Satış Yap</button>
-    <button id="temizleBtn" class="btn btn-danger mt-3">Temizle</button>
 
-    <br /><br />
+
+
+    <br /> <br />
 
     <h3>Hızlı Ürünler</h3>
     <div id="hizliUrunler" style="display: flex; flex-wrap: wrap; gap: 10px;">
         @foreach (var item in Model.HizliUrunler)
         {
-            <button class="btn btn-warning" onclick="hizliUrunEkle('@item.Barkod')" style="min-width: 100px; margin:5px;">
+            <button class="btn btn-warning"
+                    onclick="hizliUrunEkle('@item.Barkod')"
+                    style="min-width: 100px; margin:5px;">
                 @item.UrunAd <br />
                 @item.UrunFiyat ₺
             </button>
         }
     </div>
 
-    <h3>Barkodsuz Ürün Satış</h3>
-    <label>Ürün Adı:</label>
-    <input type="text" id="digerUrunAd" class="form-control" placeholder="Ürün adı (isteğe bağlı)" />
 
-    <label>Fiyat:</label>
-    <input type="number" step="0.01" id="digerUrunFiyat" class="form-control" placeholder="Fiyat girin" />
-
-    <button onclick="digerUrunEkle()">Diğer Ürün Ekle</button>
 
 
 
     <script>
         var toplam = 0;
-        let seciliOdemeTipi = "Nakit"; // Varsayılan ödeme tipi
-
-        $("#temizleBtn").click(function () {
-            // Ürün listesini temizle
-            $('#urunListesi tbody').empty();
-
-            // Toplam fiyatı sıfırla
-            toplam = 0;
-            $('#toplamFiyat').text("0");
-
-            // Müşteri seçimini sıfırla
-            $('#MusteriID').val("");
-
-            // Ödeme tipi butonlarını sıfırla
-            $('.odeme-btn').removeClass('active');
-            seciliOdemeTipi = "Nakit"; // veya null
-
-            // Müşteri seçim alanını gizle
-            $("#musteriSecimAlani").hide();
-        });
-
-
-
-        function odemeSec(button) {
-            $('.odeme-btn').removeClass('active');
-            $(button).addClass('active');
-
-            seciliOdemeTipi = $(button).data('tip');
-
-            if (seciliOdemeTipi === "Veresiye") {
-                $("#musteriSecimAlani").show();
-                // Müşteri seçimini temizleyerek, önceki seçimlerin kullanılmasını engelleyelim.
-                $("#MusteriID").val("");
-                // Veresiye seçilince satış işlemini hemen tetiklemiyoruz.
-            } else {
-                $("#musteriSecimAlani").hide();
-                // Nakit veya Kart seçildiyse satış işlemini otomatik başlatıyoruz.
-                satisYap();
-            }
-        }
-
-        // Veresiye durumunda müşteri seçimi yapıldığında satış işlemini tetikleyelim.
-        $("#MusteriID").change(function () {
-            if (seciliOdemeTipi === "Veresiye") {
-                let musteriID = $(this).val();
-                if (musteriID) {
-                    satisYap();
-                }
-            }
-        });
-
-
-
-
-
-
 
         function updateGenelToplam() {
             let toplamYeni = 0;
@@ -159,6 +84,7 @@
             var barkod = $('#barkodInput').val();
             if (barkod.trim() === "") return;
 
+            // Aynı barkoddan varsa sadece adet artır
             let mevcutSatir = $(`#urunListesi tbody tr[data-barkod='${barkod}']`);
             if (mevcutSatir.length > 0) {
                 let adetCell = mevcutSatir.find('.adet');
@@ -173,28 +99,32 @@
                 return;
             }
 
+            // Ajax ile ürün bilgisi al
             $.ajax({
                 url: '/deneme/BarkodAra',
                 type: 'POST',
                 data: { barkod: barkod },
                 success: function (res) {
                     if (res.success) {
-                        $('#urunListesi tbody').append(`
-                                                                <tr data-barkod="${barkod}">
-                                                                    <td>${res.urunAd}</td>
-                                                                    <td class="fiyat">${res.fiyat}</td>
-                                                                    <td class="adet">1</td>
-                                                                    <td class="satirToplam">${res.fiyat}</td>
-                                                                    <td>
-                                                                        <button onclick="adetDegistir(this, 1)">+</button>
-                                                                        <button onclick="adetDegistir(this, -1)">-</button>
-                                                                        <button onclick="sil(this)">Sil</button>
-                                                                    </td>
-                                                                </tr>`);
+                        let toplamSatir = res.fiyat;
+
+                        $('#urunListesi tbody').append(
+                            `<tr data-barkod="${barkod}">
+                                                            <td>${res.urunAd}</td>
+                                                            <td class="fiyat">${res.fiyat}</td>
+                                                            <td class="adet">1</td>
+                                                            <td class="satirToplam">${toplamSatir}</td>
+                                                            <td>
+                                                                <button onclick="adetDegistir(this, 1)">+</button>
+                                                                <button onclick="adetDegistir(this, -1)">-</button>
+                                                                <button onclick="sil(this)">Sil</button>
+                                                            </td>
+                                                        </tr>`
+                        );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
                     } else {
-                        alert(res.message);
+                        alert("Ürün bulunamadı.");
                         $('#barkodInput').val("").focus();
                     }
                 },
@@ -207,11 +137,13 @@
         function adetDegistir(btn, degisim) {
             let satir = $(btn).closest('tr');
             let adetCell = satir.find('.adet');
-            let adet = parseInt(adetCell.text()) + degisim;
+            let adet = parseInt(adetCell.text());
 
+            adet += degisim;
             if (adet < 1) return;
 
             adetCell.text(adet);
+
             let fiyat = parseFloat(satir.find('.fiyat').text());
             satir.find('.satirToplam').text((adet * fiyat).toFixed(2));
 
@@ -223,16 +155,17 @@
             updateGenelToplam();
         }
 
-        function satisYap() {
-            // Eğer tabloda hiç ürün yoksa uyarı ver
-            if ($('#urunListesi tbody tr').length === 0) {
-                alert("Lütfen ürün ekleyin.");
-                return;
+        // Enter tuşu ile ekleme
+        $('#barkodInput').keypress(function (e) {
+            if (e.which == 13) {
+                barkodAra();
+                e.preventDefault();
             }
+        });
 
-            let odemeTipi = seciliOdemeTipi;
+        function satisYap() {
+            let odemeTipi = $('#odemeTipi').val();
             let toplamTutar = toplam;
-            let musteriId = odemeTipi === "Veresiye" ? $('#MusteriID').val() : null;
             let urunlerText = '';
 
             $('#urunListesi tbody tr').each(function () {
@@ -248,8 +181,7 @@
                 data: {
                     OdemeTipi: odemeTipi,
                     ToplamTutar: toplamTutar,
-                    UrunListesi: urunlerText,
-                    MusteriID: musteriId
+                    UrunListesi: urunlerText
                 },
                 success: function (res) {
                     if (res.success) {
@@ -267,69 +199,34 @@
             });
         }
 
+
+
         function hizliUrunEkle(barkod) {
             $('#barkodInput').val(barkod);
-            barkodAra();
+            barkodEkle(); // Var olan fonksiyonu çağırıyoruz
         }
+
+
 
         $(document).ready(function () {
             $('#barkodInput').on('keypress', function (e) {
-                if (e.which === 13) {
-                    e.preventDefault();
-                    barkodAra();
+                if (e.which == 13) { // Enter tuşu (barkod okuyucular genelde bunu yollar)
+                    e.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
+                    barkodEkle(); // Direkt ürünü ekle
                 }
             });
-
-            $("#odemeTipi").on("change", function () {
-                if ($(this).val() === "Veresiye") {
-                    $("#musteriSecimAlani").show();
-                } else {
-                    $("#musteriSecimAlani").hide();
-                }
-            });
-
-            $('#barkodInput').val('').focus();
         });
 
-        function digerUrunEkle() {
-            var urunAd = $('#digerUrunAd').val().trim();
-            var fiyat = parseFloat($('#digerUrunFiyat').val());
-
-            if (isNaN(fiyat) || fiyat <= 0) {
-                alert("Geçerli bir fiyat giriniz.");
-                return;
-            }
-
-            if (urunAd === "") {
-                urunAd = "Diğer Ürün";
-            }
-
-            var barkod = "diger-" + new Date().getTime(); // benzersiz barkod üret
-
-            $('#urunListesi tbody').append(`
-                            <tr data-barkod="${barkod}">
-                                <td>${urunAd}</td>
-                                <td class="fiyat">${fiyat.toFixed(2)}</td>
-                                <td class="adet">1</td>
-                                <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                                <td>
-                                    <button onclick="adetDegistir(this, 1)">+</button>
-                                    <button onclick="adetDegistir(this, -1)">-</button>
-                                    <button onclick="sil(this)">Sil</button>
-                                </td>
-                            </tr>
-                        `);
-
-            updateGenelToplam();
-
-            $('#digerUrunAd').val('');
-            $('#digerUrunFiyat').val('');
-        }
+        $('#barkodInput').val('').focus();
 
 
 
 
 
     </script>
+
+
+
+
 </body>
 </html>
