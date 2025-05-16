@@ -1,57 +1,97 @@
-﻿﻿@model LordMarket.Models.Musteriler
+﻿@model LordMarket.Models.Musteriler
 @{
     ViewBag.Title = "Musteri Güncelle";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
-
-<div class="card shadow-sm border-light rounded" style="max-width: 600px; margin: 20px auto;">
+<div class="card shadow-sm border-light rounded" style="max-width: 700px; margin: 20px auto;">
     <div class="card-header bg-dark text-white text-center">
-        <h3><b>Musteri Güncelle</b></h3>
+        <h3><b>Müşteri Güncelle</b></h3>
     </div>
 
-    @using (Html.BeginForm("MusteriGuncelle", "Musteri", FormMethod.Post, new { @class = "form-group" }))
-    {
-        <div class="card-body">
+    <div class="card-body">
+
+        <!-- İşlem Temizleme Butonu Ayrı Formda -->
+        <div class="text-end mb-3">
+            <form action="/Musteri/BosAlanTemizle" method="post" onsubmit="return confirm('Yapılan işlemleri temizlemek istediğinize emin misiniz?');" style="display:inline;">
+                <input type="hidden" name="ID" value="@Model.ID" />
+                <button type="submit" class="btn btn-outline-danger btn-sm">Yapılan İşlemleri Temizle</button>
+            </form>
+            <form action="/Musteri/UrunleriTemizle" method="post" onsubmit="return confirm('Ürün listesini temizlemek istediğinize emin misiniz?');" style="display:inline;">
+                <input type="hidden" name="ID" value="@Model.ID" />
+                <button type="submit" class="btn btn-outline-danger btn-sm">Ürün Listesini Temizle</button>
+            </form>
+        </div>
+
+
+        <!-- Güncelleme Formu -->
+        @using (Html.BeginForm("MusteriGuncelle", "Musteri", FormMethod.Post, new { @class = "form-group" }))
+        {
             @Html.HiddenFor(k => k.ID)
 
             <div class="mb-3">
-                <label>Musteri Adı:</label>
-                @Html.TextBoxFor(k => k.MusteriAdSoyad, new { @class = "form-control", id = "MusteriAdSoyad", required = "required", placeholder = "Musteri Adı" })
-
+                <label>Müşteri Adı:</label>
+                @Html.TextBoxFor(k => k.MusteriAdSoyad, new { @class = "form-control", required = "required", placeholder = "Müşteri Adı" })
             </div>
 
             <div class="mb-3">
-                <label>notlar:</label>
-                @Html.TextBoxFor(k => k.Notlar, new { @class = "form-control", id = "Notlar", required = "required", placeholder = "Notlar" })
+                <label>Alınan Ürünler:</label>
+                <div class="form-control" style="min-height: 150px; overflow-y: auto; white-space: pre-line;" readonly>
+                    @{
+                        if (!string.IsNullOrEmpty(Model.Notlar))
+                        {
+                            var urunler = Model.Notlar.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var urun in urunler.Reverse()) // En son alınan ürün en üstte görünsün diye
+                            {
+                                <div>@urun.Trim()</div>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">Henüz ürün alınmamış.</span>
+                        }
+                    }
+                </div>
+            </div>
 
+
+            <div class="mb-3">
+                <label>Toplam Borç:</label>
+                @Html.TextBoxFor(k => k.ToplamBorc, new { @class = "form-control", required = "required", placeholder = "Toplam Borç" })
             </div>
 
             <div class="mb-3">
-                <label>ToplamBorc:</label>
-                @Html.TextBoxFor(k => k.ToplamBorc, new { @class = "form-control", id = "ToplamBorc", required = "required", placeholder = "ToplamBorc" })
-
+                <label>Yapılan İşlemler:</label>
+                <div class="form-control" style="min-height: 150px; overflow-y: auto; white-space: pre-line;" readonly>
+                    @{
+                        if (!string.IsNullOrEmpty(Model.BosAlan))
+                        {
+                            var islemler = Model.BosAlan.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var islem in islemler.Reverse())
+                            {
+                                <div>@islem.Trim()</div>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted">Herhangi bir işlem yapılmamış.</span>
+                        }
+                    }
+                </div>
             </div>
 
-
-          
-
-
             <div class="mb-3">
-                <label for="status" class="form-label">Status:</label>
+                <label>Status:</label>
                 @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
                 {
-                    new SelectListItem { Text = "Akif", Value = "true" },
+                    new SelectListItem { Text = "Aktif", Value = "true" },
                     new SelectListItem { Text = "Pasif", Value = "false" }
-                }, new { @class = "form-select", id = "status", required = "required" })
+                }, new { @class = "form-select", required = "required" })
             </div>
-        </div>
 
-        <div class="card-footer text-center">
-            <a href="/Musteri/Musteriler/" class="btn btn-danger btn-sm">İptal</a>
-            <button class="btn btn-success btn-sm">Güncelle</button>
-        </div>
-    }
+            <div class="text-center">
+                <a href="/Musteri/Musteriler/" class="btn btn-danger btn-sm">İptal</a>
+                <button type="submit" class="btn btn-success btn-sm">Güncelle</button>
+            </div>
+        }
+    </div>
 </div>
-
-

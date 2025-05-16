@@ -80,13 +80,13 @@
                                             <i class="bi bi-trash"></i>
                                         </a>
 
-                                        <a href="/Musteri/BorcOde/@Musteri.ID" class="btn btn-success btn-sm" title="Borç Öde">
+                                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" title="Borç Öde" data-bs-target="#borcOdeModal" onclick="setMusteriId(@Musteri.ID)">
                                             <i class="bi bi-cash-coin"></i>
-                                        </a>
+                                        </button>
 
-                                        <a href="/Musteri/VeresiyeEkle/@Musteri.ID" class="btn btn-info btn-sm text-white" title="Veresiye Ekle">
+                                        <button type="button" class="btn btn-info btn-sm text-white" data-bs-toggle="modal" title="Veresiye Ekle" data-bs-target="#veresiyeModal" onclick="setMusteriId(@Musteri.ID)">
                                             <i class="bi bi-journal-plus"></i>
-                                        </a>
+                                        </button>
 
                                     </div>
                                 </td>
@@ -103,6 +103,34 @@
 
 @section Scripts {
     <script>
+
+        let selectedMusteriId = 0;
+        function setMusteriId(id) {
+            selectedMusteriId = id;
+            document.getElementById("borcMusteriId").value = id;
+            document.getElementById("veresiyeMusteriId").value = id;
+        }
+
+        function submitBorcOdeForm() {
+            var id = $('#borcMusteriId').val();
+            var tutar = $('#OdenenBorcTutar').val();
+            var not = $('#BorcNot').val();
+
+            $.post('/Musteri/BorcOde', { id: id, OdenenBorcTutar: tutar, Not: not }, function () {
+                location.reload();
+            });
+        }
+
+        function submitVeresiyeForm() {
+            var id = $('#veresiyeMusteriId').val();
+            var tutar = $('#VeresiyeTutar').val();
+            var not = $('#VeresiyeNot').val();
+
+            $.post('/Musteri/VeresiyeEkle', { id: id, VeresiyeTutar: tutar, Not: not }, function () {
+                location.reload();
+            });
+        }
+
         // Excel Export
         document.getElementById('exportExcel').addEventListener('click', function () {
             const table = document.getElementById('DataTable');
@@ -221,3 +249,59 @@
         </div>
     </div>
 </div>
+
+
+
+<div class="modal fade" id="borcOdeModal" tabindex="-1" aria-labelledby="borcOdeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Borç Öde</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="borcMusteriId" />
+                <div class="form-group">
+                    <label>Ödenen Borç Tutarı</label>
+                    <input type="number" id="OdenenBorcTutar" class="form-control" step="0.01" required />
+                </div>
+                <div class="form-group mt-2">
+                    <label>Kısa Not (İsteğe Bağlı)</label>
+                    <textarea id="BorcNot" class="form-control" rows="2" placeholder="Açıklama..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="submitBorcOdeForm()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="veresiyeModal" tabindex="-1" aria-labelledby="veresiyeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Veresiye Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="veresiyeMusteriId" />
+                <div class="form-group">
+                    <label>Veresiye Tutarı</label>
+                    <input type="number" id="VeresiyeTutar" class="form-control" step="0.01" required />
+                </div>
+                <div class="form-group mt-2">
+                    <label>Kısa Not (İsteğe Bağlı)</label>
+                    <textarea id="VeresiyeNot" class="form-control" rows="2" placeholder="Açıklama..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" onclick="submitVeresiyeForm()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+

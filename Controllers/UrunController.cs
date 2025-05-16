@@ -114,6 +114,14 @@ namespace LordMarket.Controllers
 
 
 
+        public ActionResult EtiketOlustur()
+        {
+            var urunler = db.Urunler.ToList();
+            return View(urunler);
+        }
+
+
+
         // Kategorileri dropdown için getirir
         //private List<SelectListItem> GetKategoriSelectList()
         //{

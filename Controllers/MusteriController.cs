@@ -84,6 +84,66 @@ namespace LordMarket.Controllers
             return View("MusteriGetir", y);
         }
 
-        
+
+
+        [HttpPost]
+        public ActionResult BorcOde(int id, decimal OdenenBorcTutar, string Not)
+        {
+            var musteri = db.Musteriler.Find(id);
+            if (musteri == null) return HttpNotFound();
+
+            musteri.ToplamBorc -= OdenenBorcTutar;
+
+            string bilgi = $"Borç Ödemesi: {DateTime.Now:yyyy-MM-dd HH:mm} - {OdenenBorcTutar} ₺ Not: {Not} ||";
+            musteri.BosAlan += bilgi;
+
+            db.SaveChanges();
+            return RedirectToAction("Musteriler");
+        }
+
+        [HttpPost]
+        public ActionResult VeresiyeEkle(int id, decimal VeresiyeTutar, string Not)
+        {
+            var musteri = db.Musteriler.Find(id);
+            if (musteri == null) return HttpNotFound();
+
+            musteri.ToplamBorc += VeresiyeTutar;
+
+            string bilgi = $"Veresiye - {DateTime.Now:yyyy-MM-dd HH:mm} - {VeresiyeTutar} ₺ Not: {Not} ||";
+            musteri.BosAlan += bilgi;
+
+            db.SaveChanges();
+            return RedirectToAction("Musteriler");
+        }
+
+
+
+        [HttpPost]
+        public ActionResult BosAlanTemizle(int id)
+        {
+            var musteri = db.Musteriler.Find(id);
+            if (musteri == null) return HttpNotFound();
+
+            musteri.BosAlan = "";
+            db.SaveChanges();
+
+            return RedirectToAction("MusteriGetir", new { id = id });
+        }
+
+        [HttpPost]
+        public ActionResult UrunleriTemizle(int id)
+        {
+            var urun = db.Musteriler.Find(id);
+            if (urun == null) return HttpNotFound();
+
+            urun.Notlar = "";
+            db.SaveChanges();
+
+            return RedirectToAction("MusteriGetir", new { id = id });
+        }
+
+
+
+
     }
 }
