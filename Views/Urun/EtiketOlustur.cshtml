@@ -1,0 +1,123 @@
+﻿@model IEnumerable<LordMarket.Models.Urunler>
+@{
+    ViewBag.Title = "Etiket Oluştur";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <!-- Başlık ve Breadcrumb -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0"><i class="fas fa-boxes me-2 text-dark"></i>Etiket Oluştur</h1>
+        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item active">Etiket Oluştur</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Ana Kart -->
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <!-- Kart Başlık -->
+        <div class="card-header bg-white border-bottom py-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0 fw-semibold">Ürün Listesi</h5>
+                <div class="d-flex gap-2">
+                    <div class="btn-group">
+                        <button id="exportExcel" class="btn btn-success btn-sm me-2" title="Excel'e Aktar">
+                            <i class="fas fa-file-excel me-1"></i> Excel
+                        </button>
+                        <button id="exportPDF" class="btn btn-danger btn-sm me-2" title="PDF Oluştur">
+                            <i class="fas fa-file-pdf me-1"></i> PDF
+                        </button>
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+            @using (Html.BeginForm("EtiketOlusturPDF", "Urun", FormMethod.Post))
+            {
+                <div class="mb-3">
+                    <input type="text" id="urunSearch" class="form-control" placeholder="Ürün ara..." />
+                </div>
+
+                <div class="row" id="urunListesi">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-4 mb-3 urun-item" data-urunad="@item.UrunAd.ToLower()">
+                            <div class="d-flex align-items-center justify-content-between border rounded p-3 shadow-sm">
+                                <div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="seciliUrunler" value="@item.ID" id="urun_@item.ID" />
+                                        <label class="form-check-label" for="urun_@item.ID">
+                                            <strong>@item.UrunAd</strong> - @item.UrunFiyat ₺
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="@Url.Action("UrunGetir", "Urun", new { id = item.ID })" class="btn btn-sm btn-primary" title="Ürünü Güncelle">
+                                        <i class="fas fa-edit me-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <button type="submit" class="btn btn-danger mt-3">
+                    <i class="fas fa-file-pdf me-1"></i> PDF Etiket Oluştur
+                </button>
+            }
+
+
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+
+<script>
+    document.getElementById('urunSearch').addEventListener('input', function () {
+        const searchValue = this.value.toLowerCase();
+        const urunListesi = document.getElementById('urunListesi');
+        const urunler = Array.from(urunListesi.querySelectorAll('.urun-item'));
+
+        // Eşleşen ürünleri ve eşleşmeyenleri ayır
+        const eslesenler = [];
+        const eslesmeyenler = [];
+
+        urunler.forEach(urun => {
+            const urunAd = urun.getAttribute('data-urunad');
+            if (urunAd.includes(searchValue)) {
+                eslesenler.push(urun);
+            } else {
+                eslesmeyenler.push(urun);
+            }
+        });
+
+        // Önce eşleşenleri ekle, sonra diğerlerini
+        urunListesi.innerHTML = '';
+        eslesenler.forEach(urun => urunListesi.appendChild(urun));
+        eslesmeyenler.forEach(urun => urunListesi.appendChild(urun));
+    });
+</script>
+
+
+
+

@@ -1,9 +1,14 @@
-﻿using LordMarket.Models;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using LordMarket.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 
 namespace LordMarket.Controllers
 {
@@ -113,12 +118,48 @@ namespace LordMarket.Controllers
         }
 
 
-
-        public ActionResult EtiketOlustur()
+        [HttpGet]
+        public ActionResult EtiketOlustur(int[] seciliUrunler)
         {
             var urunler = db.Urunler.ToList();
             return View(urunler);
+
         }
+
+
+
+
+
+        [HttpPost]
+        public ActionResult EtiketOlusturPDF(int[] seciliUrunler)
+        {
+            var urunler = seciliUrunler == null || seciliUrunler.Length == 0
+                ? db.Urunler.ToList()
+                : db.Urunler.Where(u => seciliUrunler.Contains(u.ID)).ToList();
+
+            MemoryStream memoryStream = new MemoryStream();
+            iTextSharp.text.Document document = new iTextSharp.text.Document();
+            PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+            document.Open();
+
+            foreach (var urun in urunler)
+            {
+                document.Add(new Paragraph($"Ürün: {urun.UrunAd}"));
+                document.Add(new Paragraph($"Fiyat: {urun.UrunFiyat}₺"));
+                document.Add(new Paragraph("____________________________"));
+
+                document.Add(new Paragraph("KDV Dahil satış fiyatıdır."));
+            }
+
+            document.Close();
+            byte[] bytes = memoryStream.ToArray();
+            memoryStream.Close();
+
+            return File(bytes, "application/pdf", "Etiketler.pdf");
+        }
+
+        
+
 
 
 
