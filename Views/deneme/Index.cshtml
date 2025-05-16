@@ -1,5 +1,4 @@
 ﻿@model LordMarket.Controllers.denemeController.SatisIslemViewModel1
-
 @{
     Layout = null;
 }
@@ -17,7 +16,6 @@
 
     <label>Barkod Girin:</label>
     <input type="text" id="barkodInput" placeholder="Barkod okutunuz" class="form-control" />
-
     <button onclick="barkodAra()">Ekle</button>
 
     <hr />
@@ -44,28 +42,31 @@
         <option value="Veresiye">Veresiye</option>
     </select>
 
+    <div id="musteriSecimAlani" style="display:block;">
+        <label>Müşteri Seçin</label>
+        <select id="MusteriID" name="MusteriID" class="form-control">
+            <option value="">Müşteri Seçiniz</option>
+            @foreach (var m in Model.Musteriler)
+            {
+                <option value="@m.ID">@m.MusteriAdSoyad</option>
+            }
+        </select>
+    </div>
+
     <button onclick="satisYap()">Satış Yap</button>
 
-
-
-    <br /> <br />
+    <br /><br />
 
     <h3>Hızlı Ürünler</h3>
     <div id="hizliUrunler" style="display: flex; flex-wrap: wrap; gap: 10px;">
         @foreach (var item in Model.HizliUrunler)
         {
-            <button class="btn btn-warning"
-                    onclick="hizliUrunEkle('@item.Barkod')"
-                    style="min-width: 100px; margin:5px;">
+            <button class="btn btn-warning" onclick="hizliUrunEkle('@item.Barkod')" style="min-width: 100px; margin:5px;">
                 @item.UrunAd <br />
                 @item.UrunFiyat ₺
             </button>
         }
     </div>
-
-
-
-
 
     <script>
         var toplam = 0;
@@ -84,7 +85,6 @@
             var barkod = $('#barkodInput').val();
             if (barkod.trim() === "") return;
 
-            // Aynı barkoddan varsa sadece adet artır
             let mevcutSatir = $(`#urunListesi tbody tr[data-barkod='${barkod}']`);
             if (mevcutSatir.length > 0) {
                 let adetCell = mevcutSatir.find('.adet');
@@ -99,32 +99,28 @@
                 return;
             }
 
-            // Ajax ile ürün bilgisi al
             $.ajax({
                 url: '/deneme/BarkodAra',
                 type: 'POST',
                 data: { barkod: barkod },
                 success: function (res) {
                     if (res.success) {
-                        let toplamSatir = res.fiyat;
-
-                        $('#urunListesi tbody').append(
-                            `<tr data-barkod="${barkod}">
-                                                        <td>${res.urunAd}</td>
-                                                        <td class="fiyat">${res.fiyat}</td>
-                                                        <td class="adet">1</td>
-                                                        <td class="satirToplam">${toplamSatir}</td>
-                                                        <td>
-                                                            <button onclick="adetDegistir(this, 1)">+</button>
-                                                            <button onclick="adetDegistir(this, -1)">-</button>
-                                                            <button onclick="sil(this)">Sil</button>
-                                                        </td>
-                                                    </tr>`
-                        );
+                        $('#urunListesi tbody').append(`
+                                    <tr data-barkod="${barkod}">
+                                        <td>${res.urunAd}</td>
+                                        <td class="fiyat">${res.fiyat}</td>
+                                        <td class="adet">1</td>
+                                        <td class="satirToplam">${res.fiyat}</td>
+                                        <td>
+                                            <button onclick="adetDegistir(this, 1)">+</button>
+                                            <button onclick="adetDegistir(this, -1)">-</button>
+                                            <button onclick="sil(this)">Sil</button>
+                                        </td>
+                                    </tr>`);
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
                     } else {
-                        alert("Ürün bulunamadı.");
+                        alert(res.message);
                         $('#barkodInput').val("").focus();
                     }
                 },
@@ -137,13 +133,11 @@
         function adetDegistir(btn, degisim) {
             let satir = $(btn).closest('tr');
             let adetCell = satir.find('.adet');
-            let adet = parseInt(adetCell.text());
+            let adet = parseInt(adetCell.text()) + degisim;
 
-            adet += degisim;
             if (adet < 1) return;
 
             adetCell.text(adet);
-
             let fiyat = parseFloat(satir.find('.fiyat').text());
             satir.find('.satirToplam').text((adet * fiyat).toFixed(2));
 
@@ -155,17 +149,10 @@
             updateGenelToplam();
         }
 
-        // Enter tuşu ile ekleme
-        $('#barkodInput').keypress(function (e) {
-            if (e.which == 13) {
-                barkodAra();
-                e.preventDefault();
-            }
-        });
-
         function satisYap() {
             let odemeTipi = $('#odemeTipi').val();
             let toplamTutar = toplam;
+            let musteriId = odemeTipi === "Veresiye" ? $('#MusteriID').val() : null;
             let urunlerText = '';
 
             $('#urunListesi tbody tr').each(function () {
@@ -181,7 +168,8 @@
                 data: {
                     OdemeTipi: odemeTipi,
                     ToplamTutar: toplamTutar,
-                    UrunListesi: urunlerText
+                    UrunListesi: urunlerText,
+                    MusteriID: musteriId
                 },
                 success: function (res) {
                     if (res.success) {
@@ -199,34 +187,29 @@
             });
         }
 
-
-
         function hizliUrunEkle(barkod) {
             $('#barkodInput').val(barkod);
-            barkodEkle(); // Var olan fonksiyonu çağırıyoruz
+            barkodAra();
         }
-
-
 
         $(document).ready(function () {
             $('#barkodInput').on('keypress', function (e) {
-                if (e.which == 13) { // Enter tuşu (barkod okuyucular genelde bunu yollar)
-                    e.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
-                    barkodEkle(); // Direkt ürünü ekle
+                if (e.which === 13) {
+                    e.preventDefault();
+                    barkodAra();
                 }
             });
+
+            $("#odemeTipi").on("change", function () {
+                if ($(this).val() === "Veresiye") {
+                    $("#musteriSecimAlani").show();
+                } else {
+                    $("#musteriSecimAlani").hide();
+                }
+            });
+
+            $('#barkodInput').val('').focus();
         });
-
-        $('#barkodInput').val('').focus();
-
-
-
-
-
     </script>
-
-
-
-
 </body>
 </html>
