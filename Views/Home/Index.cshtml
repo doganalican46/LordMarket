@@ -1,445 +1,479 @@
-﻿@model LordMarket.Controllers.HomeController.SatisIslemViewModel1
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lord Büfe</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lord Tekel&Büfe Satış</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #e74c3c;
-            --light-color: #ecf0f1;
-        }
-
         body {
-            background-color: #f5f5f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 15px;
-            margin: 0;
-        }
-
-        .header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px 0;
-            border-radius: 5px 5px 0 0;
-        }
-
-        .main-container {
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            height: calc(100vh - 60px);
+            padding: 20px;
+            background-color: #f8f9fa;
+            height: 100vh;
             overflow: hidden;
         }
 
-        .payment-card {
-            background-color: var(--secondary-color);
+        .container-fluid {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #343a40;
             color: white;
+            padding: 15px;
             border-radius: 5px;
-            padding: 15px;
-            height: 100%;
+            margin-bottom: 20px;
         }
 
-        .product-card {
-            border-left: 3px solid var(--accent-color);
-        }
-
-        .quick-product-btn {
-            background-color: var(--light-color);
-            border: none;
-            transition: all 0.2s;
-            padding: 8px;
-            font-size: 0.9rem;
-            margin: 2px;
-        }
-
-            .quick-product-btn:hover {
-                background-color: #bdc3c7;
-                transform: translateY(-1px);
-            }
-
-        .action-btn {
-            font-weight: bold;
-            padding: 8px;
-            font-size: 0.9rem;
-            margin: 2px;
-        }
-
-        .delete-btn {
-            color: var(--accent-color);
-            background: none;
-            border: none;
-            padding: 0 5px;
-        }
-
-        .payment-input {
-            background-color: rgba(255,255,255,0.1);
-            color: white;
-            border: none;
-            border-bottom: 1px solid white;
-            border-radius: 0;
-            height: 38px;
-            padding: 5px;
-            font-size: 1rem;
-        }
-
-            .payment-input:focus {
-                background-color: rgba(255,255,255,0.2);
-                color: white;
-                box-shadow: none;
-                border-bottom: 1px solid var(--accent-color);
-            }
-
-        .payment-label {
-            font-size: 0.85rem;
-            margin-bottom: 3px;
-        }
-
-        .total-amount {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-
-        .barcode-input {
-            font-size: 0.95rem;
-            height: 38px;
-        }
-
-        .quick-products-container {
-            margin-top: 12px;
-            border-top: 1px solid #dee2e6;
-            padding-top: 12px;
-        }
-
-        .product-table {
-            font-size: 0.92rem;
-        }
-
-            .product-table th {
-                padding: 8px;
-            }
-
-            .product-table td {
-                padding: 8px;
-                vertical-align: middle;
-            }
-
-        .quantity-control {
-            width: 90px;
-        }
-
-            .quantity-control .btn {
-                padding: 0 6px;
-            }
-
-            .quantity-control input {
-                text-align: center;
-                padding: 0 3px;
-            }
-
-        .compact-modal .modal-body {
-            padding: 15px;
-        }
-
-        .compact-modal .modal-footer,
-        .compact-modal .modal-header {
-            padding: 12px 15px;
-        }
-
-        .left-column {
-            padding: 15px;
-            height: 100%;
+        .main-content {
             display: flex;
-            flex-direction: column;
-        }
-
-        .right-column {
-            padding: 15px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-list-container {
             flex: 1;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .right-panel {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .barcode-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .product-table-container {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             overflow-y: auto;
+        }
+
+        .payment-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .quick-products {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .total-section {
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px;
+            font-size: 1.1rem;
+        }
+
+        .btn-quick-product {
+            width: 120px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+            white-space: normal;
+        }
+
+        .odeme-btn {
+            flex: 1;
+        }
+
+            .odeme-btn.active {
+                background-color: #007bff;
+                color: white;
+            }
+
+        #urunListesi {
+            width: 100%;
+        }
+
+            #urunListesi th {
+                position: sticky;
+                top: 0;
+                background-color: #343a40;
+                color: white;
+            }
+
+        .payment-methods {
+            display: flex;
+            gap: 10px;
             margin-bottom: 15px;
         }
 
-        .quick-products-wrapper {
-            flex-shrink: 0;
+        .customer-select {
+            margin-bottom: 15px;
+        }
+
+        .other-product-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <!-- Başlık -->
-        <div class="row header text-center m-0">
-            <div class="col p-0">
-                <h5 class="m-0">LORDTEKEL - SATIŞ EKRANI</h5>
-            </div>
+    <div class="container-fluid">
+        <div class="header">
+            <h1><i class="fas fa-barcode me-2"></i>Lord Tekel Büfe Satış</h1>
         </div>
 
-        <div class="row m-0" style="height: calc(100% - 55px);">
-            <!-- Sol Taraf - Ürün Listesi (8 birim) -->
-            <div class="col-md-8 p-0">
-                <div class="left-column">
-                    <!-- Barkod Arama -->
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            <form method="get" asp-action="Index" asp-controller="Home">
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
-                                    <input type="text" id="barkodInput" name="Barkod" class="form-control barcode-input"
-                                           placeholder="Barkod okuyun veya ürün adı girin" autofocus />
-                                    <button id="barkodAraBtn" class="btn btn-primary" type="submit">
-                                        <i class="bi bi-search"></i> Ara
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="barcode-section">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"><i class="fas fa-barcode"></i></span>
+                        <input type="text" id="barkodInput" class="form-control form-control-lg" placeholder="Barkod okutun veya girin" autofocus>
+                        <button class="btn btn-primary" onclick="barkodAra()"><i class="fas fa-plus me-2"></i>Ekle</button>
                     </div>
+                </div>
 
-                    <!-- Ürün Listesi -->
-                    <div class="product-list-container">
-                        <div class="card h-100">
-                            <div class="card-body p-2">
-                                <div class="table-responsive">
-                                    <table class="table table-hover mb-0 product-table">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th width="40%">ÜRÜN</th>
-                                                <th>FİYAT</th>
-                                                <th>ADET</th>
-                                                <th>TOPLAM</th>
-                                                <th width="5%"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="urunListesi">
-                                            @foreach (var urun in Model.Urunler.Where(u => u.HizliUrunMu == true))
-                                            {
-                                                <tr class="product-card" data-id="@urun.ID">
-                                                    <td>@urun.UrunAd</td>
-                                                    <td>₺@urun.UrunFiyat</td>
-                                                    <td>
-                                                        <div class="input-group input-group-sm quantity-control">
-                                                            <button class="btn btn-outline-secondary adet-azalt" type="button">-</button>
-                                                            <input type="text" class="form-control text-center adet-input" value="1">
-                                                            <button class="btn btn-outline-secondary adet-artir" type="button">+</button>
-                                                        </div>
-                                                    </td>
-                                                    <td class="urun-toplam">₺@urun.UrunFiyat</td>
-                                                    <td><button class="delete-btn"><i class="bi bi-trash-fill"></i></button></td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="product-table-container">
+                    <table class="table table-striped table-hover" id="urunListesi">
+                        <thead>
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th>Fiyat (₺)</th>
+                                <th>Adet</th>
+                                <th>Toplam (₺)</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
 
-                    <!-- Hızlı Ürün Butonları -->
-                    <div class="quick-products-wrapper">
-                        <div class="quick-products-container">
-                            <h6 class="mb-2"><i class="bi bi-lightning-charge-fill"></i> HIZLI ÜRÜNLER</h6>
-                            <div class="row g-2">
-                                @foreach (var urun in Model.Urunler.Where(u => u.HizliUrunMu == true))
-                                {
-                                    <div class="col-3">
-                                        <button class="btn quick-product-btn w-100">
-                                            <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.85rem;">@urun.UrunAd</div>
-                                            <div class="fw-bold" style="font-size: 0.9rem;">@urun.UrunFiyat ₺</div>
-                                        </button>
-                                    </div>
-                                }
-                            </div>
-                        </div>
+                <div class="other-product-section">
+                    <h5><i class="fas fa-tag me-2"></i>Diğer Ürün Ekle</h5>
+                    <div class="input-group">
+                        <span class="input-group-text">Fiyat (₺)</span>
+                        <input type="number" id="digerUrunFiyat" class="form-control" placeholder="Fiyat girin" min="0" step="0.01">
+                        <button class="btn btn-secondary" onclick="digerUrunEkle()"><i class="fas fa-plus me-2"></i>Ekle</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Sağ Taraf - Ödeme Alanı (4 birim) -->
-            <div class="col-md-4 p-0 border-start">
-                <div class="right-column">
-                    <!-- Ödeme Bilgileri -->
-                    <div class="payment-card mb-3">
-                        <h6 class="text-center mb-3"><i class="bi bi-credit-card"></i> ÖDEME BİLGİLERİ</h6>
-
-                        <div class="mb-3">
-                            <label class="form-label payment-label">TOPLAM TUTAR</label>
-                            <input type="text" class="form-control payment-input total-amount text-end fw-bold" value="₺0,00" readonly>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label payment-label">ÖDENEN</label>
-                            <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label payment-label">PARA ÜSTÜ</label>
-                            <input type="text" class="form-control payment-input text-end fw-bold" value="₺0,00" readonly>
-                        </div>
-
-                        <div class="d-grid gap-2 mb-3">
-                            <button class="btn btn-success action-btn py-2" data-bs-toggle="modal" data-bs-target="#paymentModal">
-                                <i class="bi bi-check-circle-fill"></i> SATIŞI TAMAMLA
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- İşlem Butonları -->
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <button class="btn btn-danger action-btn w-100">
-                                <i class="bi bi-x-circle-fill"></i> İPTAL
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-warning action-btn w-100">
-                                <i class="bi bi-pause-fill"></i> BEKLET
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="col-6">
-                            <button class="btn btn-primary action-btn w-100" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
-                                <i class="bi bi-plus-circle"></i> ÜRÜN EKLE
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-warning action-btn w-100" data-bs-toggle="modal" data-bs-target="#discountModal">
-                                <i class="bi bi-percent"></i> İSKONTO
-                            </button>
-                        </div>
-                    </div>
+            <div class="right-panel">
+                <div class="total-section">
+                    <div id="toplamFiyat" style="font-size: 40px; /* Daha büyük font */ font-weight: bold; /* Kalın yazı */ color: #333;">0.00 ₺</div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modaller -->
-    <!-- Ürün Ekle Modal -->
-    <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
-                </div>
-                <form action="/SatisYap/YeniUrun" method="post" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="Barkod" class="form-label">Barkod</label>
-                                    <input type="text" name="Barkod" class="form-control" required />
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="UrunAd" class="form-label">Ürün Adı</label>
-                                    <input type="text" name="UrunAd" class="form-control" required />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="UrunFiyat" class="form-label">Fiyat</label>
-                                    <input type="text" name="UrunFiyat" class="form-control" required />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="UrunResmi" class="form-label">Resim</label>
-                                    <input type="file" name="UrunResmiFile" class="form-control" />
-                                </div>
-                                <div class="mb-3">
-                                    <label for="Stok" class="form-label">Stok</label>
-                                    <input type="number" name="Stok" class="form-control" required />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Kaydet</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
-    <!-- İskonto Modal -->
-    <div class="modal fade" id="discountModal" tabindex="-1" aria-labelledby="discountModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title" id="discountModalLabel">İskonto Uygula</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">İskonto Tutarı (₺)</label>
-                        <input type="text" class="form-control" placeholder="₺0,00">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Veya İskonto Yüzdesi (%)</label>
-                        <input type="text" class="form-control" placeholder="%0">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="button" class="btn btn-warning">Uygula</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Ödeme Yöntemi Modal -->
-    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="paymentModalLabel">Ödeme Yöntemi Seçin</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="d-grid gap-3">
-                        <button class="btn btn-outline-primary py-3" data-bs-dismiss="modal">
-                            <i class="bi bi-cash-stack fs-1"></i>
-                            <h4>NAKİT ÖDEME</h4>
+                <div class="payment-section">
+                    <h5><i class="fas fa-money-bill-wave me-2"></i>Ödeme Seçenekleri</h5>
+                    <div class="payment-methods">
+                        <button type="button" class="btn btn-success odeme-btn active" data-tip="Nakit">
+                            <i class="fas fa-money-bill me-2"></i>Nakit
                         </button>
-                        <button class="btn btn-outline-success py-3" data-bs-dismiss="modal">
-                            <i class="bi bi-credit-card fs-1"></i>
-                            <h4>KREDİ KARTI</h4>
+                        <button type="button" class="btn btn-info odeme-btn" data-tip="Kart">
+                            <i class="fas fa-credit-card me-2"></i>Kart
                         </button>
-                        <button class="btn btn-outline-secondary py-3" data-bs-dismiss="modal">
-                            <i class="bi bi-receipt fs-1"></i>
-                            <h4>VERESİYE DEFTERİ</h4>
+                        <button type="button" class="btn btn-warning odeme-btn" data-tip="Veresiye">
+                            <i class="fas fa-hand-holding-usd me-2"></i>Veresiye
                         </button>
                     </div>
+                    <input type="hidden" id="odemeTipi" value="Nakit">
+
+                    <div class="customer-select" id="customerSelectContainer" style="display: none;">
+                        <label for="musteriSelect" class="form-label"><i class="fas fa-user me-2"></i>Müşteri Seçin:</label>
+                        <select id="musteriSelect" class="form-select">
+                            <option value="">Müşteri Seçin</option>
+                            @foreach (var musteri in Model.Musteriler)
+                            {
+                                <option value="@musteri.ID">@musteri.MusteriAdSoyad</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-success btn-action" onclick="satisYap()">
+                        <i class="fas fa-cash-register me-2"></i>Satış Yap
+                    </button>
+                    <button class="btn btn-danger btn-action" onclick="temizle()">
+                        <i class="fas fa-trash-alt me-2"></i>Temizle
+                    </button>
+                    <button class="btn btn-secondary btn-action" onclick="temizle()">
+                        <i class="fas fa-times-circle me-2"></i>İptal
+                    </button>
+                </div>
+
+                <div class="quick-products">
+                    <h5><i class="fas fa-bolt me-2"></i>Hızlı Ürünler</h5>
+                    <div class="d-flex flex-wrap">
+                        @foreach (var item in Model.HizliUrunler)
+                        {
+                            <button class="btn btn-warning btn-quick-product"
+                                    onclick="hizliUrunEkle('@item.Barkod')">
+                                <div>@item.UrunAd</div>
+                                <div class="fw-bold">@item.UrunFiyat ₺</div>
+                            </button>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelector('.barcode-input').focus();
+        var toplam = 0;
+        var iskontoUygulandi = false;
+        var iskontoOrani = 0;
+        let digerUrunSayac = 0;
+
+        function temizle() {
+            $('#urunListesi tbody').empty();
+            toplam = 0;
+            $('#toplamFiyat').text("0.00 ₺");
+            $('#barkodInput').val('').focus();
+            $('#odemeTipi').val('Nakit');
+            $('.odeme-btn').removeClass('active');
+            $('.odeme-btn[data-tip="Nakit"]').addClass('active');
+            $('#musteriSelect').val('');
+            $('#customerSelectContainer').hide();
+        }
+
+        function updateGenelToplam() {
+            let toplamYeni = 0;
+            $('#urunListesi tbody tr').each(function () {
+                let satirToplam = parseFloat($(this).find('.satirToplam').text());
+                toplamYeni += satirToplam;
+            });
+            toplam = toplamYeni;
+            $('#toplamFiyat').text(toplam.toFixed(2) + ' ₺');
+        }
+
+        function barkodAra() {
+            var barkod = $('#barkodInput').val();
+            if (barkod.trim() === "") return;
+
+            let mevcutSatir = $(`#urunListesi tbody tr[data-barkod='${barkod}']`);
+            if (mevcutSatir.length > 0) {
+                let adetCell = mevcutSatir.find('.adet');
+                let yeniAdet = parseInt(adetCell.text()) + 1;
+                adetCell.text(yeniAdet);
+
+                let fiyat = parseFloat(mevcutSatir.find('.fiyat').text());
+                mevcutSatir.find('.satirToplam').text((yeniAdet * fiyat).toFixed(2));
+
+                updateGenelToplam();
+                $('#barkodInput').val("").focus();
+                return;
+            }
+
+            $.ajax({
+                url: '/Home/BarkodAra',
+                type: 'POST',
+                data: { barkod: barkod },
+                success: function (res) {
+                    if (res.success) {
+                        let toplamSatir = res.fiyat;
+
+                        $('#urunListesi tbody').append(
+                            `<tr data-barkod="${barkod}">
+                                        <td>${res.urunAd}</td>
+                                        <td class="fiyat">${res.fiyat}</td>
+                                        <td class="adet">1</td>
+                                        <td class="satirToplam">${toplamSatir}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>`
+                        );
+                        updateGenelToplam();
+                        $('#barkodInput').val("").focus();
+                    } else {
+                        alert("Ürün bulunamadı.");
+                        $('#barkodInput').val("").focus();
+                    }
+                },
+                error: function () {
+                    alert("Bir hata oluştu.");
+                }
+            });
+        }
+
+        function adetDegistir(btn, degisim) {
+            let satir = $(btn).closest('tr');
+            let adetCell = satir.find('.adet');
+            let adet = parseInt(adetCell.text());
+
+            adet += degisim;
+            if (adet < 1) return;
+
+            adetCell.text(adet);
+
+            let fiyat = parseFloat(satir.find('.fiyat').text());
+            satir.find('.satirToplam').text((adet * fiyat).toFixed(2));
+
+            updateGenelToplam();
+        }
+
+        function sil(btn) {
+            $(btn).closest('tr').remove();
+            updateGenelToplam();
+        }
+
+        $('#barkodInput').keypress(function (e) {
+            if (e.which == 13) {
+                barkodAra();
+                e.preventDefault();
+            }
+        });
+
+        function satisYap() {
+            let odemeTipi = $('#odemeTipi').val();
+            let toplamTutar = parseFloat($('#toplamFiyat').text().replace(' ₺', ''));
+
+            if (isNaN(toplamTutar) || toplamTutar <= 0) {
+                alert("Geçerli bir tutar giriniz.");
+                return;
+            }
+
+            let urunlerText = '';
+            let musteriID = odemeTipi === 'Veresiye' ? $('#musteriSelect').val() : null;
+
+            let urunSatirlari = $('#urunListesi tbody tr');
+            if (urunSatirlari.length === 0) {
+                alert("Ürün listesi boş! Lütfen önce ürün ekleyin.");
+                return;
+            }
+
+            if (odemeTipi === 'Veresiye' && (!musteriID || musteriID === "")) {
+                alert("Veresiye satış için müşteri seçmelisiniz.");
+                return;
+            }
+
+            urunSatirlari.each(function () {
+                let urunAd = $(this).find('td:eq(0)').text();
+                let adet = $(this).find('.adet').text();
+                let fiyat = $(this).find('.fiyat').text();
+                urunlerText += `${urunAd} - ${adet} Adet - ${fiyat}₺\n`;
+            });
+
+            $.ajax({
+                url: '/Home/SatisYap',
+                type: 'POST',
+                data: {
+                    OdemeTipi: odemeTipi,
+                    ToplamTutar: toplamTutar,
+                    UrunListesi: urunlerText,
+                    MusteriID: musteriID
+                },
+                success: function (res) {
+                    if (res.success) {
+                        alert("Satış tamamlandı!");
+                        temizle();
+                    } else {
+                        alert("Hata: " + res.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Satış işlemi sırasında sistemsel bir hata oluştu.");
+                    console.error("Hata Detayı:", xhr.responseText, status, error);
+                }
+            });
+        }
+
+        function hizliUrunEkle(barkod) {
+            $('#barkodInput').val(barkod);
+            barkodAra();
+        }
+
+        function digerUrunEkle() {
+            let fiyatInput = $('#digerUrunFiyat');
+            let fiyat = parseFloat(fiyatInput.val());
+
+            if (isNaN(fiyat) || fiyat <= 0) {
+                alert("Lütfen geçerli bir fiyat girin.");
+                fiyatInput.focus();
+                return;
+            }
+
+            digerUrunSayac++;
+            let barkodDegeri = `digerUrun${digerUrunSayac}`;
+            let urunAdi = digerUrunSayac === 1 ? "Diğer Ürün" : `Diğer Ürün ${digerUrunSayac}`;
+
+            $('#urunListesi tbody').append(
+                `<tr data-barkod="${barkodDegeri}">
+                            <td>${urunAdi}</td>
+                            <td class="fiyat">${fiyat.toFixed(2)}</td>
+                            <td class="adet">1</td>
+                            <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>`
+            );
+
+            updateGenelToplam();
+            fiyatInput.val("").focus();
+        }
+
+        $('.odeme-btn').click(function () {
+            $('.odeme-btn').removeClass('active');
+            $(this).addClass('active');
+
+            let secilenTip = $(this).data('tip');
+            $('#odemeTipi').val(secilenTip);
+
+            if (secilenTip === 'Veresiye') {
+                $('#customerSelectContainer').show();
+            } else {
+                $('#customerSelectContainer').hide();
+                $('#musteriSelect').val('');
+            }
+        });
+
+        $(document).ready(function () {
+            $('#barkodInput').focus();
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-

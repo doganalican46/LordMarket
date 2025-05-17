@@ -153,19 +153,5 @@ namespace LordMarket.Controllers
 
             db.SaveChanges();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
