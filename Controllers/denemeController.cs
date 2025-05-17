@@ -26,6 +26,8 @@ namespace LordMarket.Controllers
 
         public ActionResult Index()
         {
+            UpdateSatisToplamTutar();
+
             var viewModel = new SatisIslemViewModel1
             {
                 GelirGider = db.GelirGider.Where(h => h.Status == true).ToList(),
@@ -60,17 +62,30 @@ namespace LordMarket.Controllers
 
 
         [HttpPost]
-        public JsonResult SatisYap(string OdemeTipi, decimal ToplamTutar, string UrunListesi)
+        public JsonResult SatisYap(string OdemeTipi, decimal? ToplamTutar, string UrunListesi, int? MusteriID)
         {
             try
             {
+                // Veresiye seçildiğinde müşteri ID kontrolü zorunlu
+                if (OdemeTipi == "Veresiye" && (MusteriID == null || MusteriID == 0))
+                {
+                    return Json(new { success = false, message = "Veresiye satış için müşteri seçimi zorunludur." });
+                }
+
+                // Ürün listesi boş olamaz
+                if (string.IsNullOrWhiteSpace(UrunListesi))
+                {
+                    return Json(new { success = false, message = "Ürün listesi boş olamaz." });
+                }
+
                 SatisIslem yeniSatis = new SatisIslem
                 {
                     ToplamTutar = ToplamTutar,
                     OdemeTipi = OdemeTipi,
                     UrunListesi = UrunListesi,
                     Tarih = DateTime.Now,
-                    Status = true
+                    Status = true,
+                    MusteriID = (OdemeTipi == "Veresiye") ? MusteriID : null
                 };
 
                 db.SatisIslem.Add(yeniSatis);
@@ -80,8 +95,63 @@ namespace LordMarket.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = ex.Message });
+                return Json(new { success = false, message = "Hata oluştu: " + ex.Message });
             }
+        }
+
+        private void UpdateSatisToplamTutar()
+        {
+            var satislar = db.SatisIslem
+                            .Where(s => s.Status == true && (!s.ToplamTutar.HasValue || s.ToplamTutar == 0))
+                            .ToList();
+
+            foreach (var satis in satislar)
+            {
+                if (string.IsNullOrWhiteSpace(satis.UrunListesi))
+                    continue;
+
+                decimal toplam = 0;
+
+                // Ürün listesini parçala
+                // Örnek: "Kristal Bardak - 1 Adet - 1.5₺ Maraş Otu - 1 Adet - 7₺ Benimo - 1 Adet - 28₺"
+                // Ürünler arası boşluklarla ayrılmış ama ürünler kendi içinde " - " ile ayrılmış.
+                // En sağdaki fiyat kısmını alacağız.
+
+                var urunler = satis.UrunListesi.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+                // Daha sağlam çözüm için " - " ile ayırıp fiyatı almak gerek.
+                // Bu nedenle her ürünün "İsim - adet - fiyat₺" şeklinde ayrılması gerekiyor.
+                // Bunu ayırmak için, UrunListesi stringini "₺" işaretine göre split edip her ürün fiyatını alabiliriz.
+
+                // Alternatif olarak ürünleri '₺' işaretinden bölüp işlem yapalım:
+
+                var urunParcalari = satis.UrunListesi.Split(new char[] { '₺' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var parca in urunParcalari)
+                {
+                    // Her parça örn: "Kristal Bardak - 1 Adet - 1.5"
+                    // Son - ile ayrılan fiyat kısmını alalım.
+
+                    var kismi = parca.Trim();
+
+                    // Son '-' işaretinden sonra fiyat olmalı
+                    int sonTireIndex = kismi.LastIndexOf('-');
+                    if (sonTireIndex < 0)
+                        continue;
+
+                    string fiyatStr = kismi.Substring(sonTireIndex + 1).Trim();
+
+                    // Fiyatı decimal'e çevirmeye çalış
+                    if (decimal.TryParse(fiyatStr.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal fiyat))
+                    {
+                        toplam += fiyat;
+                    }
+                }
+
+                satis.ToplamTutar = toplam;
+            }
+
+            db.SaveChanges();
         }
 
 

@@ -43,8 +43,22 @@
         <option value="Kart">Kart</option>
         <option value="Veresiye">Veresiye</option>
     </select>
+    <br /><br />
 
+          <select id="musteriSelect" style="display:none;">
+              Müşteri Seçin:
+
+              <option value="">Müşteri Seçin</option>
+              @foreach (var musteri in Model.Musteriler)
+              {
+                  <option value="@musteri.ID">@musteri.MusteriAdSoyad</option>
+              }
+          </select>
+
+
+    <br /><br />
     <button onclick="satisYap()">Satış Yap</button>
+    <button onclick="temizle()">Temizle</button>
 
 
 
@@ -65,10 +79,38 @@
 
 
 
+    <br /><br />
+    <!-- Barkodsuz ürün için input ve buton -->
+    <label>Diğer Ürün Fiyatı (₺):</label>
+    <input type="number" id="digerUrunFiyat" placeholder="Fiyat girin" min="0" step="0.01" class="form-control" />
+    <button onclick="digerUrunEkle()">Diğer Ürün Ekle</button>
+
+
+
+
 
 
     <script>
         var toplam = 0;
+
+        function temizle() {
+            // Ürün listesini temizle
+            $('#urunListesi tbody').empty();
+
+            // Genel toplamı sıfırla
+            toplam = 0;
+            $('#toplamFiyat').text("0");
+
+            // Barkod inputu temizle ve focus yap
+            $('#barkodInput').val('').focus();
+
+            // Ödeme tipi sıfırla (ilk seçeneğe getir)
+            $('#odemeTipi').val('Nakit');
+
+            // Müşteri seçimini sıfırla (varsa)
+            $('#musteriSelect').val('');
+        }
+
 
         function updateGenelToplam() {
             let toplamYeni = 0;
@@ -110,16 +152,16 @@
 
                         $('#urunListesi tbody').append(
                             `<tr data-barkod="${barkod}">
-                                                            <td>${res.urunAd}</td>
-                                                            <td class="fiyat">${res.fiyat}</td>
-                                                            <td class="adet">1</td>
-                                                            <td class="satirToplam">${toplamSatir}</td>
-                                                            <td>
-                                                                <button onclick="adetDegistir(this, 1)">+</button>
-                                                                <button onclick="adetDegistir(this, -1)">-</button>
-                                                                <button onclick="sil(this)">Sil</button>
-                                                            </td>
-                                                        </tr>`
+                                                                            <td>${res.urunAd}</td>
+                                                                            <td class="fiyat">${res.fiyat}</td>
+                                                                            <td class="adet">1</td>
+                                                                            <td class="satirToplam">${toplamSatir}</td>
+                                                                            <td>
+                                                                                <button onclick="adetDegistir(this, 1)">+</button>
+                                                                                <button onclick="adetDegistir(this, -1)">-</button>
+                                                                                <button onclick="sil(this)">Sil</button>
+                                                                            </td>
+                                                                        </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -165,16 +207,35 @@
 
         function satisYap() {
             let odemeTipi = $('#odemeTipi').val();
-            let toplamTutar = toplam;
-            let urunlerText = '';
 
-            // Ürün satırı sayısını kontrol et
+            // toplam değerinin HTML'den geldiğini varsayıyorum, örneğin:
+            let toplamText = $('#toplamTutar').text() || toplam; // toplam değişkenin tanımını görmek faydalı olurdu
+
+            // Sayıya dönüştür (virgül varsa noktaya çevirerek)
+            let toplamTutar = parseFloat(toplamText.toString().replace(",", "."));
+
+            if (isNaN(toplamTutar)) {
+                alert("Toplam tutar okunamadı. Lütfen tutarı kontrol edin.");
+                return;
+            }
+
+            let urunlerText = '';
+            let musteriID = odemeTipi === 'Veresiye' ? $('#musteriSelect').val() : null;
+
+            // Ürün kontrolü
             let urunSatirlari = $('#urunListesi tbody tr');
             if (urunSatirlari.length === 0) {
                 alert("Ürün listesi boş! Lütfen önce ürün ekleyin.");
-                return; // İşlem devam etmesin
+                return;
             }
 
+            // Veresiye için müşteri zorunlu
+            if (odemeTipi === 'Veresiye' && (!musteriID || musteriID === "")) {
+                alert("Veresiye satış için müşteri seçmelisiniz.");
+                return;
+            }
+
+            // Ürün listesini hazırla
             urunSatirlari.each(function () {
                 let urunAd = $(this).find('td:eq(0)').text();
                 let adet = $(this).find('.adet').text();
@@ -188,23 +249,25 @@
                 data: {
                     OdemeTipi: odemeTipi,
                     ToplamTutar: toplamTutar,
-                    UrunListesi: urunlerText
+                    UrunListesi: urunlerText,
+                    MusteriID: musteriID
                 },
                 success: function (res) {
                     if (res.success) {
                         alert("Satış tamamlandı!");
-                        $('#urunListesi tbody').empty();
-                        $('#toplamFiyat').text("0");
-                        toplam = 0;
+                        temizle();
                     } else {
                         alert("Hata: " + res.message);
                     }
                 },
-                error: function () {
-                    alert("Satış işlemi sırasında hata oluştu.");
+                error: function (xhr, status, error) {
+                    alert("Satış işlemi sırasında sistemsel bir hata oluştu.");
+                    console.error("Hata Detayı:", xhr.responseText, status, error);
                 }
             });
         }
+
+
 
 
 
@@ -228,8 +291,60 @@
 
         $('#barkodInput').val('').focus();
 
+        function digerUrunEkle() {
+            let fiyatInput = $('#digerUrunFiyat');
+            let fiyat = parseFloat(fiyatInput.val());
+
+            if (isNaN(fiyat) || fiyat <= 0) {
+                alert("Lütfen geçerli bir fiyat girin.");
+                fiyatInput.focus();
+                return;
+            }
+
+            // Aynı isimde başka bir "Diğer Ürün" varsa adet artır
+            let mevcutSatir = $(`#urunListesi tbody tr[data-barkod='digerUrun']`);
+            if (mevcutSatir.length > 0) {
+                let adetCell = mevcutSatir.find('.adet');
+                let yeniAdet = parseInt(adetCell.text()) + 1;
+                adetCell.text(yeniAdet);
+
+                mevcutSatir.find('.satirToplam').text((yeniAdet * fiyat).toFixed(2));
+                mevcutSatir.find('.fiyat').text(fiyat.toFixed(2)); // Fiyatı güncelle (son girilen fiyatı alabilir)
+
+                updateGenelToplam();
+                fiyatInput.val("").focus();
+                return;
+            }
+
+            // Yeni satır ekle
+            $('#urunListesi tbody').append(
+                `<tr data-barkod="digerUrun">
+                        <td>Diğer Ürün</td>
+                        <td class="fiyat">${fiyat.toFixed(2)}</td>
+                        <td class="adet">1</td>
+                        <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                        <td>
+                            <button onclick="adetDegistir(this, 1)">+</button>
+                            <button onclick="adetDegistir(this, -1)">-</button>
+                            <button onclick="sil(this)">Sil</button>
+                        </td>
+                    </tr>`
+            );
+
+            updateGenelToplam();
+            fiyatInput.val("").focus();
+        }
 
 
+
+        $('#odemeTipi').on('change', function () {
+            if ($(this).val() === 'Veresiye') {
+                $('#musteriSelect').show();
+            } else {
+                $('#musteriSelect').hide();
+                $('#musteriSelect').val(''); // seçimi sıfırla
+            }
+        });
 
 
     </script>
