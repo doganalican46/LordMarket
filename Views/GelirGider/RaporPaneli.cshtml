@@ -4,117 +4,131 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2 class="mb-4">Satış Rapor Paneli</h2>
-
-<form method="get" class="row g-3 mb-4 align-items-end">
-    <div class="col-auto">
-        <label for="baslangicTarihi" class="form-label">Başlangıç:</label>
-        <input id="baslangicTarihi" type="date" name="baslangicTarihi" value="@(((DateTime?)ViewBag.Baslangic)?.ToString("yyyy-MM-dd"))" class="form-control" />
-    </div>
-    <div class="col-auto">
-        <label for="bitisTarihi" class="form-label">Bitiş:</label>
-        <input id="bitisTarihi" type="date" name="bitisTarihi" value="@(((DateTime?)ViewBag.Bitis)?.ToString("yyyy-MM-dd"))" class="form-control" />
-    </div>
-    <div class="col-auto">
-        <button type="submit" class="btn btn-primary">Filtrele</button>
-    </div>
-</form>
-
-@if (Model != null && Model.Any())
-{
-    <div class="mb-4 w-50">
-        <h5>Toplam Ödemeler (Seçilen Tarih Aralığı)</h5>
-        <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Nakit
-                <span class="badge bg-primary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NakitToplam ?? 0)</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Kart
-                <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KartToplam ?? 0)</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                Veresiye
-                <span class="badge bg-warning rounded-pill">@String.Format("{0:N2} ₺", ViewBag.VeresiyeToplam ?? 0)</span>
-            </li>
-        </ul>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="table-responsive p-3">
-            <table id="raporDataTable" class="table table-bordered table-striped table-hover align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Satış No</th>
-                        <th class="text-center">Toplam Tutar</th>
-                        <th class="text-center">Tarih</th>
-                        <th class="text-center">Ödeme Tipi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var SatisIslem in Model)
-                    {
-                        <tr>
-                            <td>
-                                @SatisIslem.SatisNo
-                                <a href="/GelirGider/SatisIslemGetir/@SatisIslem.ID" class="btn btn-light btn-sm ms-2" title="Detay">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                            </td>
-                            <td class="text-center">@SatisIslem.ToplamTutar ₺</td>
-                            <td class="text-center">@SatisIslem.Tarih</td>
-                            <td class="text-center">@SatisIslem.OdemeTipi</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0"><i class="fas fa-file-alt me-2 text-dark"></i>Rapor Paneli</h1>
         </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item active">Rapor Paneli</li>
+            </ol>
+        </nav>
     </div>
 
-    <!-- JQuery, DataTables ve Buttons CSS & JS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+    <form method="get" class="row g-3 mb-4 align-items-end">
+        <div class="col-auto">
+            <label for="baslangicTarihi" class="form-label">Başlangıç:</label>
+            <input id="baslangicTarihi" type="date" name="baslangicTarihi" value="@(((DateTime?)ViewBag.Baslangic)?.ToString("yyyy-MM-dd"))" class="form-control" />
+        </div>
+        <div class="col-auto">
+            <label for="bitisTarihi" class="form-label">Bitiş:</label>
+            <input id="bitisTarihi" type="date" name="bitisTarihi" value="@(((DateTime?)ViewBag.Bitis)?.ToString("yyyy-MM-dd"))" class="form-control" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Filtrele</button>
+        </div>
+    </form>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    @if (Model != null && Model.Any())
+    {
+        <div class="mb-4 w-50">
+            <h5>Toplam Ödemeler (Seçilen Tarih Aralığı)</h5>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Nakit
+                    <span class="badge bg-primary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NakitToplam ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Kart
+                    <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KartToplam ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Veresiye
+                    <span class="badge bg-warning rounded-pill">@String.Format("{0:N2} ₺", ViewBag.VeresiyeToplam ?? 0)</span>
+                </li>
+            </ul>
+        </div>
 
-    <script>
-        $(document).ready(function () {
-            $('#raporDataTable').DataTable({
-                language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json'
-                },
-                pageLength: 10,
-                dom: 'Bfrtip', // Butonları tablo üstüne koyar
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-success btn-sm',
-                        title: 'Satış_Raporu'
-                    },
-                    {
-                        extend: 'pdfHtml5',
-                        text: '<i class="fas fa-file-pdf"></i> PDF',
-                        className: 'btn btn-danger btn-sm',
-                        title: 'Satış_Raporu',
-                        orientation: 'landscape',
-                        pageSize: 'A4',
-                        exportOptions: {
-                            columns: ':visible'
+        <div class="card shadow-sm">
+            <div class="table-responsive p-3">
+                <table id="raporDataTable" class="table table-bordered table-striped table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Satış No</th>
+                            <th class="text-center">Toplam Tutar</th>
+                            <th class="text-center">Tarih</th>
+                            <th class="text-center">Ödeme Tipi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var SatisIslem in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @SatisIslem.SatisNo
+                                    <a href="/GelirGider/SatisIslemGetir/@SatisIslem.ID" class="btn btn-light btn-sm ms-2" title="Detay">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">@SatisIslem.ToplamTutar ₺</td>
+                                <td class="text-center">@SatisIslem.Tarih</td>
+                                <td class="text-center">@SatisIslem.OdemeTipi</td>
+                            </tr>
                         }
-                    }
-                ]
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- JQuery, DataTables ve Buttons CSS & JS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#raporDataTable').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json'
+                    },
+                    pageLength: 10,
+                    dom: 'Bfrtip', // Butonları tablo üstüne koyar
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '<i class="fas fa-file-excel"></i> Excel',
+                            className: 'btn btn-success btn-sm',
+                            title: 'Satış_Raporu'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            text: '<i class="fas fa-file-pdf"></i> PDF',
+                            className: 'btn btn-danger btn-sm',
+                            title: 'Satış_Raporu',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        }
+                    ]
+                });
             });
-        });
-    </script>
-}
-else
-{
-    <div class="alert alert-warning mt-4">Seçilen tarihler arasında satış bulunamadı.</div>
-}
+        </script>
+    }
+    else
+    {
+        <div class="alert alert-warning mt-4">Seçilen tarihler arasında satış bulunamadı.</div>
+    }
+
+
+</div>

@@ -1,59 +1,202 @@
 ﻿@{
     ViewBag.Title = "Ana Sayfa";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    var odemeTipleri = ViewBag.OdemeTipiIstatistik as List<dynamic>;
 }
 
-<h1 class="mt-4">Ana Sayfa</h1>
-<ol class="breadcrumb mb-4">
-    <li class="breadcrumb-item active">Ana Sayfa</li>
-</ol>
-
-<div class="row">
-    <div class="col-xl-3 col-md-6">
-        <div class="card bg-primary text-white mb-4">
-            <div class="card-body">
-                Toplam Satış Tutarı: @string.Format("{0:C}", ViewBag.ToplamSatisTutar)
-            </div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="#">Detaylar</a>
-                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-            </div>
-        </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0"><i class="fas fa-home me-2 text-dark"></i>Ana Sayfa</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item active" aria-current="page">Ana Sayfa</li>
+            </ol>
+        </nav>
     </div>
-</div>
 
-@if (odemeTipleri != null && odemeTipleri.Count > 0)
-{
-    <div class="row">
-        <div class="col-xl-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fas fa-chart-bar me-1"></i>
-                    Ödeme Tipine Göre Satışlar
-                </div>
+    <!-- Günlük, Toplam Gelir ve Gider Kartları -->
+    <div class="row mt-4 g-3 mb-5">
+        <div class="col-xl-4 col-md-6">
+            <div class="card bg-light text-dark h-100">
                 <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Ödeme Tipi</th>
-                                <th>Satış Adedi</th>
-                                <th>Toplam Tutar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in odemeTipleri)
-                            {
-                                <tr>
-                                    <td>@item.OdemeTipi</td>
-                                    <td>@item.Adet</td>
-                                    <td>@string.Format("{0:C}", item.ToplamTutar)</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    Günün Toplam Satış Tutarı:<br />
+                    <strong>@String.Format("{0:C}", ViewBag.GununToplamSatis ?? 0)</strong>
+                    <hr />
+                    <span class="fw-bold">Günün Gelirleri:</span><br />
+                    <strong class="text-success">@String.Format("{0:C}", ViewBag.GununToplamGelir ?? 0)</strong><br />
+                    <span class="fw-bold">Günün Giderleri:</span><br />
+                    <strong class="text-danger">@String.Format("{0:C}", ViewBag.GununToplamGider ?? 0)</strong>
+                    <hr />
+                    <!-- Butonlar -->
+                    <a href="@Url.Action("GelirGider", "GelirGider")" class="btn btn-primary me-2">
+                        <i class="bi bi-cash-stack"></i> Gelir Gider
+                    </a>
+                    <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-secondary">
+                        <i class="bi bi-bar-chart-line"></i> Raporlar
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-}
+
+
+
+
+    <h2 class="mb-4">Tüm Zaman İstatistikleri</h2>
+
+    <div style="display: flex; gap: 20px; max-width: 800px; max-height: 300px;">
+        <canvas id="GelirGiderChart" style="flex: 1; max-width: 400px; height: 300px;"></canvas>
+        <canvas id="OdemeTurleriChart" style="flex: 1; max-width: 400px; height: 300px;"></canvas>
+    </div>
+
+
+    <script>
+    // Gelir-Gider Grafik
+    var gelirGiderCtx = document.getElementById('GelirGiderChart').getContext('2d');
+    var gelirGiderChart = new Chart(gelirGiderCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Gelir', 'Gider'],
+            datasets: [{
+                label: 'Gelir ve Gider',
+                data: [
+                    @Html.Raw(ViewBag.ToplamGelir ?? 0),
+                    @Html.Raw(ViewBag.ToplamGider ?? 0)
+                ],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.7)',  // Mavi - Gelir
+                    'rgba(255, 99, 132, 0.7)'   // Kırmızı - Gider
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        font: { size: 12 }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Tüm Zamanların Gelir Gider Tablosu',
+                    font: { size: 14 }
+                }
+            }
+        }
+    });
+
+    // Ödeme Türleri Grafik
+    var odemeTurleriCtx = document.getElementById('OdemeTurleriChart').getContext('2d');
+    var odemeTurleriChart = new Chart(odemeTurleriCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Nakit', 'Kart', 'Veresiye'],
+            datasets: [{
+                label: 'Ödemeler Toplamı',
+                data: [
+                    @Html.Raw(ViewBag.NakitToplam ?? 0),
+                    @Html.Raw(ViewBag.KartToplam ?? 0),
+                    @Html.Raw(ViewBag.VeresiyeToplam ?? 0)
+                ],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.7)',  // Mavi
+                    'rgba(255, 206, 86, 0.7)',  // Sarı
+                    'rgba(75, 192, 192, 0.7)'   // Turkuaz
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 12,
+                        font: { size: 12 }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Tüm Zamanların Ödeme Türlerine Göre Kazancı',
+                    font: { size: 14 }
+                }
+            }
+        }
+    });
+    </script>
+
+    <!-- Ödeme Bilgi Kartları -->
+    <div class="row g-3 mt-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <strong>Nakit Ödemeler Toplamı</strong>
+                    <h3 class="mt-2">@String.Format("{0:C}", ViewBag.NakitToplam ?? 0)</h3>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="GelirGider/RaporPaneli">Detayları Gör</a>
+                    <i class="fas fa-angle-right text-white"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body">
+                    <strong>Kart Ödemeler Toplamı</strong>
+                    <h3 class="mt-2">@String.Format("{0:C}", ViewBag.KartToplam ?? 0)</h3>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="GelirGider/RaporPaneli">Detayları Gör</a>
+                    <i class="fas fa-angle-right text-white"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <strong>Veresiye Ödemeler Toplamı</strong>
+                    <h3 class="mt-2">@String.Format("{0:C}", ViewBag.VeresiyeToplam ?? 0)</h3>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="GelirGider/RaporPaneli">Detayları Gör</a>
+                    <i class="fas fa-angle-right text-white"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-danger text-white h-100">
+                <div class="card-body">
+                    <strong>En Çok Veresiye Alan Müşteri</strong>
+                    <h5 class="mt-2">
+                        @ViewBag.EnCokVeresiyeAlanMusteri <br />
+                        Toplam: @String.Format("{0:C}", ViewBag.EnCokVeresiyeAlanMusteriBorcu ?? 0)
+                    </h5>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="/Musteri/MusteriGetir/@ViewBag.EnCokVeresiyeAlanMusteriID">Müşteri Detayları</a>
+                    <i class="fas fa-angle-right text-white"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
