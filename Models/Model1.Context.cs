@@ -45,5 +45,20 @@ namespace LordMarket.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SatisYap", odemeTipiParameter, tarihParameter);
         }
+    
+        public virtual int sp_GuncelleSatisNo()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_GuncelleSatisNo");
+        }
+    
+        public virtual int UpdateNullToplamTutar()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateNullToplamTutar");
+        }
+    
+        public virtual int UpdateToplamTutarFromUrunListesi()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateToplamTutarFromUrunListesi");
+        }
     }
 }

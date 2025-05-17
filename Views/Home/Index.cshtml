@@ -227,17 +227,22 @@
                     </div>
                 </div>
 
-                <div class="action-buttons">
-                    <button class="btn btn-success btn-action" onclick="satisYap()">
-                        <i class="fas fa-cash-register me-2"></i>Satış Yap
+                <div class="action-buttons d-flex gap-2 flex-wrap mb-3">
+
+                    <button class="btn btn-danger btn-sm" onclick="temizle()">
+                        <i class="fas fa-trash-alt me-1"></i> Temizle
                     </button>
-                    <button class="btn btn-danger btn-action" onclick="temizle()">
-                        <i class="fas fa-trash-alt me-2"></i>Temizle
+
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
+                        <i class="fas fa-plus me-1"></i> Yeni Ürün
                     </button>
-                    <button class="btn btn-secondary btn-action" onclick="temizle()">
-                        <i class="fas fa-times-circle me-2"></i>İptal
-                    </button>
+
+                    <a href="/Admin/Index" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left me-1"></i>
+                    </a>
+
                 </div>
+
 
                 <div class="quick-products">
                     <h5><i class="fas fa-bolt me-2"></i>Hızlı Ürünler</h5>
@@ -312,16 +317,16 @@
 
                         $('#urunListesi tbody').append(
                             `<tr data-barkod="${barkod}">
-                                        <td>${res.urunAd}</td>
-                                        <td class="fiyat">${res.fiyat}</td>
-                                        <td class="adet">1</td>
-                                        <td class="satirToplam">${toplamSatir}</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>`
+                                                <td>${res.urunAd}</td>
+                                                <td class="fiyat">${res.fiyat}</td>
+                                                <td class="adet">1</td>
+                                                <td class="satirToplam">${toplamSatir}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                </td>
+                                            </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -439,16 +444,16 @@
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-                            <td>${urunAdi}</td>
-                            <td class="fiyat">${fiyat.toFixed(2)}</td>
-                            <td class="adet">1</td>
-                            <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                            <td>
-                                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>`
+                                    <td>${urunAdi}</td>
+                                    <td class="fiyat">${fiyat.toFixed(2)}</td>
+                                    <td class="adet">1</td>
+                                    <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>`
             );
 
             updateGenelToplam();
@@ -473,7 +478,121 @@
         $(document).ready(function () {
             $('#barkodInput').focus();
         });
+
+        $(document).ready(function () {
+            $(".odeme-btn").click(function () {
+                $(".odeme-btn").removeClass("active");
+                $(this).addClass("active");
+
+                var tip = $(this).data("tip");
+                $("#odemeTipi").val(tip);
+
+                // Eğer Veresiye ise müşteri seçimini göster
+                if (tip === "Veresiye") {
+                    $("#customerSelectContainer").slideDown();
+                } else {
+                    $("#customerSelectContainer").slideUp();
+                }
+
+                // Veresiye seçilmişse, müşteri seçilmeden satış yapma
+                if (tip === "Veresiye") {
+                    if ($("#musteriSelect").val()) {
+                        satisYap(); // Müşteri zaten seçiliyse direkt satış yap
+                    } else {
+                        // Seçim yapılınca satış yapılsın
+                        $("#musteriSelect").off("change").on("change", function () {
+                            if ($(this).val()) {
+                                satisYap();
+                            }
+                        });
+                    }
+                } else {
+                    satisYap(); // Nakit veya Kart seçildiyse direkt satış yap
+                }
+            });
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+
+                <form action="/Home/YeniUrun" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="Barkod" class="form-label">Barkod</label>
+                                <input type="text" name="Barkod" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="UrunAd" class="form-label">Ürün Adı</label>
+                                <input type="text" name="UrunAd" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="UrunKategori" class="form-label">Ürün Kategorisi</label>
+                                <input type="text" name="UrunKategori" class="form-control" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="UrunAlisFiyati" class="form-label">Ürün Alış Fiyatı</label>
+                                <input type="number" step="0.01" name="UrunAlisFiyati" id="UrunAlisFiyati" class="form-control" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="KDVOran" class="form-label">KDV Oranı (%)</label>
+                                <input type="number" step="0.01" name="KDVOran" id="KDVOran" class="form-control" value="18" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="UrunFiyat" class="form-label">Hesaplanan Ürün Fiyatı</label>
+                                <input type="number" step="0.01" name="UrunFiyat" id="UrunFiyat" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="UrunResmiFile" class="form-label">Ürün Resmi</label>
+                                <input type="file" name="UrunResmiFile" class="form-control" />
+                            </div>
+
+                            <div class="col-md-6 mt-4 d-flex align-items-center">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="HizliUrunMu" value="true" id="HizliUrunMu" />
+                                    <label class="form-check-label" for="HizliUrunMu">Hızlı Ürün mü?</label>
+                                </div>
+                                <input type="hidden" name="HizliUrunMu" value="false" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Kaydet</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const alisInput = document.getElementById("UrunAlisFiyati");
+        const kdvInput = document.getElementById("KDVOran");
+        const fiyatInput = document.getElementById("UrunFiyat");
+
+        function hesaplaFiyat() {
+            let alis = parseFloat(alisInput.value) || 0;
+            let kdv = parseFloat(kdvInput.value) || 0;
+            let hesaplanan = alis + (alis * kdv / 100);
+            fiyatInput.value = hesaplanan.toFixed(2);
+        }
+
+        alisInput.addEventListener("input", hesaplaFiyat);
+        kdvInput.addEventListener("input", hesaplaFiyat);
+    </script>
 </body>
 </html>

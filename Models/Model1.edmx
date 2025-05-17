@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="GelirGider">
           <Key>
             <PropertyRef Name="ID" />
@@ -38,7 +38,7 @@
           <Property Name="Notlar" Type="nvarchar(max)" />
           <Property Name="ToplamBorc" Type="decimal" Precision="18" Scale="2" />
           <Property Name="SonGuncellenmeTarihi" Type="datetime" />
-          <Property Name="BosAlan" Type="nvarchar" MaxLength="500" />
+          <Property Name="BosAlan" Type="nvarchar(max)" />
           <Property Name="Status" Type="bit" />
         </EntityType>
         <EntityType Name="SatisIslem">
@@ -63,6 +63,8 @@
           <Property Name="Barkod" Type="nvarchar" MaxLength="200" />
           <Property Name="UrunAd" Type="nvarchar" MaxLength="250" />
           <Property Name="UrunFiyat" Type="nvarchar" MaxLength="50" />
+          <Property Name="UrunAlisFiyati" Type="nvarchar" MaxLength="50" />
+          <Property Name="UrunKategori" Type="nvarchar" MaxLength="250" />
           <Property Name="UrunResmi" Type="nvarchar(max)" />
           <Property Name="KDVOran" Type="nvarchar" MaxLength="50" />
           <Property Name="Stok" Type="int" />
@@ -88,6 +90,9 @@
           <Parameter Name="OdemeTipi" Type="nvarchar" Mode="In" />
           <Parameter Name="Tarih" Type="datetime" Mode="In" />
         </Function>
+        <Function Name="sp_GuncelleSatisNo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UpdateNullToplamTutar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UpdateToplamTutarFromUrunListesi" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="LordMarketDBModelStoreContainer">
           <EntitySet Name="GelirGider" EntityType="Self.GelirGider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Kullanicilar" EntityType="Self.Kullanicilar" Schema="dbo" store:Type="Tables" />
@@ -99,8 +104,7 @@
             <End Role="SatisIslem" EntitySet="SatisIslem" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LordMarketDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -137,7 +141,7 @@
           <Property Name="Notlar" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ToplamBorc" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="SonGuncellenmeTarihi" Type="DateTime" Precision="3" />
-          <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="BosAlan" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Boolean" />
           <NavigationProperty Name="SatisIslem" Relationship="Self.FK_SatisIslem_Musteriler" FromRole="Musteriler" ToRole="SatisIslem" />
         </EntityType>
@@ -172,6 +176,8 @@
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="HizliUrunMu" Type="Boolean" />
           <Property Name="Status" Type="Boolean" />
+          <Property Name="UrunKategori" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="UrunAlisFiyati" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_SatisIslem_Musteriler">
           <End Role="Musteriler" Type="Self.Musteriler" Multiplicity="0..1" />
@@ -199,6 +205,9 @@
             <Parameter Name="OdemeTipi" Mode="In" Type="String" />
             <Parameter Name="Tarih" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <FunctionImport Name="sp_GuncelleSatisNo" />
+          <FunctionImport Name="UpdateNullToplamTutar" />
+          <FunctionImport Name="UpdateToplamTutarFromUrunListesi" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -263,6 +272,8 @@
           <EntitySetMapping Name="Urunler">
             <EntityTypeMapping TypeName="LordMarketDBModel.Urunler">
               <MappingFragment StoreEntitySet="Urunler">
+                <ScalarProperty Name="UrunAlisFiyati" ColumnName="UrunAlisFiyati" />
+                <ScalarProperty Name="UrunKategori" ColumnName="UrunKategori" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Barkod" ColumnName="Barkod" />
                 <ScalarProperty Name="UrunAd" ColumnName="UrunAd" />
@@ -279,6 +290,9 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SatisYap" FunctionName="LordMarketDBModel.Store.SatisYap" />
+          <FunctionImportMapping FunctionImportName="sp_GuncelleSatisNo" FunctionName="LordMarketDBModel.Store.sp_GuncelleSatisNo" />
+          <FunctionImportMapping FunctionImportName="UpdateNullToplamTutar" FunctionName="LordMarketDBModel.Store.UpdateNullToplamTutar" />
+          <FunctionImportMapping FunctionImportName="UpdateToplamTutarFromUrunListesi" FunctionName="LordMarketDBModel.Store.UpdateToplamTutarFromUrunListesi" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

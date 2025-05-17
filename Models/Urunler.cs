@@ -26,5 +26,7 @@ namespace LordMarket.Models
         public string BosAlan { get; set; }
         public Nullable<bool> HizliUrunMu { get; set; }
         public Nullable<bool> Status { get; set; }
+        public string UrunKategori { get; set; }
+        public string UrunAlisFiyati { get; set; }
     }
 }

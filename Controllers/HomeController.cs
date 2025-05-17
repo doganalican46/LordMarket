@@ -153,5 +153,22 @@ namespace LordMarket.Controllers
 
             db.SaveChanges();
         }
+
+        [HttpPost]
+        public ActionResult YeniUrun(Urunler urun)
+        {
+            if (ModelState.IsValid)
+            {
+                urun.Status = true;
+                urun.EklenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                db.Urunler.Add(urun);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(urun);
+        }
+
+
     }
 }

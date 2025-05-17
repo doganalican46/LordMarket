@@ -192,11 +192,10 @@
 
 
 
-<!-- Modal -->
 <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
             </div>
@@ -204,31 +203,49 @@
             <form action="/Urun/YeniUrun" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
 
-                    <div class="mb-3">
-                        <label for="Barkod" class="form-label">Barkod</label>
-                        <input type="text" name="Barkod" class="form-control" required />
-                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="Barkod" class="form-label">Barkod</label>
+                            <input type="text" name="Barkod" class="form-control" required />
+                        </div>
 
-                    
+                        <div class="col-md-6">
+                            <label for="UrunAd" class="form-label">Ürün Adı</label>
+                            <input type="text" name="UrunAd" class="form-control" required />
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="UrunAd" class="form-label">Ürün Adı</label>
-                        <input type="text" name="UrunAd" class="form-control" required />
-                    </div>
+                        <div class="col-md-6">
+                            <label for="UrunKategori" class="form-label">Ürün Kategorisi</label>
+                            <input type="text" name="UrunKategori" class="form-control" />
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="UrunFiyat" class="form-label">Ürün Fiyatı</label>
-                        <input type="text" name="UrunFiyat" class="form-control" required />
-                    </div>
+                        <div class="col-md-6">
+                            <label for="UrunAlisFiyati" class="form-label">Ürün Alış Fiyatı</label>
+                            <input type="number" step="0.01" name="UrunAlisFiyati" id="UrunAlisFiyati" class="form-control" />
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="UrunResmi" class="form-label">Ürün Resmi</label>
-                        <input type="file" name="UrunResmiFile" class="form-control" />
-                    </div>
+                        <div class="col-md-6">
+                            <label for="KDVOran" class="form-label">KDV Oranı (%)</label>
+                            <input type="number" step="0.01" name="KDVOran" id="KDVOran" class="form-control" value="18" />
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="Stok" class="form-label">Stok</label>
-                        <input type="number" name="Stok" class="form-control" required />
+                        <div class="col-md-6">
+                            <label for="UrunFiyat" class="form-label">Hesaplanan Ürün Fiyatı</label>
+                            <input type="number" step="0.01" name="UrunFiyat" id="UrunFiyat" class="form-control" required />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="UrunResmiFile" class="form-label">Ürün Resmi</label>
+                            <input type="file" name="UrunResmiFile" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-4 d-flex align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="HizliUrunMu" value="true" id="HizliUrunMu" />
+                                <label class="form-check-label" for="HizliUrunMu">Hızlı Ürün mü?</label>
+                            </div>
+                            <input type="hidden" name="HizliUrunMu" value="false" />
+                        </div>
                     </div>
 
                 </div>
@@ -240,3 +257,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    const alisInput = document.getElementById("UrunAlisFiyati");
+    const kdvInput = document.getElementById("KDVOran");
+    const fiyatInput = document.getElementById("UrunFiyat");
+
+    function hesaplaFiyat() {
+        let alis = parseFloat(alisInput.value) || 0;
+        let kdv = parseFloat(kdvInput.value) || 0;
+        let hesaplanan = alis + (alis * kdv / 100);
+        fiyatInput.value = hesaplanan.toFixed(2);
+    }
+
+    alisInput.addEventListener("input", hesaplaFiyat);
+    kdvInput.addEventListener("input", hesaplaFiyat);
+</script>
