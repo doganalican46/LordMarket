@@ -207,16 +207,7 @@
                         <input type="text" name="Barkod" class="form-control" required />
                     </div>
 
-                    <div class="mb-3">
-                        <label for="KategoriID" class="form-label">Ürün Kategorisi</label>
-                        <select name="KategoriID" class="form-select" required>
-                            <option disabled selected>Kategori Seçin</option>
-                            @foreach (SelectListItem item in ViewBag.Kategoriler)
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                    </div>
+                   
 
                     <div class="mb-3">
                         <label for="UrunAd" class="form-label">Ürün Adı</label>

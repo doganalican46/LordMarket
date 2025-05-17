@@ -25,16 +25,13 @@
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <h5 class="mb-0 fw-semibold">Ürün Listesi</h5>
                 <div class="d-flex gap-2">
-                    <div class="btn-group">
-                        <button id="exportExcel" class="btn btn-success btn-sm me-2" title="Excel'e Aktar">
-                            <i class="fas fa-file-excel me-1"></i> Excel
-                        </button>
-                        <button id="exportPDF" class="btn btn-danger btn-sm me-2" title="PDF Oluştur">
-                            <i class="fas fa-file-pdf me-1"></i> PDF
-                        </button>
 
+
+                    <div class="d-flex justify-content-end mb-3">
+                        <button type="button" id="tumunuSecBtn" class="btn btn-outline-secondary">
+                            <i class="fas fa-check-square me-1"></i> Tümünü Seç
+                        </button>
                     </div>
-
 
 
                 </div>
@@ -48,10 +45,17 @@
 
             @using (Html.BeginForm("EtiketOlusturPDF", "Urun", FormMethod.Post))
             {
-                <div class="mb-3">
-                    <input type="text" id="urunSearch" class="form-control" placeholder="Ürün ara..." />
+                <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <!-- Sol: PDF Butonu -->
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-file-pdf me-1"></i> PDF Etiket Oluştur
+                    </button>
+
+                    <!-- Sağ: Ürün Arama -->
+                    <input type="text" id="urunSearch" class="form-control" placeholder="Ürün ara..." style="max-width: 300px;" />
                 </div>
 
+                <!-- Ürün Listesi -->
                 <div class="row" id="urunListesi">
                     @foreach (var item in Model)
                     {
@@ -74,11 +78,8 @@
                         </div>
                     }
                 </div>
-
-                <button type="submit" class="btn btn-danger mt-3">
-                    <i class="fas fa-file-pdf me-1"></i> PDF Etiket Oluştur
-                </button>
             }
+
 
 
 
@@ -115,6 +116,18 @@
         urunListesi.innerHTML = '';
         eslesenler.forEach(urun => urunListesi.appendChild(urun));
         eslesmeyenler.forEach(urun => urunListesi.appendChild(urun));
+    });
+
+    let tumSecildi = false;
+
+    document.getElementById('tumunuSecBtn').addEventListener('click', function () {
+        const checkboxlar = document.querySelectorAll('.form-check-input');
+        checkboxlar.forEach(cb => cb.checked = !tumSecildi);
+
+        tumSecildi = !tumSecildi;
+        this.innerHTML = tumSecildi
+            ? '<i class="fas fa-times-circle me-1"></i> Tümünü Bırak'
+            : '<i class="fas fa-check-square me-1"></i> Tümünü Seç';
     });
 </script>
 

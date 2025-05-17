@@ -1,0 +1,122 @@
+﻿@model LordMarket.Models.SatisIslem
+
+@{
+    ViewBag.Title = "Satış İşlem Detay";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var urunListesiStr = Model.UrunListesi ?? "";
+    var urunSatirlari = urunListesiStr.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">Satış İşlem Detay</h3>
+    <div>
+        <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-secondary">← Geri Dön</a>
+        <button class="btn btn-outline-primary" onclick="window.print()">🖨 Yazdır</button>
+    </div>
+</div>
+
+<!-- Müşteri Bilgileri -->
+@if (Model.MusteriID != null)
+{
+    <div class="mb-4">
+        <h5><strong>Müşteri Bilgileri</strong></h5>
+        <table class="table table-bordered table-sm w-50">
+            <tbody>
+                <tr>
+                    <th>Müşteri ID</th>
+                    <td>
+                        @Model.MusteriID
+                        <a href="@Url.Action("MusteriGetir", "Musteri", new { id = Model.MusteriID })"
+                           class="btn btn-sm btn-outline-primary ms-2"
+                           title="Müşteri Detayına Git">
+                            <i class="bi bi-person-lines-fill"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ad Soyad</th>
+                    <td>@ViewBag.MusteriAdSoyad</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+
+<!-- Genel Satış Bilgileri -->
+<div class="table-responsive mb-4" id="printArea">
+    <table class="table table-bordered table-sm text-center">
+        <thead class="table-light">
+            <tr>
+                <th>Satış No</th>
+                <th class="text-center">Toplam Tutar</th>
+                <th class="text-center">Tarih</th>
+                <th class="text-center">Ödeme Tipi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.SatisNo</td>
+                <td>@Model.ToplamTutar ₺</td>
+                <td>@(Model.Tarih.HasValue ? Model.Tarih.Value.ToString("dd.MM.yyyy HH:mm") : "-")</td>
+                <td>@Model.OdemeTipi</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Ürün Detayları -->
+<div class="mb-3">
+    <label><strong>Ürün Detayları:</strong></label>
+
+    @if (urunSatirlari.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Ürün Adı</th>
+                        <th>Adet</th>
+                        <th>Birim Fiyat</th>
+                        <th>Toplam</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                        foreach (var satir in urunSatirlari)
+                        {
+                            var parcalar = satir.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (parcalar.Length == 3)
+                            {
+                                var urunAd = parcalar[0].Trim();
+                                var adetStr = parcalar[1].Trim().Replace("Adet", "").Trim();
+                                var fiyatStr = parcalar[2].Trim().Replace("₺", "").Trim();
+
+                                int adet = 0;
+                                decimal fiyat = 0;
+                                int.TryParse(adetStr, out adet);
+                                decimal.TryParse(fiyatStr, out fiyat);
+                                var toplam = adet * fiyat;
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@urunAd</td>
+                                    <td>@adet</td>
+                                    <td>@fiyat ₺</td>
+                                    <td>@toplam ₺</td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-muted">Ürün listesi boş.</div>
+    }
+</div>

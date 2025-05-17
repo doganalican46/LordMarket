@@ -301,6 +301,8 @@
     <Content Include="Views\deneme\Index.cshtml" />
     <Content Include="Views\deneme\FisYazdir.cshtml" />
     <Content Include="Views\Urun\EtiketOlustur.cshtml" />
+    <Content Include="Views\GelirGider\RaporPaneli.cshtml" />
+    <Content Include="Views\GelirGider\SatisIslemGetir.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

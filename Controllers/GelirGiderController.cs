@@ -1,9 +1,13 @@
-﻿using LordMarket.Models;
+﻿using iTextSharp.text.pdf;
+using iTextSharp.text;
+using LordMarket.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+
 
 namespace LordMarket.Controllers
 {
@@ -83,5 +87,95 @@ namespace LordMarket.Controllers
 
             return View("GelirGiderGetir", y);
         }
+
+        public class RaporViewModel
+        {
+            public List<SatisIslem> Satislar { get; set; }
+            public decimal ToplamTutar { get; set; }
+            public DateTime? BaslangicTarihi { get; set; }
+            public DateTime? BitisTarihi { get; set; }
+        }
+
+
+
+        [HttpGet]
+        public ActionResult Raporlar()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Raporlar(DateTime? baslangicTarihi, DateTime? bitisTarihi)
+        {
+            var rapor = new RaporViewModel();
+
+            if (baslangicTarihi.HasValue && bitisTarihi.HasValue)
+            {
+                rapor.Satislar = db.SatisIslem
+                    .Where(s => s.Tarih >= baslangicTarihi && s.Tarih <= bitisTarihi)
+                    .OrderBy(s => s.Tarih)
+                    .ToList();
+
+                rapor.ToplamTutar = rapor.Satislar.Sum(s => s.ToplamTutar ?? 0);
+                rapor.BaslangicTarihi = baslangicTarihi;
+                rapor.BitisTarihi = bitisTarihi;
+            }
+            else
+            {
+                rapor.Satislar = new List<SatisIslem>();
+                rapor.ToplamTutar = 0;
+            }
+
+            return View(rapor);
+        }
+
+        public ActionResult RaporPaneli(DateTime? baslangicTarihi, DateTime? bitisTarihi)
+        {
+            var satislar = db.SatisIslem
+                .Where(x => (!baslangicTarihi.HasValue || x.Tarih >= baslangicTarihi) &&
+                            (!bitisTarihi.HasValue || x.Tarih <= bitisTarihi))
+                .ToList();
+
+            ViewBag.Baslangic = baslangicTarihi;
+            ViewBag.Bitis = bitisTarihi;
+
+            // Ödeme tipi bazında toplam tutarları hesapla
+            ViewBag.NakitToplam = satislar.Where(s => s.OdemeTipi == "Nakit").Sum(s => s.ToplamTutar);
+            ViewBag.KartToplam = satislar.Where(s => s.OdemeTipi == "Kart").Sum(s => s.ToplamTutar);
+            ViewBag.VeresiyeToplam = satislar.Where(s => s.OdemeTipi == "Veresiye").Sum(s => s.ToplamTutar);
+
+            return View(satislar);
+        }
+
+
+
+
+
+        public ActionResult SatisIslemGetir(int id)
+        {
+            var satisIslem = db.SatisIslem.Find(id);
+
+            if (satisIslem == null)
+                return HttpNotFound();
+
+            if (satisIslem.MusteriID != null)
+            {
+                var musteri = db.Musteriler.FirstOrDefault(m => m.ID == satisIslem.MusteriID);
+                ViewBag.MusteriAdSoyad = musteri?.MusteriAdSoyad ?? "Bilinmiyor";
+            }
+            else
+            {
+                ViewBag.MusteriAdSoyad = "Müşteri kaydı yok";
+            }
+
+            return View(satisIslem);
+        }
+
+
+
+
+
+
+
     }
 }
