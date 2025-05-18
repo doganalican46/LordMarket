@@ -1,15 +1,16 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lord Tekel&Büfe Satış</title>
+    <title>Lord Büfe&Market Satış</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -162,7 +163,7 @@
 <body>
     <div class="container-fluid">
         <div class="header">
-            <h1><i class="fas fa-barcode me-2"></i>Lord Tekel Büfe Satış</h1>
+            <h1><i class="fas fa-barcode me-2"></i>Lord Büfe & Market Satış</h1>
         </div>
 
         <div class="main-content">
@@ -202,9 +203,8 @@
 
             <div class="right-panel">
                 <div class="total-section">
-                    <div id="toplamFiyat" style="font-size: 40px; /* Daha büyük font */ font-weight: bold; /* Kalın yazı */ color: #333;">0.00 ₺</div>
+                    <div id="toplamFiyat" style="font-size: 40px; font-weight: bold; color: #333;">0.00 ₺</div>
                 </div>
-
 
                 <div class="payment-section">
                     <h5><i class="fas fa-money-bill-wave me-2"></i>Ödeme Seçenekleri</h5>
@@ -234,32 +234,20 @@
                 </div>
 
                 <div class="action-buttons d-flex gap-2 flex-wrap mb-3">
-
-                    <button class="btn btn-danger btn-sm" onclick="temizle()">
+                    <button class="btn btn-danger btn-sm d-flex align-items-center" onclick="temizle()">
                         <i class="fas fa-trash-alt me-1"></i> Temizle
                     </button>
-
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
+                    <button type="button" class="btn btn-success btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
                         <i class="fas fa-plus me-1"></i> Yeni Ürün
                     </button>
-
-                    <a href="/Admin/Index" class="btn btn-dark btn-sm d-flex align-items-center" title="Admin Ekranı">
+                    <a href="/Admin/Index" class="btn btn-warning btn-sm d-flex align-items-center" title="Admin Ekranı">
                         <i class="fas fa-toolbox me-2"></i>
                     </a>
-                    <button onclick="fisYazdir()" class="btn btn-success">Son Satış Makbuzu Göster</button>
-
-
-                    @*<a href="/Urun/Urunler" class="btn btn-warning btn-sm" title="Hızlı Ürün Ekle">
-                        <i class="fas fa-bolt me-1"></i>
-                    </a>
-
-                    <a class="btn btn-success btn-sm" href="/Urun/Urunler" title="Ürün Güncelle">
-                        <i class="fas fa-edit me-1"></i>
-                    </a>*@
-
-
-
+                    <button type="button" class="btn btn-info btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#makbuzModal"  title="Son İşlemin Makbuzunu Yazdır">
+                        🧾
+                    </button>
                 </div>
+
 
 
                 <div class="quick-products">
@@ -277,14 +265,22 @@
                 </div>
             </div>
         </div>
-
-
-
-        <button type="button" class="btn btn-primary btn-sm" onclick="fisYazdir()">🖨 Makbuzu Yazdır</button>
-
     </div>
 
     <script>
+
+
+        $(document).ready(function () {
+            if (localStorage.getItem('fisYazdirClicked') === 'true') {
+                localStorage.removeItem('fisYazdirClicked'); // işaret kaldır
+                // Otomatik olarak makbuz modal butonuna tıkla
+                $('button[data-bs-target="#makbuzModal"]').trigger('click');
+            }
+        });
+
+
+
+
         var toplam = 0;
         let digerUrunSayac = 0;
 
@@ -338,16 +334,16 @@
 
                         $('#urunListesi tbody').append(
                             `<tr data-barkod="${barkod}">
-                                                <td>${res.urunAd}</td>
-                                                <td class="fiyat">${res.fiyat}</td>
-                                                <td class="adet">1</td>
-                                                <td class="satirToplam">${toplamSatir}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                </td>
-                                            </tr>`
+                                                        <td>${res.urunAd}</td>
+                                                        <td class="fiyat">${res.fiyat}</td>
+                                                        <td class="adet">1</td>
+                                                        <td class="satirToplam">${toplamSatir}</td>
+                                                        <td>
+                                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                        </td>
+                                                    </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -361,7 +357,6 @@
                             reverseButtons: true
                         }).then((result) => {
                             if (result.dismiss === Swal.DismissReason.cancel) {
-                                // Ürün Ekle modalını aç
                                 var myModal = new bootstrap.Modal(document.getElementById('urunEkleModal'));
                                 myModal.show();
                             }
@@ -377,9 +372,10 @@
                         confirmButtonText: 'Tamam'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            location.reload(); // Sayfayı yenile
+                            location.reload();
                         }
-                    });                }
+                    });
+                }
             });
         }
 
@@ -473,20 +469,34 @@
                             reverseButtons: true
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                temizle(); // Satış sonrası temizlik
-                            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                                fisYazdir();
                                 temizle();
+                            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                localStorage.setItem('fisYazdirClicked', 'true');  // işaretle
+                                Swal.fire({
+                                    title: 'Fiş hazırlanıyor...',
+                                    timer: 2400,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    },
+                                    willClose: () => {
+                                        temizle();
+                                        location.reload();
+                                    }
+                                });
                             }
                         });
+
                     } else {
                         Swal.fire({
                             title: 'Hata',
-                            text: 'Hata: ' + res.message, // Bu satır dinamikse JS içinden çağırılmalı
+                            text: 'Hata: ' + res.message,
                             icon: 'error',
                             confirmButtonText: 'Tamam'
-                        });                    }
+                        });
+                    }
                 },
+
                 error: function (xhr, status, error) {
                     Swal.fire({
                         title: 'Hata',
@@ -502,142 +512,6 @@
                 }
             });
         }
-
-
-        function fisYazdir() {
-            $.ajax({
-                type: "POST",
-                url: '/Home/SonSatisBilgisi',
-                dataType: 'json',
-                success: function (response) {
-                    if (response.success) {
-                        var satis = response.data;
-
-                        // HTML içeriğini oluştur
-                        var urunSatirlari = "";
-                        satis.UrunSatirlari.forEach(function (satir) {
-                            let urunAd = "", adet = "", tutar = "";
-
-                            var parcalar = satir.split(" - ");
-                            parcalar.forEach(function (parca) {
-                                if (parca.startsWith("Ürün: ")) urunAd = parca.replace("Ürün: ", "").trim();
-                                if (parca.startsWith("Adet: ")) adet = parca.replace("Adet: ", "").trim();
-                                if (parca.startsWith("Tutar: ")) tutar = parca.replace("Tutar: ", "").trim();
-                            });
-
-                            if (urunAd.length > 20) urunAd = urunAd.substring(0, 17) + "...";
-
-                            urunSatirlari += `
-                        <div style="display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 3px;">
-                            <span style="flex: 1.3;">${urunAd}</span>
-                            <span style="flex: 0.6; text-align: center;">${adet}</span>
-                            <span style="flex: 1.2; text-align: right;">${tutar}</span>
-                        </div>`;
-                        });
-
-                        var html = `
-<div id="yazdirDiv" style="font-family: 'Courier New', monospace; font-size: 14px; width: 58mm; margin: 0 auto; padding-left: 6px; font-weight: bold; box-sizing: border-box;">
-    <div style="text-align: center; font-size: 17px; margin-bottom: 5px;">LORD BÜFE & MARKET</div>
-    <div style="text-align: center; font-size: 14px; margin-bottom: 5px;">TEL: 0544 940 8134</div>
-    <div style="text-align: center; font-size: 15px; margin-bottom: 5px;">-----------------------</div>
-
-    <div style="margin-bottom: 6px;">Tarih: ${new Date(satis.Tarih).toLocaleString("tr-TR")}</div>
-    <div style="margin-bottom: 6px;">Satış No: ${satis.SatisNo}</div>
-    <div style="text-align: center; font-size: 15px; margin-bottom: 5px;">-----------------------</div>
-
-    <div style="display: flex; justify-content: space-between; font-size: 15px; border-bottom: 1px dashed black; padding-bottom: 3px; margin-bottom: 5px;">
-        <span style="flex: 1.3;">Ürün</span>
-        <span style="flex: 0.6; text-align: center;">Adet</span>
-        <span style="flex: 1.2; text-align: right;">Tutar</span>
-    </div>
-    ${urunSatirlari}
-
-    <div style="text-align: center; font-size: 15px; margin: 7px 0;">-----------------------</div>
-
-    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 18px; font-weight: 900;">
-        <span>Toplam:</span>
-        <span>${satis.ToplamTutar} ₺</span>
-    </div>
-    <div style="display: flex; justify-content: space-between; margin-bottom: 7px; font-size: 15px;">
-        <span>Ödeme Tipi:</span>
-        <span>${satis.OdemeTipi}</span>
-    </div>
-
-    ${satis.MusteriAdSoyad ? `<div style="margin-bottom: 6px; font-size: 14px;">Müşteri: ${satis.MusteriAdSoyad}</div>` : ""}
-
-    <div style="text-align: center; font-size: 15px; margin: 7px 0;">-----------------------</div>
-    <div style="text-align: center; font-size: 14px; margin-bottom: 6px;">MALİ DEĞERİ YOKTUR</div>
-    <div style="text-align: center; font-size: 14px; margin: 7px 0;">-----------------------</div>
-
-    <div style="text-align: center; font-size: 14px;">
-        ADRES: NARLI CUMHURİYET MAH.<br />
-        13007.SK NO:12/A
-    </div>
-</div>`;
-
-                        // Yeni pencere açıp yazdır
-                        var printWindow = window.open('', '', 'height=600,width=400');
-                        printWindow.document.write('<html><head><title>Makbuz</title></head><body>');
-                        printWindow.document.write(html);
-                        printWindow.document.write('</body></html>');
-                        printWindow.document.close();
-                        printWindow.focus();
-                        printWindow.print();
-                        printWindow.close();
-
-                    } else {
-                        alert("Hata: " + response.message);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    alert("Sunucu hatası: " + error);
-                }
-            });
-        }
-
-
-        $("#yazdirBtn").on("click", function () {
-            var printContents = document.getElementById("printableReceipt").innerHTML;
-            var originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-
-            // Yazdırma sonrası makbuzu gizle ve sayfayı yenile
-            $("#printableReceipt").hide();
-            location.reload();
-        });
-
-        $("#kapatBtn").on("click", function () {
-            $("#printableReceipt").hide();
-        });
-
-
-        $("#yazdirBtn").on("click", function () {
-            var printContents = document.getElementById("makbuzIcerik").innerHTML;
-            var originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-
-            // Yazdırma sonrası modalı gizle ve sayfayı yenile
-            $("#makbuzContainer").hide();
-            location.reload();
-        });
-
-        $("#kapatBtn").on("click", function () {
-            $("#makbuzContainer").hide();
-        });
-
-
-
-        
-
-
-
-
 
 
         function hizliUrunEkle(barkod) {
@@ -656,7 +530,7 @@
                     icon: 'warning',
                     confirmButtonText: 'Tamam'
                 });
-                fiyatInput.value = "";     
+                fiyatInput.value = "";
                 fiyatInput.focus();
                 return;
             }
@@ -667,16 +541,16 @@
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-                                    <td>${urunAdi}</td>
-                                    <td class="fiyat">${fiyat.toFixed(2)}</td>
-                                    <td class="adet">1</td>
-                                    <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                    </td>
-                                </tr>`
+                                            <td>${urunAdi}</td>
+                                            <td class="fiyat">${fiyat.toFixed(2)}</td>
+                                            <td class="adet">1</td>
+                                            <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>`
             );
 
             updateGenelToplam();
@@ -710,19 +584,16 @@
                 var tip = $(this).data("tip");
                 $("#odemeTipi").val(tip);
 
-                // Eğer Veresiye ise müşteri seçimini göster
                 if (tip === "Veresiye") {
                     $("#customerSelectContainer").slideDown();
                 } else {
                     $("#customerSelectContainer").slideUp();
                 }
 
-                // Veresiye seçilmişse, müşteri seçilmeden satış yapma
                 if (tip === "Veresiye") {
                     if ($("#musteriSelect").val()) {
-                        satisYap(); // Müşteri zaten seçiliyse direkt satış yap
+                        satisYap();
                     } else {
-                        // Seçim yapılınca satış yapılsın
                         $("#musteriSelect").off("change").on("change", function () {
                             if ($(this).val()) {
                                 satisYap();
@@ -730,17 +601,15 @@
                         });
                     }
                 } else {
-                    satisYap(); // Nakit veya Kart seçildiyse direkt satış yap
+                    satisYap();
                 }
             });
         });
 
 
-        
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
 
     <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -752,7 +621,6 @@
 
                 <form action="/Home/YeniUrun" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
-
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="Barkod" class="form-label">Barkod</label>
@@ -797,7 +665,6 @@
                                 <input type="hidden" name="HizliUrunMu" value="false" />
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">Kaydet</button>
@@ -822,6 +689,118 @@
 
         alisInput.addEventListener("input", hesaplaFiyat);
         kdvInput.addEventListener("input", hesaplaFiyat);
+    </script>
+
+
+    <div class="modal fade" id="makbuzModal" tabindex="-1" aria-labelledby="makbuzModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm" style="display: flex; justify-content: center; align-items: center;">
+            <div class="modal-content" style="margin: 0 auto;">
+                <div class="modal-header py-1">
+                    <h5 class="modal-title" id="makbuzModalLabel" style="font-size: 16px;">İşlem Makbuzu</h5>
+                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div id="printableReceipt" style="font-family: 'Courier New', monospace; font-size: 14px; width: 58mm; margin: 0 auto; padding-left: 6px; font-weight: bold; box-sizing: border-box;">
+                    <div style="text-align: center; font-size: 17px; margin-bottom: 5px;">
+                        LORD BÜFE & MARKET
+                    </div>
+                    <div style="text-align: center; font-size: 14px; margin-bottom: 5px;">
+                        TEL: 0544 940 8134
+                    </div>
+                    <div style="text-align: center; font-size: 15px; margin-bottom: 5px;">-----------------------</div>
+
+                    <div style="margin-bottom: 6px; font-size: 14px;">Tarih: @(Model.SonSatis?.Tarih?.ToString("dd.MM.yyyy HH:mm") ?? "-")</div>
+                    <div style="margin-bottom: 6px; font-size: 14px;">Satış No: @Model.SonSatis.SatisNo</div>
+                    <div style="text-align: center; font-size: 15px; margin-bottom: 5px;">-----------------------</div>
+
+                    <!-- Tablo başlıkları -->
+                    <table style="width: 100%; border-collapse: collapse; font-size: 15px; margin-bottom: 5px;">
+                        <thead>
+                            <tr style="border-bottom: 1px dashed black;">
+                                <th style="text-align: left; font-weight: bold; padding-bottom: 3px;">Ürün</th>
+                                <th style="text-align: center; font-weight: bold; padding-bottom: 3px;">Adet</th>
+                                <th style="text-align: right; font-weight: bold; padding-bottom: 3px;">Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var satir in Model.SonSatis.UrunListesi.Split('\n'))
+                            {
+                                var parcalar = satir.Split(new[] { " - " }, StringSplitOptions.None);
+                                string urunAd = "";
+                                string adet = "";
+                                string tutar = "";
+
+                                foreach (var parca in parcalar)
+                                {
+                                    if (parca.StartsWith("Ürün: "))
+                                    {
+                                        urunAd = parca.Replace("Ürün: ", "").Trim();
+                                    }
+                                    else if (parca.StartsWith("Adet: "))
+                                    {
+                                        adet = parca.Replace("Adet: ", "").Trim();
+                                    }
+                                    else if (parca.StartsWith("Tutar: "))
+                                    {
+                                        tutar = parca.Replace("Tutar: ", "").Trim();
+                                    }
+                                }
+
+                                <tr>
+                                    <td style="padding: 2px 0;">@urunAd</td>
+                                    <td style="text-align: center; padding: 2px 0;">@adet</td>
+                                    <td style="text-align: right; padding: 2px 0;">@tutar</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div style="text-align: center; font-size: 15px; margin: 7px 0;">-----------------------</div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 18px; font-weight: 900;">
+                        <span>Toplam:</span>
+                        <span>@Model.SonSatis.ToplamTutar ₺</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 7px; font-size: 15px;">
+                        <span>Ödeme Tipi:</span>
+                        <span>@Model.SonSatis.OdemeTipi</span>
+                    </div>
+
+                    @if (Model.SonSatis.MusteriID != null)
+                    {
+                        <div style="margin-bottom: 6px; font-size: 14px;">Müşteri: @Model.MusteriAdSoyad</div>
+                    }
+
+                    <div style="text-align: center; font-size: 15px; margin: 7px 0;">-----------------------</div>
+                    <div style="text-align: center; font-size: 14px; margin-bottom: 6px;">MALİ DEĞERİ YOKTUR</div>
+                    <div style="text-align: center; font-size: 14px; margin: 7px 0;">-----------------------</div>
+
+                    <div style="text-align: center; font-size: 14px;">
+                        ADRES: NARLI CUMHURİYET MAH.<br />
+                        13007.SK NO:12/A
+                    </div>
+                </div>
+                <div class="modal-footer py-1">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Kapat</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="printDiv('printableReceipt')">🖨 Yazdır</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        function printDiv(divId) {
+            var printContents = document.getElementById(divId).innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = '<div style="width: 58mm; margin: 0 auto; font-family: \'Courier New\', monospace; font-size: 11px; font-weight: bold; box-sizing: border-box;">' + printContents + '</div>';
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+            location.reload();
+        }
     </script>
 </body>
 </html>
