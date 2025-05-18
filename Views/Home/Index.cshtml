@@ -7,6 +7,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         body {
             padding: 20px;
@@ -237,9 +243,19 @@
                         <i class="fas fa-plus me-1"></i> Yeni Ürün
                     </button>
 
-                    <a href="/Admin/Index" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-arrow-left me-1"></i>
+                    <a href="/Admin/Index" class="btn btn-dark btn-sm d-flex align-items-center" title="Admin Ekranı">
+                        <i class="fas fa-toolbox me-2"></i>
                     </a>
+
+                    <a href="/Urun/Urunler" class="btn btn-warning btn-sm" title="Hızlı Ürün Ekle">
+                        <i class="fas fa-bolt me-1"></i>
+                    </a>
+
+                    <a class="btn btn-success btn-sm" href="/Urun/Urunler" title="Ürün Güncelle">
+                        <i class="fas fa-edit me-1"></i>
+                    </a>
+
+                   
 
                 </div>
 
@@ -331,13 +347,34 @@
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
                     } else {
-                        alert("Ürün bulunamadı.");
+                        Swal.fire({
+                            title: 'Ürün bulunamadı',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Tamam',
+                            cancelButtonText: 'Ürün Ekle',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.cancel) {
+                                // Ürün Ekle modalını aç
+                                var myModal = new bootstrap.Modal(document.getElementById('urunEkleModal'));
+                                myModal.show();
+                            }
+                        });
                         $('#barkodInput').val("").focus();
                     }
                 },
                 error: function () {
-                    alert("Bir hata oluştu.");
-                }
+                    Swal.fire({
+                        title: 'Bir hata oluştu',
+                        text: 'Lütfen tekrar deneyin.',
+                        icon: 'error',
+                        confirmButtonText: 'Tamam'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload(); // Sayfayı yenile
+                        }
+                    });                }
             });
         }
 
@@ -371,32 +408,44 @@
 
         function satisYap() {
             let odemeTipi = $('#odemeTipi').val();
-            let toplamTutar = parseFloat($('#toplamFiyat').text().replace(' ₺', ''));
-
-            if (isNaN(toplamTutar) || toplamTutar <= 0) {
-                alert("Geçerli bir tutar giriniz.");
-                return;
-            }
-
-            let urunlerText = '';
             let musteriID = odemeTipi === 'Veresiye' ? $('#musteriSelect').val() : null;
 
+            let urunlerText = '';
             let urunSatirlari = $('#urunListesi tbody tr');
+
             if (urunSatirlari.length === 0) {
-                alert("Ürün listesi boş! Lütfen önce ürün ekleyin.");
+                Swal.fire({
+                    title: 'Ürün listesi boş!',
+                    text: 'Lütfen önce ürün ekleyin.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Tamam',
+                    cancelButtonText: 'Ürün Ekle',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        var modal = new bootstrap.Modal(document.getElementById('urunEkleModal'));
+                        modal.show();
+                    }
+                });
                 return;
             }
 
             if (odemeTipi === 'Veresiye' && (!musteriID || musteriID === "")) {
-                alert("Veresiye satış için müşteri seçmelisiniz.");
+                Swal.fire({
+                    title: 'Uyarı',
+                    text: 'Veresiye satış için müşteri seçmelisiniz.',
+                    icon: 'info',
+                    confirmButtonText: 'Tamam'
+                });
                 return;
             }
 
             urunSatirlari.each(function () {
-                let urunAd = $(this).find('td:eq(0)').text();
-                let adet = $(this).find('.adet').text();
-                let fiyat = $(this).find('.fiyat').text();
-                urunlerText += `${urunAd} - ${adet} Adet - ${fiyat}₺\n`;
+                let urunAd = $(this).find('td:eq(0)').text().trim();
+                let adet = $(this).find('.adet').text().trim();
+                let fiyat = $(this).find('.fiyat').text().trim();
+                urunlerText += `Ürün: ${urunAd} - Adet: ${adet} - Tutar: ${fiyat}\n`;
             });
 
             $.ajax({
@@ -404,24 +453,95 @@
                 type: 'POST',
                 data: {
                     OdemeTipi: odemeTipi,
-                    ToplamTutar: toplamTutar,
                     UrunListesi: urunlerText,
                     MusteriID: musteriID
                 },
                 success: function (res) {
                     if (res.success) {
-                        alert("Satış tamamlandı!");
-                        temizle();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Satış Tamamlandı!',
+                            text: 'Satış işlemi başarıyla gerçekleştirildi.',
+                            confirmButtonText: 'Tamam',
+                            showCancelButton: true,
+                            cancelButtonText: 'Fiş Yazdır',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                temizle(); // Satış sonrası temizlik
+                            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                fisYazdir();
+                                temizle();
+                            }
+                        });
                     } else {
-                        alert("Hata: " + res.message);
-                    }
+                        Swal.fire({
+                            title: 'Hata',
+                            text: 'Hata: ' + res.message, // Bu satır dinamikse JS içinden çağırılmalı
+                            icon: 'error',
+                            confirmButtonText: 'Tamam'
+                        });                    }
                 },
                 error: function (xhr, status, error) {
-                    alert("Satış işlemi sırasında sistemsel bir hata oluştu.");
+                    Swal.fire({
+                        title: 'Hata',
+                        text: 'Satış işlemi sırasında sistemsel bir hata oluştu.',
+                        icon: 'error',
+                        confirmButtonText: 'Tamam'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
                     console.error("Hata Detayı:", xhr.responseText, status, error);
                 }
             });
         }
+
+
+        function fisYazdir() {
+            let fisMetni = "Lord Tekel Büfe Satış Fişi\n\n";
+
+            // Ürünler
+            fisMetni += "Ürünler:\n";
+            $('#urunListesi tbody tr').each(function () {
+                let urunAdi = $(this).find('td:eq(0)').text();
+                let fiyat = parseFloat($(this).find('.fiyat').text()).toFixed(2);
+                let adet = $(this).find('.adet').text();
+                let satirToplam = parseFloat($(this).find('.satirToplam').text()).toFixed(2);
+
+                fisMetni += `${urunAdi} - ${adet} x ${fiyat}₺ = ${satirToplam}₺\n`;
+            });
+
+            // Toplam
+            let toplam = $('#toplamFiyat').text();
+            fisMetni += "\nToplam: " + toplam + "\n";
+
+            // Ödeme Tipi
+            let odemeTipi = $('#odemeTipi').val();
+            fisMetni += "Ödeme Tipi: " + odemeTipi + "\n";
+
+            // Müşteri bilgisi (seçiliyse)
+            let musteriID = $('#musteriSelect').val();
+            if (musteriID) {
+                let musteriAd = $('#musteriSelect option:selected').text();
+                fisMetni += "Müşteri: " + musteriAd + "\n";
+            }
+
+            fisMetni += "\nTeşekkürler!";
+
+            // Yazdırma kısmı (örneğin alert veya yeni pencerede gösterme)
+            // Sen burayı gerçek yazıcıya gönderme koduyla değiştirebilirsin.
+            let yeniPencere = window.open('', '', 'width=300,height=400');
+            yeniPencere.document.write('<pre>' + fisMetni + '</pre>');
+            yeniPencere.document.close();
+            yeniPencere.focus();
+            yeniPencere.print();
+            yeniPencere.close();
+        }
+
+
+
 
         function hizliUrunEkle(barkod) {
             $('#barkodInput').val(barkod);
@@ -433,7 +553,13 @@
             let fiyat = parseFloat(fiyatInput.val());
 
             if (isNaN(fiyat) || fiyat <= 0) {
-                alert("Lütfen geçerli bir fiyat girin.");
+                Swal.fire({
+                    title: 'Geçersiz Fiyat',
+                    text: 'Lütfen geçerli bir fiyat girin.',
+                    icon: 'warning',
+                    confirmButtonText: 'Tamam'
+                });
+                fiyatInput.value = "";     
                 fiyatInput.focus();
                 return;
             }
@@ -511,6 +637,50 @@
                 }
             });
         });
+
+
+        function hizliUrunEkle2() {
+            var barkod = $('#barkodInput').val().trim();
+            if (!barkod) {
+                Swal.fire("Uyarı", "Lütfen bir barkod girin.", "warning");
+                return;
+            }
+
+            $.ajax({
+                url: '/Urun/UrunGetir/' + barkod,
+                method: 'GET',
+                success: function (data) {
+                    if (data) {
+                        $.ajax({
+                            url: '/Home/HizliUrunYap',
+                            method: 'POST',
+                            data: { barkod: barkod },
+                            success: function (response) {
+                                Swal.fire("Başarılı", "Ürün hızlı ürün olarak ayarlandı.", "success");
+                            },
+                            error: function () {
+                                Swal.fire("Hata", "İşlem sırasında hata oluştu.", "error");
+                            }
+                        });
+                    } else {
+                        Swal.fire("Bulunamadı", "Bu barkoda ait ürün bulunamadı.", "error");
+                    }
+                },
+                error: function () {
+                    Swal.fire("Hata", "Ürün getirilemedi.", "error");
+                }
+            });
+        }
+
+        function urunGuncelle() {
+            var barkod = $('#barkodInput').val().trim();
+            if (!barkod) {
+                Swal.fire("Uyarı", "Lütfen bir barkod girin.", "warning");
+                return;
+            }
+
+            window.location.href = '/Urun/UrunGetir/' + barkod;
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
@@ -556,8 +726,8 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="UrunResmiFile" class="form-label">Ürün Resmi</label>
-                                <input type="file" name="UrunResmiFile" class="form-control" />
+                                <label for="UrunResmi" class="form-label">Ürün Resmi</label>
+                                <input type="text" name="UrunResmi" class="form-control" />
                             </div>
 
                             <div class="col-md-6 mt-4 d-flex align-items-center">

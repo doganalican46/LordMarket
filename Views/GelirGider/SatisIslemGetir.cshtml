@@ -4,15 +4,13 @@
     ViewBag.Title = "Satış İşlem Detay";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 
-    var urunListesiStr = Model.UrunListesi ?? "";
-    var urunSatirlari = urunListesiStr.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+    var urunSatirlari = (Model.UrunListesi ?? "").Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="mb-0">Satış İşlem Detay</h3>
     <div>
         <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-secondary">← Geri Dön</a>
-        <button class="btn btn-outline-primary" onclick="window.print()">🖨 Yazdır</button>
     </div>
 </div>
 
@@ -42,7 +40,13 @@
         </table>
     </div>
 }
-
+else
+{
+    <div class="mb-4">
+        <h5><strong>Müşteri Bilgileri</strong></h5>
+        <div class="alert alert-warning p-2">Müşteri kaydı yok.</div>
+    </div>
+}
 
 <!-- Genel Satış Bilgileri -->
 <div class="table-responsive mb-4" id="printArea">
@@ -66,57 +70,110 @@
     </table>
 </div>
 
-<!-- Ürün Detayları -->
-<div class="mb-3">
-    <label><strong>Ürün Detayları:</strong></label>
-
-    @if (urunSatirlari.Any())
-    {
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm text-center">
-                <thead class="table-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Ürün Adı</th>
-                        <th>Adet</th>
-                        <th>Birim Fiyat</th>
-                        <th>Toplam</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        int index = 1;
-                        foreach (var satir in urunSatirlari)
-                        {
-                            var parcalar = satir.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-                            if (parcalar.Length == 3)
-                            {
-                                var urunAd = parcalar[0].Trim();
-                                var adetStr = parcalar[1].Trim().Replace("Adet", "").Trim();
-                                var fiyatStr = parcalar[2].Trim().Replace("₺", "").Trim();
-
-                                int adet = 0;
-                                decimal fiyat = 0;
-                                int.TryParse(adetStr, out adet);
-                                decimal.TryParse(fiyatStr, out fiyat);
-                                var toplam = adet * fiyat;
-                                <tr>
-                                    <td>@index</td>
-                                    <td>@urunAd</td>
-                                    <td>@adet</td>
-                                    <td>@fiyat ₺</td>
-                                    <td>@toplam ₺</td>
-                                </tr>
-                                index++;
-                            }
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-    else
-    {
-        <div class="text-muted">Ürün listesi boş.</div>
-    }
+<div class="mb-4">
+    <h5><strong>İşlem Makbuzu</strong></h5>
 </div>
+
+<!-- Makbuzu Göster Butonu -->
+<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#makbuzModal">
+    🧾 Makbuzu Göster
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="makbuzModal" tabindex="-1" aria-labelledby="makbuzModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="makbuzModalLabel">İşlem Makbuzu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body" id="printableReceipt">
+                <div class="border p-3" style="font-family: 'Courier New', Courier, monospace; white-space: pre-line;">
+                    <div class="text-center mb-3" style="font-weight: bold; font-size: 1.2rem;">
+                        LORD TEKEL BÜFE
+                    </div>
+                    <div>
+                        Tarih: @(Model.Tarih.HasValue ? Model.Tarih.Value.ToString("dd.MM.yyyy HH:mm") : "-")
+                    </div>
+                    <div>
+                        Satış No: @Model.SatisNo
+                    </div>
+                    <hr />
+                    <div><strong>Ürünler:</strong></div>
+                    <table class="table table-borderless table-sm" style="font-family: monospace;">
+                        <thead>
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th class="text-center">Adet</th>
+                                <th class="text-end">Tutar (₺)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var satir in urunSatirlari)
+                            {
+                                var parcalar = satir.Split(new[] { " - " }, StringSplitOptions.None);
+                                string urunAd = "";
+                                string adet = "";
+                                string tutar = "";
+
+                                foreach (var parca in parcalar)
+                                {
+                                    if (parca.StartsWith("Ürün: "))
+                                    {
+                                        urunAd = parca.Replace("Ürün: ", "").Trim();
+                                    }
+                                    else if (parca.StartsWith("Adet: "))
+                                    {
+                                        adet = parca.Replace("Adet: ", "").Trim();
+                                    }
+                                    else if (parca.StartsWith("Tutar: "))
+                                    {
+                                        tutar = parca.Replace("Tutar: ", "").Trim();
+                                    }
+                                }
+                                <tr>
+                                    <td>@urunAd</td>
+                                    <td class="text-center">@adet</td>
+                                    <td class="text-end">@tutar</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <hr />
+                    <div class="d-flex justify-content-between" style="font-weight: bold;">
+                        <span>Toplam:</span>
+                        <span>@Model.ToplamTutar ₺</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Ödeme Tipi:</span>
+                        <span>@Model.OdemeTipi</span>
+                    </div>
+                    @if (Model.MusteriID != null)
+                    {
+                        <div class="mt-3">
+                            <strong>Müşteri Adı:</strong> @ViewBag.MusteriAdSoyad
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" onclick="printDiv('printableReceipt')">🖨 Yazdır</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function printDiv(divId) {
+        var printContents = document.getElementById(divId).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+
+        location.reload();
+    }
+</script>
+

@@ -139,7 +139,6 @@ namespace LordMarket.Controllers
             ViewBag.Baslangic = baslangicTarihi;
             ViewBag.Bitis = bitisTarihi;
 
-            // Ödeme tipi bazında toplam tutarları hesapla
             ViewBag.NakitToplam = satislar.Where(s => s.OdemeTipi == "Nakit").Sum(s => s.ToplamTutar);
             ViewBag.KartToplam = satislar.Where(s => s.OdemeTipi == "Kart").Sum(s => s.ToplamTutar);
             ViewBag.VeresiyeToplam = satislar.Where(s => s.OdemeTipi == "Veresiye").Sum(s => s.ToplamTutar);
@@ -167,6 +166,7 @@ namespace LordMarket.Controllers
             {
                 ViewBag.MusteriAdSoyad = "Müşteri kaydı yok";
             }
+
 
             return View(satisIslem);
         }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -62,7 +63,7 @@ namespace LordMarket.Controllers
 
 
         [HttpPost]
-        public JsonResult SatisYap(string OdemeTipi, decimal? ToplamTutar, string UrunListesi, int? MusteriID)
+        public JsonResult SatisYap(string OdemeTipi, string UrunListesi, int? MusteriID)
         {
             try
             {
@@ -76,10 +77,57 @@ namespace LordMarket.Controllers
                     return Json(new { success = false, message = "Ürün listesi boş olamaz." });
                 }
 
-                // Yeni satış kaydı oluştur
+                Musteriler musteri = null;
+                decimal toplam = 0;
+                StringBuilder yeniNot = new StringBuilder();
+                string tarih = DateTime.Now.ToString("dd.MM.yyyy");
+
+                yeniNot.AppendLine($"[Tarih: {tarih}]");
+                string[] urunSatirlari = UrunListesi.Split('\n');
+
+                foreach (var satir in urunSatirlari)
+                {
+                    if (!string.IsNullOrWhiteSpace(satir))
+                    {
+                        string[] parcalar = satir.Split('-');
+                        if (parcalar.Length == 3)
+                        {
+                            string urunAd = parcalar[0].Replace("Ürün:", "").Trim();
+                            string adetStr = parcalar[1].Replace("Adet:", "").Trim();
+                            string fiyatStr = parcalar[2].Replace("Tutar:", "").Replace("₺", "").Trim();
+
+                            bool adetOk = int.TryParse(adetStr, out int adet);
+                            bool fiyatOk = decimal.TryParse(fiyatStr, System.Globalization.NumberStyles.Any,
+                                System.Globalization.CultureInfo.InvariantCulture, out decimal birimFiyat);
+
+                            if (adetOk && fiyatOk)
+                            {
+                                decimal satirToplam = adet * birimFiyat;
+                                toplam += satirToplam;
+
+                                yeniNot.AppendLine($"Ürün: {urunAd} | Adet: {adet} | Birim: {birimFiyat}₺ | Toplam: {satirToplam}₺");
+                            }
+                        }
+                    }
+                }
+
+                yeniNot.AppendLine("-----------------------------");
+
+                if (OdemeTipi == "Veresiye" && MusteriID.HasValue)
+                {
+                    musteri = db.Musteriler.FirstOrDefault(m => m.ID == MusteriID.Value);
+                    if (musteri == null)
+                    {
+                        return Json(new { success = false, message = "Müşteri bulunamadı." });
+                    }
+
+                    musteri.ToplamBorc = (musteri.ToplamBorc ?? 0) + toplam;
+                    musteri.Notlar = (musteri.Notlar ?? "") + yeniNot.ToString();
+                }
+
                 SatisIslem yeniSatis = new SatisIslem
                 {
-                    ToplamTutar = ToplamTutar,
+                    ToplamTutar = toplam,
                     OdemeTipi = OdemeTipi,
                     UrunListesi = UrunListesi,
                     Tarih = DateTime.Now,
@@ -88,17 +136,6 @@ namespace LordMarket.Controllers
                 };
 
                 db.SatisIslem.Add(yeniSatis);
-
-                // Veresiye ise, müşterinin toplam borcunu güncelle
-                if (OdemeTipi == "Veresiye" && MusteriID.HasValue)
-                {
-                    var musteri = db.Musteriler.FirstOrDefault(m => m.ID == MusteriID.Value);
-                    if (musteri != null)
-                    {
-                        musteri.ToplamBorc = (musteri.ToplamBorc ?? 0) + (ToplamTutar ?? 0);
-                    }
-                }
-
                 db.SaveChanges();
 
                 return Json(new { success = true });
@@ -108,6 +145,9 @@ namespace LordMarket.Controllers
                 return Json(new { success = false, message = "Hata oluştu: " + ex.Message });
             }
         }
+
+
+
 
 
         private void UpdateSatisToplamTutar()
@@ -179,6 +219,19 @@ namespace LordMarket.Controllers
 
             return View(urun);
         }
+
+
+        [HttpPost]
+        public ActionResult HizliUrunYap(string barkod)
+        {
+            var urun = db.Urunler.FirstOrDefault(x => x.Barkod == barkod);
+
+            urun.HizliUrunMu = true;
+            db.SaveChanges();
+
+            return View("Index");
+        }
+
 
 
     }
