@@ -1,0 +1,60 @@
+﻿@model LordMarket.Models.Kullanicilar
+@{
+    ViewBag.Title = "Kullanici Güncelle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="card shadow-sm border-light rounded" style="max-width: 700px; margin: 20px auto;">
+    <div class="card-header bg-dark text-white text-center">
+        <h3><b>Kullanici Güncelle</b></h3>
+    </div>
+
+    <div class="card-body">
+
+
+        <!-- Güncelleme Formu -->
+        @using (Html.BeginForm("KullaniciGuncelle", "Kullanici", FormMethod.Post, new { @class = "form-group" }))
+        {
+            @Html.HiddenFor(k => k.ID)
+
+            <div class="mb-3">
+                <label>Kullanici Adı:</label>
+                @Html.TextBoxFor(k => k.Username, new { @class = "form-control", required = "required", placeholder = "Kullanici Adı" })
+            </div>
+
+            <div class="mb-3">
+                <label>Şifre:</label>
+                @Html.TextBoxFor(k => k.Password, new { @class = "form-control", required = "required", placeholder = "Şifre" })
+            </div>
+
+            <div class="mb-3">
+                <label>Resim:</label>
+                @Html.TextBoxFor(k => k.Image, new { @class = "form-control", required = "required", placeholder = "Resim" })
+            </div>
+
+
+            <div class="mb-3">
+                <label>Role:</label>
+                @Html.DropDownListFor(k => k.Role, new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Admin", Value = "admin" },
+                    new SelectListItem { Text = "Normal User", Value = "user" }
+                }, new { @class = "form-select", required = "required" })
+            </div>
+
+
+            <div class="mb-3">
+                <label>Status:</label>
+                @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Aktif", Value = "true" },
+                    new SelectListItem { Text = "Pasif", Value = "false" }
+                }, new { @class = "form-select", required = "required" })
+            </div>
+
+            <div class="text-center">
+                <a href="/Kullanici/Kullanicilar/" class="btn btn-danger btn-sm">İptal</a>
+                <button type="submit" class="btn btn-success btn-sm">Güncelle</button>
+            </div>
+        }
+    </div>
+</div>

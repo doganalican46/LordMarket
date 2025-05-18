@@ -12,13 +12,10 @@
 
         <!-- İşlem Temizleme Butonu Ayrı Formda -->
         <div class="text-end mb-3">
-            <form action="/Musteri/BosAlanTemizle" method="post" onsubmit="return confirm('Yapılan işlemleri temizlemek istediğinize emin misiniz?');" style="display:inline;">
+            
+            <form action="/Musteri/MusteriTemizle" method="post" onsubmit="return confirm('Müşteriye ait tüm borçları silmek istediğinize emin misiniz?');" style="display:inline;">
                 <input type="hidden" name="ID" value="@Model.ID" />
-                <button type="submit" class="btn btn-outline-danger btn-sm">Yapılan İşlemleri Temizle</button>
-            </form>
-            <form action="/Musteri/UrunleriTemizle" method="post" onsubmit="return confirm('Ürün listesini temizlemek istediğinize emin misiniz?');" style="display:inline;">
-                <input type="hidden" name="ID" value="@Model.ID" />
-                <button type="submit" class="btn btn-outline-danger btn-sm">Ürün Listesini Temizle</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm">Temizle</button>
             </form>
         </div>
 

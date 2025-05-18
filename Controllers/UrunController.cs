@@ -91,6 +91,7 @@ namespace LordMarket.Controllers
                 urun.Stok = y.Stok;
                 urun.GuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 urun.Status = y.Status;
+                urun.HizliUrunMu = y.HizliUrunMu;
 
                 db.SaveChanges();
 

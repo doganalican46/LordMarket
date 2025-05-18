@@ -1,0 +1,277 @@
+﻿@model IEnumerable<LordMarket.Models.Kullanicilar>
+@{
+    ViewBag.Title = "Kullanici Yönetimi";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <!-- Başlık ve Breadcrumb -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0"><i class="fas fa-users me-2 text-dark"></i>Kullanıcı Yönetimi</h1>
+        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item active">Kullanici</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Ana Kart -->
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <!-- Kart Başlık -->
+        <div class="card-header bg-white border-bottom py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-semibold">Kullanici Listesi</h5>
+                <div class="d-flex gap-2">
+                    <div class="btn-group">
+                        <button id="exportExcel" class="btn btn-success btn-sm me-2" title="Excel'e Aktar">
+                            <i class="fas fa-file-excel me-1"></i> Excel
+                        </button>
+                        <button id="exportPDF" class="btn btn-danger btn-sm me-2" title="PDF Oluştur">
+                            <i class="fas fa-file-pdf me-1"></i> PDF
+                        </button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#KullaniciEkleModal">
+                            Yeni Kullanici Ekle
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Tablo -->
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="DataTable" class="table table-hover align-middle mb-0" style="min-width: 100%;">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Resim</th>
+
+                            <th>Kullanici Adı</th>
+                            <th width="100px" class="text-center">Role</th>
+                            <th width="100px" class="text-center">Durum</th>
+                            <th width="150px" class="text-center">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Kullanici in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center justify-content-center position-relative">
+                                        <img src="@Kullanici.Image" alt="Ürün Resmi" class="rounded-circle border" style="width: 40px; height: 40px; object-fit: cover;">
+
+                                    </div>
+                                </td>
+                                <td class="fw-semibold">@Kullanici.Username</td>
+
+                                <td class="text-center">
+                                    <span class="badge @(Kullanici.Role == "admin" ? "bg-success" : "bg-primary")">
+                                        @(Kullanici.Role == "admin" ? "Admin" : "NormalUser")
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+                                    <span class="badge @(Kullanici.Status == true ? "bg-success" : "bg-danger")">
+                                        @(Kullanici.Status == true ? "Aktif" : "Pasif")
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+                                    <div class="d-flex flex-wrap justify-content-center gap-1">
+
+                                        <a href="/Kullanici/KullaniciGetir/@Kullanici.ID" class="btn btn-warning btn-sm" title="Güncelle">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+
+                                        <a href="/Kullanici/KullaniciSil/@Kullanici.ID" class="btn btn-danger btn-sm" onclick="return confirm('Kullaniciyi silmek istediğinize emin misiniz?');" title="Sil">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        let selectedKullaniciId = 0;
+        function setKullaniciId(id) {
+            selectedKullaniciId = id;
+            document.getElementById("borcKullaniciId").value = id;
+            document.getElementById("veresiyeKullaniciId").value = id;
+        }
+
+        function submitBorcOdeForm() {
+            var id = $('#borcKullaniciId').val();
+            var tutar = $('#OdenenBorcTutar').val();
+            var not = $('#BorcNot').val();
+
+            $.post('/Kullanici/BorcOde', { id: id, OdenenBorcTutar: tutar, Not: not }, function () {
+                location.reload();
+            });
+        }
+
+        function submitVeresiyeForm() {
+            var id = $('#veresiyeKullaniciId').val();
+            var tutar = $('#VeresiyeTutar').val();
+            var not = $('#VeresiyeNot').val();
+
+            $.post('/Kullanici/VeresiyeEkle', { id: id, VeresiyeTutar: tutar, Not: not }, function () {
+                location.reload();
+            });
+        }
+
+        // Excel Export
+        document.getElementById('exportExcel').addEventListener('click', function () {
+            const table = document.getElementById('DataTable');
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Kullanicilar" });
+            XLSX.writeFile(wb, `Kullanicilar_${new Date().toLocaleDateString()}.xlsx`);
+        });
+
+        // PDF Export
+        document.getElementById('exportPDF').addEventListener('click', function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm'
+            });
+
+            // Başlık
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(16);
+            doc.text('Kullanici Listesi', 14, 15);
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text(`Oluşturulma Tarihi: ${new Date().toLocaleDateString()}`, 14, 22);
+
+            // Tablo verileri
+            const table = document.getElementById('DataTable');
+            const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.innerText.trim());
+            const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => {
+                return Array.from(tr.querySelectorAll('td')).map(td => td.innerText.trim());
+            });
+
+            // PDF oluşturma
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 30,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [41, 128, 185],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                },
+                columnStyles: {
+                    0: { cellWidth: 10 },
+                    1: { cellWidth: 15 },
+                    2: { cellWidth: 'auto' },
+                    3: { cellWidth: 20 },
+                    4: { cellWidth: 15 },
+                    5: { cellWidth: 15 },
+                    6: { cellWidth: 25 }
+                },
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 2,
+                    halign: 'center'
+                },
+                margin: { top: 30 }
+            });
+
+            doc.save(`Kullanicilar_${new Date().toLocaleDateString()}.pdf`);
+        });
+
+        // Arama fonksiyonu
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#DataTable tbody tr');
+
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+
+    </script>
+}
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="KullaniciEkleModal" tabindex="-1" aria-labelledby="KullaniciEkleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="KullaniciEkleModalLabel">Yeni Kullanici Ekle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+
+            <form action="/Kullanici/YeniKullanici" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="Username" class="form-label">Kullanici Adı</label>
+                        <input type="text" id="Username" name="Username" class="form-control" required placeholder="Kullanici adı girin" />
+                    </div>
+
+                    <div class="mb-3 position-relative">
+                        <label for="Password" class="form-label">Şifre</label>
+                        <input type="password" id="Password" name="Password" class="form-control pe-5" required placeholder="Şifre" />
+                        <button type="button" class="btn btn-sm btn-outline-secondary position-absolute end-0 top-50 translate-middle-y me-2" onclick="togglePassword()">
+                            Göster
+                        </button>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Role" class="form-label">Rol</label>
+                        <select id="Role" name="Role" class="form-select" required>
+                            <option value="" disabled selected>Rol Seçin</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">Normal Kullanıcı</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Image" class="form-label">Profil Fotoğrafı</label>
+                        <input type="text" id="Image" name="Image" class="form-control"
+                               value="https://cdn-icons-png.flaticon.com/512/219/219983.png" />
+                    </div>
+
+
+                    <input type="hidden" name="Status" value="true" />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById("Password");
+        const type = passwordInput.type === "password" ? "text" : "password";
+        passwordInput.type = type;
+    }
+</script>
+
+
+

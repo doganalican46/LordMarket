@@ -66,18 +66,17 @@ namespace LordMarket.Controllers
         {
             try
             {
-                // Veresiye seçildiğinde müşteri ID kontrolü zorunlu
                 if (OdemeTipi == "Veresiye" && (MusteriID == null || MusteriID == 0))
                 {
                     return Json(new { success = false, message = "Veresiye satış için müşteri seçimi zorunludur." });
                 }
 
-                // Ürün listesi boş olamaz
                 if (string.IsNullOrWhiteSpace(UrunListesi))
                 {
                     return Json(new { success = false, message = "Ürün listesi boş olamaz." });
                 }
 
+                // Yeni satış kaydı oluştur
                 SatisIslem yeniSatis = new SatisIslem
                 {
                     ToplamTutar = ToplamTutar,
@@ -89,6 +88,17 @@ namespace LordMarket.Controllers
                 };
 
                 db.SatisIslem.Add(yeniSatis);
+
+                // Veresiye ise, müşterinin toplam borcunu güncelle
+                if (OdemeTipi == "Veresiye" && MusteriID.HasValue)
+                {
+                    var musteri = db.Musteriler.FirstOrDefault(m => m.ID == MusteriID.Value);
+                    if (musteri != null)
+                    {
+                        musteri.ToplamBorc = (musteri.ToplamBorc ?? 0) + (ToplamTutar ?? 0);
+                    }
+                }
+
                 db.SaveChanges();
 
                 return Json(new { success = true });
@@ -98,6 +108,7 @@ namespace LordMarket.Controllers
                 return Json(new { success = false, message = "Hata oluştu: " + ex.Message });
             }
         }
+
 
         private void UpdateSatisToplamTutar()
         {

@@ -119,24 +119,17 @@ namespace LordMarket.Controllers
 
 
         [HttpPost]
-        public ActionResult BosAlanTemizle(int id)
-        {
-            var musteri = db.Musteriler.Find(id);
-            if (musteri == null) return HttpNotFound();
-
-            musteri.BosAlan = "";
-            db.SaveChanges();
-
-            return RedirectToAction("MusteriGetir", new { id = id });
-        }
-
-        [HttpPost]
-        public ActionResult UrunleriTemizle(int id)
+        public ActionResult MusteriTemizle(int id)
         {
             var urun = db.Musteriler.Find(id);
             if (urun == null) return HttpNotFound();
 
+
+            urun.BosAlan = "";
             urun.Notlar = "";
+            urun.ToplamBorc = 0;
+
+
             db.SaveChanges();
 
             return RedirectToAction("MusteriGetir", new { id = id });

@@ -27,9 +27,28 @@
             </div>
 
             <div class="mb-3">
-                <label>Ürün Fiyatı:</label>
-                @Html.TextBoxFor(k => k.UrunFiyat, new { @class = "form-control", id = "UrunFiyat", required = "required", placeholder = "Ürün Fiyatı" })
+                <label>Ürün Kategorisi:</label>
+                @Html.TextBoxFor(k => k.UrunKategori, new { @class = "form-control", id = "UrunKategori", placeholder = "Ürün Kategorisi" })
             </div>
+
+            <div class="mb-3">
+                <label>Ürün Alış Fiyatı:</label>
+                @Html.TextBoxFor(k => k.UrunAlisFiyati, new { @class = "form-control", id = "UrunAlisFiyati",  placeholder = "UrunAlisFiyati", step = "0.01", type = "number" })
+            </div>
+
+            <div class="mb-3">
+                <label>KDV Oranı (%):</label>
+                @Html.TextBoxFor(k => k.KDVOran, new { @class = "form-control", id = "KDVOran", required = "required", placeholder = "KDV Oranı", value = Model.KDVOran.ToString() == "0" ? "18" : Model.KDVOran.ToString(), step = "0.01", type = "number" })
+            </div>
+
+            <div class="mb-3">
+                <label>Hesaplanan Ürün Fiyatı:</label>
+                @Html.TextBoxFor(k => k.UrunFiyat, new { @class = "form-control", id = "UrunFiyat", required = "required", placeholder = "Ürün Fiyatı", step = "0.01", type = "number" })
+            </div>
+
+
+
+
 
             <div class="mb-3">
                 <label for="UrunResmi" class="form-label">Ürün Resmi:</label>
@@ -39,15 +58,16 @@
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label for="KDVOran" class="form-label">KDV Oranı:</label>
-                @Html.TextBoxFor(k => k.KDVOran, new { @class = "form-control", id = "KDVOran", required = "required", placeholder = "KDV Oranı" })
+            <div class="col-md-6 mt-4 d-flex align-items-center">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="HizliUrunMu" value="true" id="HizliUrunMu" @(Model.HizliUrunMu == true ? "checked" : "") />
+                    <label class="form-check-label" for="HizliUrunMu">Hızlı Ürün mü?</label>
+                </div>
+                <input type="hidden" name="HizliUrunMu" value="false" />
             </div>
 
-            <div class="mb-3">
-                <label for="Stok" class="form-label">Stok:</label>
-                @Html.TextBoxFor(k => k.Stok, new { @class = "form-control", id = "Stok", required = "required", placeholder = "Stok" })
-            </div>
+
+
 
             <div class="mb-3">
                 <label for="status" class="form-label">Status:</label>
@@ -65,6 +85,20 @@
         </div>
     }
 </div>
+
+<script>
+    function hesaplaFiyat() {
+        const alis = parseFloat(document.getElementById("UrunAlisFiyati").value) || 0;
+        const kdv = parseFloat(document.getElementById("KDVOran").value) || 0;
+
+        const satis = alis + (alis * (kdv / 100));
+        document.getElementById("UrunFiyat").value = satis.toFixed(2);
+    }
+
+    document.getElementById("UrunAlisFiyati").addEventListener("input", hesaplaFiyat);
+    document.getElementById("KDVOran").addEventListener("input", hesaplaFiyat);
+</script>
+
 
 <script>
     function previewImage() {
