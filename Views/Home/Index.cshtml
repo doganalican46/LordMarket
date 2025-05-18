@@ -243,7 +243,7 @@
                     <a href="/Admin/Index" class="btn btn-warning btn-sm d-flex align-items-center" title="Admin Ekranı">
                         <i class="fas fa-toolbox me-2"></i>
                     </a>
-                    <button type="button" class="btn btn-info btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#makbuzModal"  title="Son İşlemin Makbuzunu Yazdır">
+                    <button type="button" class="btn btn-info btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#makbuzModal" title="Son İşlemin Makbuzunu Yazdır">
                         🧾
                     </button>
                 </div>
@@ -334,16 +334,16 @@
 
                         $('#urunListesi tbody').append(
                             `<tr data-barkod="${barkod}">
-                                                        <td>${res.urunAd}</td>
-                                                        <td class="fiyat">${res.fiyat}</td>
-                                                        <td class="adet">1</td>
-                                                        <td class="satirToplam">${toplamSatir}</td>
-                                                        <td>
-                                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                        </td>
-                                                    </tr>`
+                                                                        <td>${res.urunAd}</td>
+                                                                        <td class="fiyat">${res.fiyat}</td>
+                                                                        <td class="adet">1</td>
+                                                                        <td class="satirToplam">${toplamSatir}</td>
+                                                                        <td>
+                                                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                        </td>
+                                                                    </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -541,16 +541,16 @@
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-                                            <td>${urunAdi}</td>
-                                            <td class="fiyat">${fiyat.toFixed(2)}</td>
-                                            <td class="adet">1</td>
-                                            <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                            </td>
-                                        </tr>`
+                                                            <td>${urunAdi}</td>
+                                                            <td class="fiyat">${fiyat.toFixed(2)}</td>
+                                                            <td class="adet">1</td>
+                                                            <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                                                            <td>
+                                                                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                            </td>
+                                                        </tr>`
             );
 
             updateGenelToplam();
@@ -693,99 +693,97 @@
 
 
     <div class="modal fade" id="makbuzModal" tabindex="-1" aria-labelledby="makbuzModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm" style="display: flex; justify-content: center; align-items: center;">
-            <div class="modal-content" style="margin: 0 auto;">
-                <div class="modal-header py-1">
-                    <h5 class="modal-title" id="makbuzModalLabel" style="font-size: 16px;">İşlem Makbuzu</h5>
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content mx-auto" style="width: 100%; max-width: 58mm; padding: 0; margin: 0;">
+                <div class="modal-header py-1 justify-content-center">
+                    <h5 class="modal-title" id="makbuzModalLabel" style="font-size: 13px;">İşlem Makbuzu</h5>
                     <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
-                <div id="printableReceipt" style="font-family: 'Courier New', monospace; font-size: 14px; width: 58mm; margin: 0 auto; padding-left: 6px; font-weight: bold; box-sizing: border-box;">
-                    <div style="text-align: center; font-size: 17px; margin-bottom: 5px;">
-                        LORD BÜFE & MARKET
-                    </div>
-                    <div style="text-align: center; font-size: 14px; margin-bottom: 5px;">
-                        TEL: 0544 940 8134
-                    </div>
-                    <div style="text-align: center; font-size: 15px; margin-bottom: 5px;">-----------------------</div>
 
-                    <div style="margin-bottom: 6px; font-size: 14px;">Tarih: @(Model.SonSatis?.Tarih?.ToString("dd.MM.yyyy HH:mm") ?? "-")</div>
-                    <div style="margin-bottom: 6px; font-size: 14px;">Satış No: @Model.SonSatis.SatisNo</div>
-                    <div style="text-align: center; font-size: 15px; margin-bottom: 5px;">-----------------------</div>
+                <div id="printableReceipt"
+                     style="font-family: 'Courier New', monospace; font-size: 11px; width: 100%; box-sizing: border-box; padding: 2px 3px; line-height: 1.1; word-break: break-word; overflow-wrap: break-word;">
 
-                    <!-- Tablo başlıkları -->
-                    <table style="width: 100%; border-collapse: collapse; font-size: 15px; margin-bottom: 5px;">
+                    <div style="font-size: 12px; text-align: center; margin-bottom: 2px;">LORD BÜFE & MARKET</div>
+                    <div style="text-align: center; margin-bottom: 2px;">TEL: 0544 940 8134</div>
+                    <div style="text-align: center; margin-bottom: 2px;">--------------------------</div>
+
+                    <div style="margin-bottom: 1px;">Tarih: @(Model.SonSatis?.Tarih?.ToString("dd.MM.yyyy HH:mm") ?? "-")</div>
+                    <div style="margin-bottom: 1px;">Satış No: @Model.SonSatis.SatisNo</div>
+                    <div style="text-align: center; margin: 2px 0;">--------------------------</div>
+
+                    <table style="width: 100%; font-size: 11px; text-align: center; border-collapse: collapse;">
                         <thead>
-                            <tr style="border-bottom: 1px dashed black;">
-                                <th style="text-align: left; font-weight: bold; padding-bottom: 3px;">Ürün</th>
-                                <th style="text-align: center; font-weight: bold; padding-bottom: 3px;">Adet</th>
-                                <th style="text-align: right; font-weight: bold; padding-bottom: 3px;">Tutar</th>
+                            <tr>
+                                <th style="text-align: left;">Ürün</th>
+                                <th>Ad</th>
+                                <th style="text-align: right;">Tutar</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var satir in Model.SonSatis.UrunListesi.Split('\n'))
                             {
                                 var parcalar = satir.Split(new[] { " - " }, StringSplitOptions.None);
-                                string urunAd = "";
-                                string adet = "";
-                                string tutar = "";
+                                string urunAd = "", adet = "", tutar = "";
 
                                 foreach (var parca in parcalar)
                                 {
-                                    if (parca.StartsWith("Ürün: "))
-                                    {
+                                    if (parca.StartsWith("Ürün: ")) {
                                         urunAd = parca.Replace("Ürün: ", "").Trim();
                                     }
-                                    else if (parca.StartsWith("Adet: "))
-                                    {
+                                    else if (parca.StartsWith("Adet: ")) {
                                         adet = parca.Replace("Adet: ", "").Trim();
                                     }
-                                    else if (parca.StartsWith("Tutar: "))
-                                    {
+                                    else if (parca.StartsWith("Tutar: ")) {
                                         tutar = parca.Replace("Tutar: ", "").Trim();
                                     }
                                 }
 
                                 <tr>
-                                    <td style="padding: 2px 0;">@urunAd</td>
-                                    <td style="text-align: center; padding: 2px 0;">@adet</td>
-                                    <td style="text-align: right; padding: 2px 0;">@tutar</td>
+                                    <td style="text-align: left;">@urunAd</td>
+                                    <td>@adet</td>
+                                    <td style="text-align: right;">@tutar</td>
                                 </tr>
                             }
                         </tbody>
                     </table>
 
-                    <div style="text-align: center; font-size: 15px; margin: 7px 0;">-----------------------</div>
+                    <div style="text-align: center; margin: 2px 0;">--------------------------</div>
 
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 18px; font-weight: 900;">
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; margin-bottom: 1px;">
                         <span>Toplam:</span>
                         <span>@Model.SonSatis.ToplamTutar ₺</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 7px; font-size: 15px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 10.5px; margin-bottom: 2px;">
                         <span>Ödeme Tipi:</span>
                         <span>@Model.SonSatis.OdemeTipi</span>
                     </div>
 
                     @if (Model.SonSatis.MusteriID != null)
                     {
-                        <div style="margin-bottom: 6px; font-size: 14px;">Müşteri: @Model.MusteriAdSoyad</div>
+                        <div style="margin-bottom: 2px;">Müşteri: @Model.MusteriAdSoyad</div>
                     }
 
-                    <div style="text-align: center; font-size: 15px; margin: 7px 0;">-----------------------</div>
-                    <div style="text-align: center; font-size: 14px; margin-bottom: 6px;">MALİ DEĞERİ YOKTUR</div>
-                    <div style="text-align: center; font-size: 14px; margin: 7px 0;">-----------------------</div>
+                    <div style="text-align: center; margin: 2px 0;">--------------------------</div>
+                    <div style="text-align: center; margin-bottom: 2px;">MALİ DEĞERİ YOKTUR</div>
+                    <div style="text-align: center; margin: 2px 0;">--------------------------</div>
 
-                    <div style="text-align: center; font-size: 14px;">
+                    <div style="text-align: center; font-size: 10.5px;">
                         ADRES: NARLI CUMHURİYET MAH.<br />
                         13007.SK NO:12/A
                     </div>
                 </div>
-                <div class="modal-footer py-1">
+
+                <div class="modal-footer py-1 justify-content-center">
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Kapat</button>
                     <button type="button" class="btn btn-primary btn-sm" onclick="printDiv('printableReceipt')">🖨 Yazdır</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+
+
 
 
 
