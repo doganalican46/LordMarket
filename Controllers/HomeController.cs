@@ -233,6 +233,56 @@ namespace LordMarket.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult SonSatisBilgisi()
+        {
+            try
+            {
+                var sonSatis = db.SatisIslem.OrderByDescending(s => s.ID).FirstOrDefault();
+                if (sonSatis == null)
+                    return Json(new { success = false, message = "Satış bulunamadı." });
+
+                var urunSatirlari = new string[0];
+                if (!string.IsNullOrEmpty(sonSatis.UrunListesi))
+                    urunSatirlari = sonSatis.UrunListesi.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+                string musteriAdi = null;
+                if (sonSatis.MusteriID != null)
+                {
+                    musteriAdi = db.Musteriler
+                        .Where(m => m.ID == sonSatis.MusteriID)
+                        .Select(m => m.MusteriAdSoyad)
+                        .FirstOrDefault();
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        sonSatis.ID,
+                        Tarih = sonSatis.Tarih?.ToString("dd.MM.yyyy HH:mm"),
+                        sonSatis.ToplamTutar,
+                        sonSatis.OdemeTipi,
+                        UrunSatirlari = urunSatirlari,
+                        sonSatis.MusteriID,
+                        MusteriAdSoyad = musteriAdi
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+
+
+
+
+
+
+
 
     }
 }

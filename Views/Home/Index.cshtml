@@ -246,6 +246,8 @@
                     <a href="/Admin/Index" class="btn btn-dark btn-sm d-flex align-items-center" title="Admin Ekranı">
                         <i class="fas fa-toolbox me-2"></i>
                     </a>
+                    <button onclick="fisYazdir()" class="btn btn-success">Son Satış Makbuzu Göster</button>
+
 
                     @*<a href="/Urun/Urunler" class="btn btn-warning btn-sm" title="Hızlı Ürün Ekle">
                         <i class="fas fa-bolt me-1"></i>
@@ -255,7 +257,7 @@
                         <i class="fas fa-edit me-1"></i>
                     </a>*@
 
-                   
+
 
                 </div>
 
@@ -275,12 +277,15 @@
                 </div>
             </div>
         </div>
+
+
+
+        <button type="button" class="btn btn-primary btn-sm" onclick="fisYazdir()">🖨 Makbuzu Yazdır</button>
+
     </div>
 
     <script>
         var toplam = 0;
-        var iskontoUygulandi = false;
-        var iskontoOrani = 0;
         let digerUrunSayac = 0;
 
         function temizle() {
@@ -500,45 +505,137 @@
 
 
         function fisYazdir() {
-            let fisMetni = "Lord Tekel Büfe Satış Fişi\n\n";
+            $.ajax({
+                type: "POST",
+                url: '/Home/SonSatisBilgisi',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        var satis = response.data;
 
-            // Ürünler
-            fisMetni += "Ürünler:\n";
-            $('#urunListesi tbody tr').each(function () {
-                let urunAdi = $(this).find('td:eq(0)').text();
-                let fiyat = parseFloat($(this).find('.fiyat').text()).toFixed(2);
-                let adet = $(this).find('.adet').text();
-                let satirToplam = parseFloat($(this).find('.satirToplam').text()).toFixed(2);
+                        // HTML içeriğini oluştur
+                        var urunSatirlari = "";
+                        satis.UrunSatirlari.forEach(function (satir) {
+                            let urunAd = "", adet = "", tutar = "";
 
-                fisMetni += `${urunAdi} - ${adet} x ${fiyat}₺ = ${satirToplam}₺\n`;
+                            var parcalar = satir.split(" - ");
+                            parcalar.forEach(function (parca) {
+                                if (parca.startsWith("Ürün: ")) urunAd = parca.replace("Ürün: ", "").trim();
+                                if (parca.startsWith("Adet: ")) adet = parca.replace("Adet: ", "").trim();
+                                if (parca.startsWith("Tutar: ")) tutar = parca.replace("Tutar: ", "").trim();
+                            });
+
+                            if (urunAd.length > 20) urunAd = urunAd.substring(0, 17) + "...";
+
+                            urunSatirlari += `
+                        <div style="display: flex; justify-content: space-between; font-size: 15px; margin-bottom: 3px;">
+                            <span style="flex: 1.3;">${urunAd}</span>
+                            <span style="flex: 0.6; text-align: center;">${adet}</span>
+                            <span style="flex: 1.2; text-align: right;">${tutar}</span>
+                        </div>`;
+                        });
+
+                        var html = `
+<div id="yazdirDiv" style="font-family: 'Courier New', monospace; font-size: 14px; width: 58mm; margin: 0 auto; padding-left: 6px; font-weight: bold; box-sizing: border-box;">
+    <div style="text-align: center; font-size: 17px; margin-bottom: 5px;">LORD BÜFE & MARKET</div>
+    <div style="text-align: center; font-size: 14px; margin-bottom: 5px;">TEL: 0544 940 8134</div>
+    <div style="text-align: center; font-size: 15px; margin-bottom: 5px;">-----------------------</div>
+
+    <div style="margin-bottom: 6px;">Tarih: ${new Date(satis.Tarih).toLocaleString("tr-TR")}</div>
+    <div style="margin-bottom: 6px;">Satış No: ${satis.SatisNo}</div>
+    <div style="text-align: center; font-size: 15px; margin-bottom: 5px;">-----------------------</div>
+
+    <div style="display: flex; justify-content: space-between; font-size: 15px; border-bottom: 1px dashed black; padding-bottom: 3px; margin-bottom: 5px;">
+        <span style="flex: 1.3;">Ürün</span>
+        <span style="flex: 0.6; text-align: center;">Adet</span>
+        <span style="flex: 1.2; text-align: right;">Tutar</span>
+    </div>
+    ${urunSatirlari}
+
+    <div style="text-align: center; font-size: 15px; margin: 7px 0;">-----------------------</div>
+
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 18px; font-weight: 900;">
+        <span>Toplam:</span>
+        <span>${satis.ToplamTutar} ₺</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 7px; font-size: 15px;">
+        <span>Ödeme Tipi:</span>
+        <span>${satis.OdemeTipi}</span>
+    </div>
+
+    ${satis.MusteriAdSoyad ? `<div style="margin-bottom: 6px; font-size: 14px;">Müşteri: ${satis.MusteriAdSoyad}</div>` : ""}
+
+    <div style="text-align: center; font-size: 15px; margin: 7px 0;">-----------------------</div>
+    <div style="text-align: center; font-size: 14px; margin-bottom: 6px;">MALİ DEĞERİ YOKTUR</div>
+    <div style="text-align: center; font-size: 14px; margin: 7px 0;">-----------------------</div>
+
+    <div style="text-align: center; font-size: 14px;">
+        ADRES: NARLI CUMHURİYET MAH.<br />
+        13007.SK NO:12/A
+    </div>
+</div>`;
+
+                        // Yeni pencere açıp yazdır
+                        var printWindow = window.open('', '', 'height=600,width=400');
+                        printWindow.document.write('<html><head><title>Makbuz</title></head><body>');
+                        printWindow.document.write(html);
+                        printWindow.document.write('</body></html>');
+                        printWindow.document.close();
+                        printWindow.focus();
+                        printWindow.print();
+                        printWindow.close();
+
+                    } else {
+                        alert("Hata: " + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Sunucu hatası: " + error);
+                }
             });
-
-            // Toplam
-            let toplam = $('#toplamFiyat').text();
-            fisMetni += "\nToplam: " + toplam + "\n";
-
-            // Ödeme Tipi
-            let odemeTipi = $('#odemeTipi').val();
-            fisMetni += "Ödeme Tipi: " + odemeTipi + "\n";
-
-            // Müşteri bilgisi (seçiliyse)
-            let musteriID = $('#musteriSelect').val();
-            if (musteriID) {
-                let musteriAd = $('#musteriSelect option:selected').text();
-                fisMetni += "Müşteri: " + musteriAd + "\n";
-            }
-
-            fisMetni += "\nTeşekkürler!";
-
-            // Yazdırma kısmı (örneğin alert veya yeni pencerede gösterme)
-            // Sen burayı gerçek yazıcıya gönderme koduyla değiştirebilirsin.
-            let yeniPencere = window.open('', '', 'width=300,height=400');
-            yeniPencere.document.write('<pre>' + fisMetni + '</pre>');
-            yeniPencere.document.close();
-            yeniPencere.focus();
-            yeniPencere.print();
-            yeniPencere.close();
         }
+
+
+        $("#yazdirBtn").on("click", function () {
+            var printContents = document.getElementById("printableReceipt").innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+
+            // Yazdırma sonrası makbuzu gizle ve sayfayı yenile
+            $("#printableReceipt").hide();
+            location.reload();
+        });
+
+        $("#kapatBtn").on("click", function () {
+            $("#printableReceipt").hide();
+        });
+
+
+        $("#yazdirBtn").on("click", function () {
+            var printContents = document.getElementById("makbuzIcerik").innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+
+            // Yazdırma sonrası modalı gizle ve sayfayı yenile
+            $("#makbuzContainer").hide();
+            location.reload();
+        });
+
+        $("#kapatBtn").on("click", function () {
+            $("#makbuzContainer").hide();
+        });
+
+
+
+        
+
+
 
 
 
@@ -639,50 +736,12 @@
         });
 
 
-        function hizliUrunEkle2() {
-            var barkod = $('#barkodInput').val().trim();
-            if (!barkod) {
-                Swal.fire("Uyarı", "Lütfen bir barkod girin.", "warning");
-                return;
-            }
-
-            $.ajax({
-                url: '/Urun/UrunGetir/' + barkod,
-                method: 'GET',
-                success: function (data) {
-                    if (data) {
-                        $.ajax({
-                            url: '/Home/HizliUrunYap',
-                            method: 'POST',
-                            data: { barkod: barkod },
-                            success: function (response) {
-                                Swal.fire("Başarılı", "Ürün hızlı ürün olarak ayarlandı.", "success");
-                            },
-                            error: function () {
-                                Swal.fire("Hata", "İşlem sırasında hata oluştu.", "error");
-                            }
-                        });
-                    } else {
-                        Swal.fire("Bulunamadı", "Bu barkoda ait ürün bulunamadı.", "error");
-                    }
-                },
-                error: function () {
-                    Swal.fire("Hata", "Ürün getirilemedi.", "error");
-                }
-            });
-        }
-
-        function urunGuncelle() {
-            var barkod = $('#barkodInput').val().trim();
-            if (!barkod) {
-                Swal.fire("Uyarı", "Lütfen bir barkod girin.", "warning");
-                return;
-            }
-
-            window.location.href = '/Urun/UrunGetir/' + barkod;
-        }
+        
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
     <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content shadow">

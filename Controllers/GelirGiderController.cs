@@ -101,12 +101,16 @@ namespace LordMarket.Controllers
         [HttpGet]
         public ActionResult Raporlar()
         {
+            UpdateSatisToplamTutar();
+
             return View();
         }
 
         [HttpPost]
         public ActionResult Raporlar(DateTime? baslangicTarihi, DateTime? bitisTarihi)
         {
+            UpdateSatisToplamTutar();
+
             var rapor = new RaporViewModel();
 
             if (baslangicTarihi.HasValue && bitisTarihi.HasValue)
@@ -131,6 +135,7 @@ namespace LordMarket.Controllers
 
         public ActionResult RaporPaneli(DateTime? baslangicTarihi, DateTime? bitisTarihi)
         {
+            UpdateSatisToplamTutar();
             var satislar = db.SatisIslem
                 .Where(x => (!baslangicTarihi.HasValue || x.Tarih >= baslangicTarihi) &&
                             (!bitisTarihi.HasValue || x.Tarih <= bitisTarihi))
@@ -174,6 +179,60 @@ namespace LordMarket.Controllers
 
 
 
+        private void UpdateSatisToplamTutar()
+        {
+            var satislar = db.SatisIslem
+                            .Where(s => s.Status == true && (!s.ToplamTutar.HasValue || s.ToplamTutar == 0))
+                            .ToList();
+
+            foreach (var satis in satislar)
+            {
+                if (string.IsNullOrWhiteSpace(satis.UrunListesi))
+                    continue;
+
+                decimal toplam = 0;
+
+                // Ürün listesini parçala
+                // Örnek: "Kristal Bardak - 1 Adet - 1.5₺ Maraş Otu - 1 Adet - 7₺ Benimo - 1 Adet - 28₺"
+                // Ürünler arası boşluklarla ayrılmış ama ürünler kendi içinde " - " ile ayrılmış.
+                // En sağdaki fiyat kısmını alacağız.
+
+                var urunler = satis.UrunListesi.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+                // Daha sağlam çözüm için " - " ile ayırıp fiyatı almak gerek.
+                // Bu nedenle her ürünün "İsim - adet - fiyat₺" şeklinde ayrılması gerekiyor.
+                // Bunu ayırmak için, UrunListesi stringini "₺" işaretine göre split edip her ürün fiyatını alabiliriz.
+
+                // Alternatif olarak ürünleri '₺' işaretinden bölüp işlem yapalım:
+
+                var urunParcalari = satis.UrunListesi.Split(new char[] { '₺' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var parca in urunParcalari)
+                {
+                    // Her parça örn: "Kristal Bardak - 1 Adet - 1.5"
+                    // Son - ile ayrılan fiyat kısmını alalım.
+
+                    var kismi = parca.Trim();
+
+                    // Son '-' işaretinden sonra fiyat olmalı
+                    int sonTireIndex = kismi.LastIndexOf('-');
+                    if (sonTireIndex < 0)
+                        continue;
+
+                    string fiyatStr = kismi.Substring(sonTireIndex + 1).Trim();
+
+                    // Fiyatı decimal'e çevirmeye çalış
+                    if (decimal.TryParse(fiyatStr.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal fiyat))
+                    {
+                        toplam += fiyat;
+                    }
+                }
+
+                satis.ToplamTutar = toplam;
+            }
+
+            db.SaveChanges();
+        }
 
 
 
