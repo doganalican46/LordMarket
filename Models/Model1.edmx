@@ -23,6 +23,7 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Username" Type="nvarchar" MaxLength="100" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="150" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" />
           <Property Name="Image" Type="nvarchar(max)" />
           <Property Name="Role" Type="nvarchar" MaxLength="50" />
@@ -131,6 +132,7 @@
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SonGuncellenmeTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Boolean" />
+          <Property Name="Mail" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Musteriler">
           <Key>
@@ -231,6 +233,7 @@
           <EntitySetMapping Name="Kullanicilar">
             <EntityTypeMapping TypeName="LordMarketDBModel.Kullanicilar">
               <MappingFragment StoreEntitySet="Kullanicilar">
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Password" ColumnName="Password" />

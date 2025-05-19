@@ -61,9 +61,12 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center justify-content-center position-relative">
-                                        <img src="@Kullanici.Image" alt="Ürün Resmi" class="rounded-circle border" style="width: 40px; height: 40px; object-fit: cover;">
-
+                                        <img src="@(Kullanici.Image != null ? Kullanici.Image : "https://cdn-icons-png.flaticon.com/512/219/219983.png")"
+                                             alt="Ürün Resmi"
+                                             class="rounded-circle border"
+                                             style="width: 40px; height: 40px; object-fit: cover;">
                                     </div>
+
                                 </td>
                                 <td class="fw-semibold">@Kullanici.Username</td>
 

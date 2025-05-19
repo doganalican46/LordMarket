@@ -36,10 +36,9 @@
                         <i class="fas fa-user-circle me-1"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/Admin/Profil"><i class="fas fa-user me-2"></i>Profil</a></li>
-                        <li><a class="dropdown-item" href="/Admin/Ayarlar"><i class="fas fa-cog me-2"></i>Ayarlar</a></li>
+                        <li><a class="dropdown-item" href="/Admin/UserProfile"><i class="fas fa-cog me-2"></i>Ayarlar</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="/Admin/CikisYap"><i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap</a></li>
+                        <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap</a></li>
                     </ul>
                 </li>
             </ul>
@@ -101,7 +100,7 @@
                             Etiketler
                         </a>
 
-                        <a class="nav-link" href="/Admin/Ayarlar">
+                        <a class="nav-link" href="/Admin/UserProfile">
                             <div class="sb-nav-link-icon"><i class="fas fa-gear"></i></div>
                             Ayarlar
                         </a>
@@ -115,7 +114,7 @@
                 <!-- Alt Bilgi -->
                 <div class="sb-sidenav-footer bg-dark">
                     <div class="small text-white-50">Giriş Yapan:</div>
-                    <span class="text-white">@User.Identity.Name</span>
+                    <span class="text-white">@Session["Username"]</span>
                 </div>
             </nav>
         </div>
@@ -174,3 +173,23 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
+
+
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logoutModalLabel">Log Out</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                Çıkış yapmak istediğinize emin misiniz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                <a href="@Url.Action("Logout", "Admin")" class="btn btn-danger">Evet</a>
+            </div>
+        </div>
+    </div>
+</div>

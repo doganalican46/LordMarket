@@ -1,0 +1,85 @@
+﻿@model LordMarket.Models.Kullanicilar
+
+@{
+    ViewBag.Title = "Profilim";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0"><i class="fas fa-boxes me-2 text-dark"></i>Kullanıcı Ayarları</h1>
+        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item active">Ayarlar</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <!-- Kullanıcı Profili Kartı -->
+            <div class="col-md-4">
+                <div class="card shadow border-0 rounded-4">
+                    <div class="card-body text-center p-4">
+                        <img src="@(!string.IsNullOrEmpty(Model.Image) ? Url.Content(Model.Image) : "https://cdn-icons-png.flaticon.com/512/219/219983.png")"
+                             alt="User Image" class="rounded-circle img-fluid mb-3 border" style="width: 150px; height: 150px; object-fit: cover;">
+                        <h5 class="fw-bold">@Model.Username</h5>
+                        <p class="text-muted">@Model.Mail</p>
+
+                        <div class="d-grid gap-2">
+
+                           
+                            <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profil Güncelleme Formu -->
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="fas fa-user-edit"></i> Profilimi Düzenle</h4>
+                    </div>
+                    <div class="card-body">
+                        @using (Html.BeginForm("UpdateUser", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.ID)
+                            @Html.HiddenFor(m => m.Role)
+                            @Html.HiddenFor(m => m.Status)
+
+                            <div class="form-group mt-2">
+                                @Html.LabelFor(m => m.Username, "Kullanıcı Adı")
+                                @Html.TextBoxFor(m => m.Username, new { @class = "form-control mt-2", placeholder = "Kullanıcı Adı" })
+                            </div>
+
+                            <div class="form-group mt-2">
+                                @Html.LabelFor(m => m.Mail, "E-Posta")
+                                @Html.TextBoxFor(m => m.Mail, new { @class = "form-control mt-2", placeholder = "E-Posta" })
+                            </div>
+
+
+
+                            <div class="form-group mt-2">
+                                @Html.LabelFor(m => m.Password, "Şifre")
+                                @Html.TextBoxFor(m => m.Password, new { @class = "form-control ", placeholder = "Şifre" })
+                            </div>
+
+                            @*<div class="form-group mt-2">
+                                    @Html.LabelFor(m => m.Image, "Profil Resmi")
+                                    <input type="file" name="Image" class="form-control mt-2">
+                                </div>*@
+
+                            <button type="submit" class="btn btn-primary w-100 mt-5">
+                                <i class="fas fa-save"></i> Kaydet
+                            </button>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>

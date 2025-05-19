@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace LordMarket.Controllers
 {
@@ -251,8 +252,65 @@ namespace LordMarket.Controllers
         }
 
 
-       
 
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+
+
+        [HttpPost]
+        public ActionResult Login(Kullanicilar k)
+        {
+            var logindeger = db.Kullanicilar
+                .FirstOrDefault(x =>
+                    (x.Mail == k.Username || x.Username == k.Username) &&
+                    x.Password == k.Password);
+
+            if (logindeger != null)
+            {
+                FormsAuthentication.SetAuthCookie(logindeger.Mail, false);
+
+                Session["ID"] = logindeger.ID;
+                Session["Username"] = logindeger.Username;
+                Session["Mail"] = logindeger.Mail;
+                Session["Password"] = logindeger.Password;
+                Session["Image"] = logindeger.Image;
+                Session["Role"] = logindeger.Role;
+                Session["Status"] = logindeger.Status;
+
+                if (logindeger.Role == "admin")
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                TempData["DangerMessage"] = "E-posta veya şifreniz hatalı, tekrar deneyiniz.";
+                return View();
+            }
+        }
+
+
+        [HttpPost]
+        public ActionResult HizliUrunKaldir(int id)
+        {
+            var urun = db.Urunler.FirstOrDefault(u => u.ID == id);
+            if (urun != null)
+            {
+                urun.HizliUrunMu = false;
+                db.SaveChanges();
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false });
+        }
 
 
 

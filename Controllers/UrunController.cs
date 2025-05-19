@@ -17,7 +17,7 @@ namespace LordMarket.Controllers
     {
         LordMarketDBEntities db = new LordMarketDBEntities();
 
-        // Listeleme
+        [Authorize]
         public ActionResult Urunler()
         {
             //ViewBag.Kategoriler = GetKategoriSelectList();
@@ -25,20 +25,21 @@ namespace LordMarket.Controllers
             return View(urunler);
         }
 
+        [Authorize]
         public ActionResult HizliUrunler()
         {
             var urunler = db.Urunler.Where(m=>m.HizliUrunMu==true).ToList();
             return View(urunler);
         }
 
-        // Yeni ürün formu
+        [Authorize]
         [HttpGet]
         public ActionResult YeniUrun()
         {
             return View();
         }
 
-        // Yeni ürün kaydetme
+        [Authorize]
         [HttpPost]
         public ActionResult YeniUrun(Urunler urun)
         {
@@ -54,7 +55,7 @@ namespace LordMarket.Controllers
             return View(urun);
         }
 
-        // Silme (Pasif yapma)
+        [Authorize]
         public ActionResult UrunSil(int id)
         {
             var urun = db.Urunler.Find(id);
@@ -66,7 +67,7 @@ namespace LordMarket.Controllers
             return RedirectToAction("Urunler");
         }
 
-        // Güncelleme formu
+        [Authorize]
         public ActionResult UrunGetir(int id)
         {
             var urun = db.Urunler.Find(id);
@@ -75,7 +76,7 @@ namespace LordMarket.Controllers
             return View(urun);
         }
 
-        // Güncelleme işlemi
+        [Authorize]
         [HttpPost]
         public ActionResult UrunGuncelle(Urunler y)
         {
@@ -103,7 +104,7 @@ namespace LordMarket.Controllers
             return View("UrunGetir", y);
         }
 
-
+        [Authorize]
         [HttpGet]
         public ActionResult HizliUrunYap(int id)
         {
@@ -119,7 +120,7 @@ namespace LordMarket.Controllers
             return RedirectToAction("Urunler");
         }
 
-
+        [Authorize]
         [HttpGet]
         public ActionResult EtiketOlustur(int[] seciliUrunler)
         {
@@ -131,7 +132,7 @@ namespace LordMarket.Controllers
 
 
 
-
+        [Authorize]
         [HttpPost]
         public ActionResult EtiketOlusturPDF(int[] seciliUrunler)
         {

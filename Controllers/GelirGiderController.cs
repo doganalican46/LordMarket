@@ -15,21 +15,23 @@ namespace LordMarket.Controllers
     {
         LordMarketDBEntities db = new LordMarketDBEntities();
 
-        // Listeleme
+        [Authorize]
         public ActionResult GelirGider()
         {
+            if (Session["Role"] == null || Session["Role"].ToString() != "admin") { return RedirectToAction("Login", "Home"); }
+
             var GelirGider = db.GelirGider.ToList();
             return View(GelirGider);
         }
 
-        // Yeni ürün formu
+        [Authorize]
         [HttpGet]
         public ActionResult YeniGelirGider()
         {
             return View();
         }
 
-        // Yeni ürün kaydetme
+        [Authorize]
         [HttpPost]
         public ActionResult YeniGelirGider(GelirGider GelirGider)
         {
@@ -45,7 +47,7 @@ namespace LordMarket.Controllers
             return View(GelirGider);
         }
 
-        // Silme (Pasif yapma)
+        [Authorize]
         public ActionResult GelirGiderSil(int id)
         {
             var GelirGider = db.GelirGider.Find(id);
@@ -57,7 +59,7 @@ namespace LordMarket.Controllers
             return RedirectToAction("GelirGider");
         }
 
-        // Güncelleme formu
+        [Authorize]
         public ActionResult GelirGiderGetir(int id)
         {
             var GelirGider = db.GelirGider.Find(id);
@@ -66,7 +68,7 @@ namespace LordMarket.Controllers
             return View(GelirGider);
         }
 
-        // Güncelleme işlemi
+        [Authorize]
         [HttpPost]
         public ActionResult GelirGiderGuncelle(GelirGider y)
         {
@@ -97,7 +99,7 @@ namespace LordMarket.Controllers
         }
 
 
-
+        [Authorize]
         [HttpGet]
         public ActionResult Raporlar()
         {
@@ -106,6 +108,7 @@ namespace LordMarket.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult Raporlar(DateTime? baslangicTarihi, DateTime? bitisTarihi)
         {
@@ -133,6 +136,7 @@ namespace LordMarket.Controllers
             return View(rapor);
         }
 
+        [Authorize]
         public ActionResult RaporPaneli(DateTime? baslangicTarihi, DateTime? bitisTarihi)
         {
             UpdateSatisToplamTutar();
@@ -154,7 +158,7 @@ namespace LordMarket.Controllers
 
 
 
-
+        [Authorize]
         public ActionResult SatisIslemGetir(int id)
         {
             var satisIslem = db.SatisIslem.Find(id);
@@ -178,7 +182,7 @@ namespace LordMarket.Controllers
 
 
 
-
+        [Authorize]
         private void UpdateSatisToplamTutar()
         {
             var satislar = db.SatisIslem

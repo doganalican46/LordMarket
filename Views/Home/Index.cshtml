@@ -256,11 +256,14 @@
                         @foreach (var item in Model.HizliUrunler)
                         {
                             <button class="btn btn-warning btn-quick-product"
-                                    onclick="hizliUrunEkle('@item.Barkod')">
+                                    onclick="hizliUrunEkle('@item.Barkod')"
+                                    oncontextmenu="kaldirmakIcinSor(@item.ID); return false;">
                                 <div>@item.UrunAd</div>
                                 <div class="fw-bold">@item.UrunFiyat ₺</div>
                             </button>
                         }
+
+
                     </div>
                 </div>
             </div>
@@ -268,6 +271,46 @@
     </div>
 
     <script>
+
+        function kaldirmakIcinSor(id) {
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: "Bu ürünü hızlı ürünlerden kaldırmak istiyor musunuz?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Evet, kaldır!',
+                cancelButtonText: 'Vazgeç',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // AJAX ile hızlı üründen kaldır
+                    $.ajax({
+                        url: '/Home/HizliUrunKaldir', // bu route senin controllerda olacak
+                        type: 'POST',
+                        data: { id: id },
+                        success: function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Kaldırıldı!',
+                                text: 'Ürün hızlı ürünlerden kaldırıldı.',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload(); // ekranı yenile
+                            });
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata!',
+                                text: 'Ürün kaldırılamadı.',
+                            });
+                        }
+                    });
+                }
+            });
+        }
 
 
         $(document).ready(function () {

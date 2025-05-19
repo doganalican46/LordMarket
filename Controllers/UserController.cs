@@ -11,21 +11,21 @@ namespace LordMarket.Controllers
     {
         LordMarketDBEntities db = new LordMarketDBEntities();
 
-        // Listeleme
+        [Authorize]
         public ActionResult Kullanici()
         {
             var Kullanici = db.Kullanicilar.ToList();
             return View(Kullanici);
         }
 
-        // Yeni ürün formu
+        [Authorize]
         [HttpGet]
         public ActionResult YeniKullanici()
         {
             return View();
         }
 
-        // Yeni ürün kaydetme
+        [Authorize]
         [HttpPost]
         public ActionResult YeniKullanici(Kullanicilar Kullanici)
         {
@@ -41,7 +41,7 @@ namespace LordMarket.Controllers
             return View(Kullanici);
         }
 
-        // Silme (Pasif yapma)
+        [Authorize]
         public ActionResult KullaniciSil(int id)
         {
             var Kullanici = db.Kullanicilar.Find(id);
@@ -53,7 +53,7 @@ namespace LordMarket.Controllers
             return RedirectToAction("Kullanici");
         }
 
-        // Güncelleme formu
+        [Authorize]
         public ActionResult KullaniciGetir(int id)
         {
             var Kullanici = db.Kullanicilar.Find(id);
@@ -62,7 +62,7 @@ namespace LordMarket.Controllers
             return View(Kullanici);
         }
 
-        // Güncelleme işlemi
+        [Authorize]
         [HttpPost]
         public ActionResult KullaniciGuncelle(Kullanicilar y)
         {

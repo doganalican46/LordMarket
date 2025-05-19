@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace LordMarket.Controllers
 {
@@ -12,8 +13,12 @@ namespace LordMarket.Controllers
         private LordMarketDBEntities db = new LordMarketDBEntities(); // DbContext veya EF nesneniz
 
         // GET: Admin
+        [Authorize]
         public ActionResult Index()
         {
+            string userEmail = User.Identity.Name;
+            ViewBag.UserEmail = userEmail;
+            
             var satislar = db.SatisIslem.Where(s => s.Status == true).ToList();
             var musteriler = db.Musteriler.Where(m => m.Status == true).ToList();
             var gelirGiderler = db.GelirGider.Where(g => g.Status == true).ToList();
@@ -74,6 +79,81 @@ namespace LordMarket.Controllers
 
             return View();
         }
+
+        [Authorize]
+        public ActionResult UserProfile()
+        {
+            if (Session["ID"] == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+            int userId = (int)Session["ID"];
+            var user = db.Kullanicilar.FirstOrDefault(x => x.ID == userId);
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (Session["Username"] != null)
+            {
+                user.Username = Session["Username"].ToString();
+            }
+            if (Session["Mail"] != null)
+            {
+                user.Mail = Session["Mail"].ToString();
+            }
+            if (Session["Image"] != null)
+            {
+                user.Image = Session["Image"].ToString();
+            }
+
+            return View(user);
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateUser(int id, Kullanicilar user, HttpPostedFileBase Image)
+        {
+            //if (Image != null && Image.ContentLength > 0)
+            //{
+            //    string filePath = Path.Combine(Server.MapPath("~/Images/Users"), Path.GetFileName(Image.FileName));
+            //    Image.SaveAs(filePath);
+            //    user.Image = "/Images/Users/" + Path.GetFileName(Image.FileName);
+            //}
+
+            var existingUser = db.Kullanicilar.FirstOrDefault(x => x.ID == id);
+            if (existingUser != null)
+            {
+                existingUser.Username = user.Username;
+                existingUser.Mail = user.Mail;
+                existingUser.Password = user.Password;
+                existingUser.SonGuncellenmeTarihi =DateTime.Now.ToString();
+
+                db.SaveChanges();
+
+                Session["Username"] = user.Username;
+                Session["Mail"] = user.Mail;
+                Session["Image"] = user.Image;
+                Session["Password"] = user.Image;
+
+                return RedirectToAction("UserProfile");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        public ActionResult Logout()
+        {
+            Session.Clear();
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
+
 
 
 

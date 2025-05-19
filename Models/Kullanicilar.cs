@@ -21,5 +21,6 @@ namespace LordMarket.Models
         public string Role { get; set; }
         public string SonGuncellenmeTarihi { get; set; }
         public Nullable<bool> Status { get; set; }
+        public string Mail { get; set; }
     }
 }

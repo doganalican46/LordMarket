@@ -11,21 +11,21 @@ namespace LordMarket.Controllers
     {
         LordMarketDBEntities db = new LordMarketDBEntities();
 
-        // Listeleme
+        [Authorize]
         public ActionResult Musteriler()
         {
             var Musteriler = db.Musteriler.ToList();
             return View(Musteriler);
         }
 
-        // Yeni ürün formu
+        [Authorize]
         [HttpGet]
         public ActionResult YeniMusteri()
         {
             return View();
         }
 
-        // Yeni ürün kaydetme
+        [Authorize]
         [HttpPost]
         public ActionResult YeniMusteri(Musteriler Musteri)
         {
@@ -41,7 +41,7 @@ namespace LordMarket.Controllers
             return View(Musteri);
         }
 
-        // Silme (Pasif yapma)
+        [Authorize]
         public ActionResult MusteriSil(int id)
         {
             var Musteri = db.Musteriler.Find(id);
@@ -53,7 +53,7 @@ namespace LordMarket.Controllers
             return RedirectToAction("Musteriler");
         }
 
-        // Güncelleme formu
+        [Authorize]
         public ActionResult MusteriGetir(int id)
         {
             var Musteri = db.Musteriler.Find(id);
@@ -62,7 +62,7 @@ namespace LordMarket.Controllers
             return View(Musteri);
         }
 
-        // Güncelleme işlemi
+        [Authorize]
         [HttpPost]
         public ActionResult MusteriGuncelle(Musteriler y)
         {
@@ -85,7 +85,7 @@ namespace LordMarket.Controllers
         }
 
 
-
+        [Authorize]
         [HttpPost]
         public ActionResult BorcOde(int id, decimal OdenenBorcTutar, string Not)
         {
@@ -101,6 +101,7 @@ namespace LordMarket.Controllers
             return RedirectToAction("Musteriler");
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult VeresiyeEkle(int id, decimal VeresiyeTutar, string Not)
         {
@@ -117,7 +118,7 @@ namespace LordMarket.Controllers
         }
 
 
-
+        [Authorize]
         [HttpPost]
         public ActionResult MusteriTemizle(int id)
         {
