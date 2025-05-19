@@ -371,16 +371,16 @@
 
                         $('#urunListesi tbody').append(
                             `<tr data-barkod="${barkod}">
-                                                                        <td>${res.urunAd}</td>
-                                                                        <td class="fiyat">${res.fiyat}</td>
-                                                                        <td class="adet">1</td>
-                                                                        <td class="satirToplam">${toplamSatir}</td>
-                                                                        <td>
-                                                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                                        </td>
-                                                                    </tr>`
+                                                                            <td>${res.urunAd}</td>
+                                                                            <td class="fiyat">${res.fiyat}</td>
+                                                                            <td class="adet">1</td>
+                                                                            <td class="satirToplam">${toplamSatir}</td>
+                                                                            <td>
+                                                                                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                            </td>
+                                                                        </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -577,16 +577,16 @@
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-                                                            <td>${urunAdi}</td>
-                                                            <td class="fiyat">${fiyat.toFixed(2)}</td>
-                                                            <td class="adet">1</td>
-                                                            <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                                                            <td>
-                                                                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                            </td>
-                                                        </tr>`
+                                                                <td>${urunAdi}</td>
+                                                                <td class="fiyat">${fiyat.toFixed(2)}</td>
+                                                                <td class="adet">1</td>
+                                                                <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                                                                <td>
+                                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                </td>
+                                                            </tr>`
             );
 
             updateGenelToplam();
@@ -755,21 +755,7 @@
     </div>
 
 
-    <script>
-        const alisInput = document.getElementById("UrunAlisFiyati");
-        const kdvInput = document.getElementById("KDVOran");
-        const fiyatInput = document.getElementById("UrunFiyat");
 
-        function hesaplaFiyat() {
-            let alis = parseFloat(alisInput.value) || 0;
-            let kdv = parseFloat(kdvInput.value) || 0;
-            let hesaplanan = alis + (alis * kdv / 100);
-            fiyatInput.value = hesaplanan.toFixed(2);
-        }
-
-        alisInput.addEventListener("input", hesaplaFiyat);
-        kdvInput.addEventListener("input", hesaplaFiyat);
-    </script>
 
     <div class="modal fade" id="makbuzModal" tabindex="-1" aria-labelledby="makbuzModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -932,6 +918,24 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const alisFiyatiInput = document.getElementById('UrunAlisFiyati');
+        const kdvOranInput = document.getElementById('KDVOran');
+        const urunFiyatInput = document.getElementById('UrunFiyat');
+
+        function fiyatHesapla() {
+            const alisFiyati = parseFloat(alisFiyatiInput.value) || 0;
+            const kdvOrani = parseFloat(kdvOranInput.value) || 0;
+
+            const satisFiyati = alisFiyati + (alisFiyati * kdvOrani / 100);
+
+            urunFiyatInput.value = satisFiyati.toFixed(2);
+        }
+
+        alisFiyatiInput.addEventListener('input', fiyatHesapla);
+        kdvOranInput.addEventListener('input', fiyatHesapla);
+    </script>
     <script>
         function printDiv(divId) {
             var printContents = document.getElementById(divId).innerHTML;
