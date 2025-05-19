@@ -204,6 +204,7 @@
     <Content Include="AdminLayout\assets\demo\datatables-demo.js" />
     <Content Include="AdminLayout\assets\img\error-404-monochrome.svg" />
     <Content Include="AdminLayout\charts.html" />
+    <Content Include="AdminLayout\css\satisEkran.css" />
     <Content Include="AdminLayout\css\styles.css" />
     <Content Include="AdminLayout\index.html" />
     <Content Include="AdminLayout\js\datatables-simple-demo.js" />

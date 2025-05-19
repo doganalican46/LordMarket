@@ -1,21 +1,16 @@
-﻿﻿
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lord Büfe&Market Satış</title>
     <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/862/862819.png" />
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <link href="~/AdminLayout/css/satisEkran.css" rel="stylesheet" />
     <style>
         body {
             padding: 20px;
@@ -323,9 +318,6 @@
             }
         });
 
-
-
-
         var toplam = 0;
         let digerUrunSayac = 0;
 
@@ -558,7 +550,6 @@
             });
         }
 
-
         function hizliUrunEkle(barkod) {
             $('#barkodInput').val(barkod);
             barkodAra();
@@ -650,9 +641,6 @@
                 }
             });
         });
-
-
-
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -783,7 +771,6 @@
         kdvInput.addEventListener("input", hesaplaFiyat);
     </script>
 
-
     <div class="modal fade" id="makbuzModal" tabindex="-1" aria-labelledby="makbuzModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content mx-auto" style="width: 100%; max-width: 58mm; padding: 0; margin: 0;">
@@ -882,7 +869,6 @@
         </div>
     </div>
 
-
     <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content shadow">
@@ -946,11 +932,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
     <script>
         function printDiv(divId) {
             var printContents = document.getElementById(divId).innerHTML;
