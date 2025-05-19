@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1ffa3564d6d84ed6b22f2805baa52691" Name="Diagram1">
+      <Diagram DiagramId="7441ceac73ad4ae1bb2a9b35664c796e" Name="Diagram1">
         <EntityTypeShape EntityType="LordMarketDBModel.GelirGider" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="LordMarketDBModel.Kullanicilar" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="LordMarketDBModel.Musteriler" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />

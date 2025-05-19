@@ -16,11 +16,11 @@ namespace LordMarket.Models
     {
         public int ID { get; set; }
         public string Username { get; set; }
+        public string Mail { get; set; }
         public string Password { get; set; }
         public string Image { get; set; }
         public string Role { get; set; }
         public string SonGuncellenmeTarihi { get; set; }
         public Nullable<bool> Status { get; set; }
-        public string Mail { get; set; }
     }
 }

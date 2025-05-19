@@ -18,6 +18,8 @@ namespace LordMarket.Models
         public string Barkod { get; set; }
         public string UrunAd { get; set; }
         public string UrunFiyat { get; set; }
+        public string UrunAlisFiyati { get; set; }
+        public string UrunKategori { get; set; }
         public string UrunResmi { get; set; }
         public string KDVOran { get; set; }
         public Nullable<int> Stok { get; set; }
@@ -26,7 +28,5 @@ namespace LordMarket.Models
         public string BosAlan { get; set; }
         public Nullable<bool> HizliUrunMu { get; set; }
         public Nullable<bool> Status { get; set; }
-        public string UrunKategori { get; set; }
-        public string UrunAlisFiyati { get; set; }
     }
 }

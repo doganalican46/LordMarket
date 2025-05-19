@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="GelirGider">
           <Key>
             <PropertyRef Name="ID" />
@@ -105,7 +105,8 @@
             <End Role="SatisIslem" EntitySet="SatisIslem" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LordMarketDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -127,12 +128,12 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Mail" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SonGuncellenmeTarihi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Boolean" />
-          <Property Name="Mail" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Musteriler">
           <Key>
@@ -170,6 +171,8 @@
           <Property Name="Barkod" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="UrunAd" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="UrunFiyat" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UrunAlisFiyati" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UrunKategori" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="UrunResmi" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="KDVOran" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Stok" Type="Int32" />
@@ -178,8 +181,6 @@
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="HizliUrunMu" Type="Boolean" />
           <Property Name="Status" Type="Boolean" />
-          <Property Name="UrunKategori" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="UrunAlisFiyati" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_SatisIslem_Musteriler">
           <End Role="Musteriler" Type="Self.Musteriler" Multiplicity="0..1" />
@@ -233,9 +234,9 @@
           <EntitySetMapping Name="Kullanicilar">
             <EntityTypeMapping TypeName="LordMarketDBModel.Kullanicilar">
               <MappingFragment StoreEntitySet="Kullanicilar">
-                <ScalarProperty Name="Mail" ColumnName="Mail" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="Role" ColumnName="Role" />
@@ -275,12 +276,12 @@
           <EntitySetMapping Name="Urunler">
             <EntityTypeMapping TypeName="LordMarketDBModel.Urunler">
               <MappingFragment StoreEntitySet="Urunler">
-                <ScalarProperty Name="UrunAlisFiyati" ColumnName="UrunAlisFiyati" />
-                <ScalarProperty Name="UrunKategori" ColumnName="UrunKategori" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Barkod" ColumnName="Barkod" />
                 <ScalarProperty Name="UrunAd" ColumnName="UrunAd" />
                 <ScalarProperty Name="UrunFiyat" ColumnName="UrunFiyat" />
+                <ScalarProperty Name="UrunAlisFiyati" ColumnName="UrunAlisFiyati" />
+                <ScalarProperty Name="UrunKategori" ColumnName="UrunKategori" />
                 <ScalarProperty Name="UrunResmi" ColumnName="UrunResmi" />
                 <ScalarProperty Name="KDVOran" ColumnName="KDVOran" />
                 <ScalarProperty Name="Stok" ColumnName="Stok" />
