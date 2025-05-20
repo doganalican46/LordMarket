@@ -201,8 +201,17 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="Barkod" class="form-label">Barkod</label>
-                            <input type="text" name="Barkod" class="form-control" required />
+                            <div class="input-group">
+                                <input type="text" name="Barkod" id="barkodInput" class="form-control" required />
+                                <button type="button" class="btn btn-outline-secondary" onclick="kameraAc()">📷</button>
+                            </div>
                         </div>
+                        <div id="kameraAlani" class="mt-3" style="display:none;">
+                            <div id="reader" style="width: 100%; max-width: 400px; margin: auto;"></div>
+                            <button type="button" class="btn btn-danger mt-2" onclick="kamerayiKapat()">Kapat</button>
+                        </div>
+
+
 
                         <div class="col-md-6">
                             <label for="UrunAd" class="form-label">Ürün Adı</label>
@@ -267,4 +276,44 @@
 
     alisInput.addEventListener("input", hesaplaFiyat);
     kdvInput.addEventListener("input", hesaplaFiyat);
+
+    let html5QrCode;
+
+    function kameraAc() {
+        document.getElementById("kameraAlani").style.display = "block";
+
+        html5QrCode = new Html5Qrcode("reader");
+
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                var kameraId = devices[0].id;
+
+                html5QrCode.start(
+                    kameraId,
+                    {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 }
+                    },
+                    decodedText => {
+                        document.getElementById("barkodInput").value = decodedText;
+                        kamerayiKapat();
+                    },
+                    errorMessage => {
+                        // Sessiz geç, her hatayı göstermek zorunda değiliz
+                    }
+                );
+            }
+        }).catch(err => {
+            alert("Kamera erişim hatası: " + err);
+        });
+    }
+
+    function kamerayiKapat() {
+        if (html5QrCode) {
+            html5QrCode.stop().then(() => {
+                html5QrCode.clear();
+                document.getElementById("kameraAlani").style.display = "none";
+            });
+        }
+    }
 </script>

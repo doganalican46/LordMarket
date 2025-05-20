@@ -4,6 +4,8 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+
+
 <div class="card shadow-sm border-light rounded" style="max-width: 600px; margin: 20px auto;">
     <div class="card-header bg-dark text-white text-center">
         <h3><b>Ürün Güncelle</b></h3>
@@ -16,7 +18,14 @@
 
             <div class="mb-3">
                 <label for="Barkod" class="form-label">Barkod:</label>
-                @Html.TextBoxFor(k => k.Barkod, new { @class = "form-control", id = "Barkod", required = "required", placeholder = "Barkod" })
+                <div class="input-group">
+                    @Html.TextBoxFor(k => k.Barkod, new { @class = "form-control", id = "Barkod", required = "required", placeholder = "Barkod" })
+                    <button type="button" class="btn btn-warning" onclick="kameraIleTara()" title="Kamera ile Tara">📷</button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div id="qr-reader" style="width: 100%; max-width: 400px; display: none;"></div>
             </div>
 
 
@@ -33,12 +42,12 @@
 
             <div class="mb-3">
                 <label>Ürün Alış Fiyatı:</label>
-                @Html.TextBoxFor(k => k.UrunAlisFiyati, new { @class = "form-control", id = "UrunAlisFiyati",  placeholder = "UrunAlisFiyati", step = "0.01", type = "number" })
+                @Html.TextBoxFor(k => k.UrunAlisFiyati, new { @class = "form-control", id = "UrunAlisFiyati", placeholder = "UrunAlisFiyati", step = "0.01", type = "number" })
             </div>
 
             <div class="mb-3">
                 <label>KDV Oranı (%):</label>
-                @Html.TextBoxFor(k => k.KDVOran, new { @class = "form-control", id = "KDVOran", required = "required", placeholder = "KDV Oranı", value = Model.KDVOran.ToString() == "0" ? "18" : Model.KDVOran.ToString(), step = "0.01", type = "number" })
+                @Html.TextBoxFor(k => k.KDVOran, new { @class = "form-control", id = "KDVOran", required = "required", placeholder = "KDV Oranı", value = Model?.KDVOran?.ToString() == "0" ? "18" : Model?.KDVOran?.ToString(), step = "0.01", type = "number" })
             </div>
 
             <div class="mb-3">
@@ -112,4 +121,59 @@
         }
     }
     document.addEventListener("DOMContentLoaded", previewImage);
+
+    let html5QrCode;
+
+    function kameraIleTara() {
+        const qrRegion = document.getElementById("qr-reader");
+
+        // Eğer zaten çalışıyorsa, durdur
+        if (html5QrCode) {
+            html5QrCode.stop().then(() => {
+                html5QrCode.clear();
+                html5QrCode = null;
+            }).catch(err => console.error("Durdurulamadı:", err));
+            qrRegion.style.display = "none";
+            return;
+        }
+
+        qrRegion.style.display = "block";
+        html5QrCode = new Html5Qrcode("qr-reader");
+
+        html5QrCode.start(
+            { facingMode: "environment" },
+            {
+                fps: 10,
+                qrbox: { width: 250, height: 250 }
+            },
+            barkod => {
+                const input = document.getElementById("Barkod");
+
+                // Barkod alanını temizle ve yeni değeri yapıştır
+                input.value = "";
+                input.value = barkod;
+
+                // Otomatik Enter bas
+                const event = new KeyboardEvent('keydown', {
+                    key: 'Enter',
+                    keyCode: 13,
+                    which: 13,
+                    bubbles: true
+                });
+                input.dispatchEvent(event);
+
+                // Tarayıcıyı durdur
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    html5QrCode = null;
+                    qrRegion.style.display = "none";
+                }).catch(err => console.error("Tarayıcı durdurulamadı:", err));
+            },
+            error => {
+                // Barkod okunmazsa sessiz geç
+            }
+        ).catch(err => {
+            console.error("Kamera başlatılamadı:", err);
+        });
+    }
 </script>

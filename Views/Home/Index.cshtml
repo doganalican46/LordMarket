@@ -10,6 +10,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
     <link href="~/AdminLayout/css/satisEkran.css" rel="stylesheet" />
     <style>
         body {
@@ -165,12 +167,27 @@
 
         <div class="main-content">
             <div class="left-panel">
-                <div class="barcode-section">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text"><i class="fas fa-barcode"></i></span>
-                        <input type="text" id="barkodInput" class="form-control form-control-lg" placeholder="Barkod okutun veya girin" autofocus>
-                        <button class="btn btn-primary" onclick="barkodAra()"><i class="fas fa-plus me-2"></i>Ekle</button>
+                <div class="barcode-section my-3">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-light text-dark"><i class="fas fa-barcode"></i></span>
+                        <input type="text"
+                               id="barkodInput"
+                               class="form-control"
+                               placeholder="Barkod okutun veya girin"
+                               autofocus>
+                        <button class="btn btn-success" onclick="barkodAraSatis()">
+                            <i class="fas fa-plus me-2"></i>Ekle
+                        </button>
+                        <button type="button" class="btn btn-outline-dark" onclick="kameraAcSatis()">
+                            <i class="fas fa-camera"></i>
+                        </button>
                     </div>
+                </div>
+
+
+                <div id="kameraAlani" class="mt-3" style="display:none;">
+                    <div id="reader" style="width: 100%; max-width: 400px; margin: auto;"></div>
+                    <button type="button" class="btn btn-danger mt-2" onclick="kamerayiKapatSatis()">Kapat</button>
                 </div>
 
                 <div class="product-table-container">
@@ -371,16 +388,16 @@
 
                         $('#urunListesi tbody').append(
                             `<tr data-barkod="${barkod}">
-                                                                            <td>${res.urunAd}</td>
-                                                                            <td class="fiyat">${res.fiyat}</td>
-                                                                            <td class="adet">1</td>
-                                                                            <td class="satirToplam">${toplamSatir}</td>
-                                                                            <td>
-                                                                                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                                                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                                                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                                            </td>
-                                                                        </tr>`
+                                                                                    <td>${res.urunAd}</td>
+                                                                                    <td class="fiyat">${res.fiyat}</td>
+                                                                                    <td class="adet">1</td>
+                                                                                    <td class="satirToplam">${toplamSatir}</td>
+                                                                                    <td>
+                                                                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                                    </td>
+                                                                                </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -577,16 +594,16 @@
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-                                                                <td>${urunAdi}</td>
-                                                                <td class="fiyat">${fiyat.toFixed(2)}</td>
-                                                                <td class="adet">1</td>
-                                                                <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                                                                <td>
-                                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                                </td>
-                                                            </tr>`
+                                                                        <td>${urunAdi}</td>
+                                                                        <td class="fiyat">${fiyat.toFixed(2)}</td>
+                                                                        <td class="adet">1</td>
+                                                                        <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                                                                        <td>
+                                                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                        </td>
+                                                                    </tr>`
             );
 
             updateGenelToplam();
@@ -757,103 +774,7 @@
 
 
 
-    <div class="modal fade" id="makbuzModal" tabindex="-1" aria-labelledby="makbuzModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content mx-auto" style="width: 100%; max-width: 58mm; padding: 0; margin: 0;">
-                <div class="modal-header py-1 justify-content-center">
-                    <h5 class="modal-title" id="makbuzModalLabel" style="font-size: 13px;">İşlem Makbuzu</h5>
-                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Kapat"></button>
-                </div>
-
-                <div id="printableReceipt"
-                     style="font-family: 'Courier New', monospace; font-size: 15px; width: 100%; box-sizing: border-box; padding: 2px 3px; line-height: 1.1; word-break: break-word; overflow-wrap: break-word;">
-
-                    <div style="font-size: 15px; text-align: center; margin-bottom: 2px;">LORD BÜFE & MARKET</div>
-                    <div style="text-align: center; margin-bottom: 2px;">TEL: 0544 940 8134</div>
-                    <div style="text-align: center; margin-bottom: 2px;">--------------------------</div>
-
-                    <div style="margin-bottom: 1px;">Tarih: @(Model?.SonSatis?.Tarih?.ToString("dd.MM.yyyy HH:mm") ?? "-")</div>
-                    <div style="margin-bottom: 1px;">Satış No: @Model?.SonSatis?.SatisNo?</div>
-                    <div style="text-align: center; margin: 2px 0;">--------------------------</div>
-
-                    <table style="width: 100%; font-size: 13px; text-align: center; border-collapse: collapse;">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left;">Ürün</th>
-                                <th>Ad</th>
-                                <th style="text-align: right;">Tutar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{
-                                var urunListesi = Model?.SonSatis?.UrunListesi;
-                                var satirlar = !string.IsNullOrEmpty(urunListesi) ? urunListesi.Split('\n') : new string[0];
-                            }
-                            @foreach (var satir in satirlar)
-                            {
-                                if (string.IsNullOrWhiteSpace(satir)) { continue; }
-
-                                var parcalar = satir.Split(new[] { " - " }, StringSplitOptions.None);
-                                string urunAd = "-", adet = "-", tutar = "-";
-
-                                foreach (var parca in parcalar)
-                                {
-                                    if (parca.StartsWith("Ürün: "))
-                                    {
-                                        urunAd = parca.Replace("Ürün: ", "").Trim();
-                                    }
-                                    else if (parca.StartsWith("Adet: "))
-                                    {
-                                        adet = parca.Replace("Adet: ", "").Trim();
-                                    }
-                                    else if (parca.StartsWith("Tutar: "))
-                                    {
-                                        tutar = parca.Replace("Tutar: ", "").Trim();
-                                    }
-                                }
-
-                                <tr>
-                                    <td style="text-align: left;">@urunAd</td>
-                                    <td>@adet</td>
-                                    <td style="text-align: right;">@tutar</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                    <div style="text-align: center; margin: 2px 0;">--------------------------</div>
-
-                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 1px;">
-                        <span>Toplam:</span>
-                        <span>@Model?.SonSatis?.ToplamTutar? ₺</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 2px;">
-                        <span>Ödeme Tipi:</span>
-                        <span>@Model?.SonSatis?.OdemeTipi?</span>
-                    </div>
-
-                    @if (Model?.SonSatis?.MusteriID != null)
-                    {
-                        <div style="margin-bottom: 2px;">Müşteri: @Model?.MusteriAdSoyad?</div>
-                    }
-
-                    <div style="text-align: center; margin: 2px 0;">--------------------------</div>
-                    <div style="text-align: center; margin-bottom: 2px;">MALİ DEĞERİ YOKTUR</div>
-                    <div style="text-align: center; margin: 2px 0;">--------------------------</div>
-
-                    <div style="text-align: center; font-size: 13px;">
-                        ADRES: NARLI CUMHURİYET MAH.<br />
-                        13007.SK NO:12/A
-                    </div>
-                </div>
-
-                <div class="modal-footer py-1 justify-content-center">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Kapat</button>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="printDiv('printableReceipt')">🖨 Yazdır</button>
-                </div>
-            </div>
-        </div>
-    </div>
+   
 
     <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -863,13 +784,23 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
 
-                <form action="/Home/YeniUrun" method="post" enctype="multipart/form-data">
+                <form action="/Urun/YeniUrun" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
+
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="Barkod" class="form-label">Barkod</label>
-                                <input type="text" name="Barkod" class="form-control" required />
+                                <div class="input-group">
+                                    <input type="text" name="Barkod" id="barkodInputyeni" class="form-control" required />
+                                    <button type="button" class="btn btn-outline-secondary" onclick="kameraAc()">📷</button>
+                                </div>
                             </div>
+                            <div id="kameraAlani" class="mt-3" style="display:none;">
+                                <div id="reader" style="width: 100%; max-width: 400px; margin: auto;"></div>
+                                <button type="button" class="btn btn-danger mt-2" onclick="kamerayiKapat()">Kapat</button>
+                            </div>
+
+
 
                             <div class="col-md-6">
                                 <label for="UrunAd" class="form-label">Ürün Adı</label>
@@ -897,8 +828,8 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="UrunResmi" class="form-label">Ürün Resmi</label>
-                                <input type="text" name="UrunResmi" class="form-control" />
+                                <label for="UrunResmiFile" class="form-label">Ürün Resmi</label>
+                                <input type="file" name="UrunResmiFile" class="form-control" />
                             </div>
 
                             <div class="col-md-6 mt-4 d-flex align-items-center">
@@ -909,6 +840,7 @@
                                 <input type="hidden" name="HizliUrunMu" value="false" />
                             </div>
                         </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">Kaydet</button>
@@ -920,21 +852,99 @@
     </div>
 
     <script>
-        const alisFiyatiInput = document.getElementById('UrunAlisFiyati');
-        const kdvOranInput = document.getElementById('KDVOran');
-        const urunFiyatInput = document.getElementById('UrunFiyat');
+        const alisInput = document.getElementById("UrunAlisFiyati");
+        const kdvInput = document.getElementById("KDVOran");
+        const fiyatInput = document.getElementById("UrunFiyat");
 
-        function fiyatHesapla() {
-            const alisFiyati = parseFloat(alisFiyatiInput.value) || 0;
-            const kdvOrani = parseFloat(kdvOranInput.value) || 0;
-
-            const satisFiyati = alisFiyati + (alisFiyati * kdvOrani / 100);
-
-            urunFiyatInput.value = satisFiyati.toFixed(2);
+        function hesaplaFiyat() {
+            let alis = parseFloat(alisInput.value) || 0;
+            let kdv = parseFloat(kdvInput.value) || 0;
+            let hesaplanan = alis + (alis * kdv / 100);
+            fiyatInput.value = hesaplanan.toFixed(2);
         }
 
-        alisFiyatiInput.addEventListener('input', fiyatHesapla);
-        kdvOranInput.addEventListener('input', fiyatHesapla);
+        alisInput.addEventListener("input", hesaplaFiyat);
+        kdvInput.addEventListener("input", hesaplaFiyat);
+
+        let html5QrCode;
+
+        function kameraAc() {
+            document.getElementById("kameraAlani").style.display = "block";
+
+            html5QrCode = new Html5Qrcode("reader");
+
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    var kameraId = devices[0].id;
+
+                    html5QrCode.start(
+                        kameraId,
+                        {
+                            fps: 10,
+                            qrbox: { width: 250, height: 250 }
+                        },
+                        decodedText => {
+                            document.getElementById("barkodInputyeni").value = decodedText;
+                            kamerayiKapat();
+                        },
+                        errorMessage => {
+                            // Sessiz geç, her hatayı göstermek zorunda değiliz
+                        }
+                    );
+                }
+            }).catch(err => {
+                alert("Kamera erişim hatası: " + err);
+            });
+        }
+
+        function kamerayiKapat() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    document.getElementById("kameraAlani").style.display = "none";
+                });
+            }
+        }
+
+
+        function kameraAcSatis    () {
+            document.getElementById("kameraAlani").style.display = "block";
+
+            html5QrCode = new Html5Qrcode("reader");
+
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    var kameraId = devices[0].id;
+
+                    html5QrCode.start(
+                        kameraId,
+                        {
+                            fps: 10,
+                            qrbox: { width: 250, height: 250 }
+                        },
+                        decodedText => {
+                            document.getElementById("barkodInput").value = decodedText;
+                            kamerayiKapat();
+                            barkodAra();
+                        },
+                        errorMessage => {
+                            // Sessiz geç, her hatayı göstermek zorunda değiliz
+                        }
+                    );
+                }
+            }).catch(err => {
+                alert("Kamera erişim hatası: " + err);
+            });
+        }
+
+        function kamerayiKapatSatis() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    document.getElementById("kameraAlani").style.display = "none";
+                });
+            }
+        }
     </script>
     <script>
         function printDiv(divId) {
@@ -949,5 +959,8 @@
             location.reload();
         }
     </script>
+
+    <script src="https://unpkg.com/ericblade/quagga2@2.0.0-beta.3/dist/quagga.min.js"></script>
+
 </body>
 </html>
