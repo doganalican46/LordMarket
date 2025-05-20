@@ -80,6 +80,26 @@ namespace LordMarket.Controllers
             return Json(new { success = false });
         }
 
+        public JsonResult BarkodAraYeniUrun(string barkod)
+        {
+            
+                var urun = db.Urunler
+                    .Where(u => u.Barkod == barkod)
+                    .Select(u => new
+                    {
+                        u.UrunAd,
+                        u.UrunKategori,
+                        u.UrunAlisFiyati,
+                        u.KDVOran,
+                        u.UrunFiyat,
+                        u.UrunResmi,
+                        u.HizliUrunMu
+                    })
+                    .FirstOrDefault();
+
+                return Json(urun, JsonRequestBehavior.AllowGet);
+            
+        }
 
         [HttpPost]
         public JsonResult SatisYap(string OdemeTipi, string UrunListesi, int? MusteriID)
@@ -224,20 +244,44 @@ namespace LordMarket.Controllers
             db.SaveChanges();
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult YeniUrun(Urunler urun)
         {
             if (ModelState.IsValid)
             {
-                urun.Status = true;
-                urun.EklenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-                db.Urunler.Add(urun);
-                db.SaveChanges();
+                var mevcutUrun = db.Urunler.FirstOrDefault(x => x.Barkod == urun.Barkod);
+
+                if (mevcutUrun != null)
+                {
+                    // Güncelleme işlemi
+                    mevcutUrun.UrunAd = urun.UrunAd;
+                    mevcutUrun.UrunKategori = urun.UrunKategori;
+                    mevcutUrun.UrunAlisFiyati = urun.UrunAlisFiyati;
+                    mevcutUrun.KDVOran = urun.KDVOran;
+                    mevcutUrun.UrunFiyat = urun.UrunFiyat;
+                    mevcutUrun.UrunResmi = urun.UrunResmi;
+                    mevcutUrun.HizliUrunMu = urun.HizliUrunMu;
+                    mevcutUrun.GuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                    mevcutUrun.Status = true; // Güncellendiği için aktif olsun
+
+                    db.SaveChanges();
+                }
+                else
+                {
+                    // Yeni ürün olarak ekle
+                    urun.Status = true;
+                    urun.EklenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                    db.Urunler.Add(urun);
+                    db.SaveChanges();
+                }
+
                 return RedirectToAction("Index");
             }
 
             return View(urun);
         }
+
 
 
         [HttpPost]

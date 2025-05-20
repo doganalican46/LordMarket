@@ -91,6 +91,9 @@
                                         <a href="/Urun/UrunSil/@urun.ID" class="btn btn-sm btn-danger" onclick="return confirm('Bu ürünü silmek istediğinizden emin misiniz?');" title="Sil">
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
+                                        <a href="/Urun/TamamenUrunSil/@urun.ID" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bu ürünü tamamen silmek istediğinizden emin misiniz?');" title="TamamenSil">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
                                         <a href="/Urun/HizliUrunYap/@urun.ID" class="btn btn-sm @(urun.HizliUrunMu ==true ? "btn-info" : "btn-info")" onclick="return confirm('Bu ürünün hızlı ürün durumunu güncellemek istiyor musunuz?');" title="Hızlı Ürün">
                                             <i class="fas fa-bolt"></i>
                                         </a>
@@ -318,4 +321,35 @@
             });
         }
     }
+
+    document.getElementById("barkodInput").addEventListener("change", function () {
+        const barkod = this.value;
+
+        if (barkod.trim() === "") return;
+
+        fetch(`/Urun/BarkodAra?barkod=${encodeURIComponent(barkod)}`)
+            .then(response => {
+                if (!response.ok) throw new Error("Sunucu hatası");
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    document.querySelector('input[name="UrunAd"]').value = data.UrunAd || "";
+                    document.querySelector('input[name="UrunKategori"]').value = data.UrunKategori || "";
+                    document.querySelector('input[name="UrunAlisFiyati"]').value = data.UrunAlisFiyati || "";
+                    document.querySelector('input[name="KDVOran"]').value = data.KDVOran || "";
+                    document.querySelector('input[name="UrunFiyat"]').value = data.UrunFiyat || "";
+                    document.querySelector('input[name="UrunResmi"]').value = data.UrunResmi || "";
+
+                    if (data.HizliUrunMu === true) {
+                        document.getElementById("HizliUrunMu").checked = true;
+                    } else {
+                        document.getElementById("HizliUrunMu").checked = false;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("Hata:", error);
+            });
+    });
 </script>

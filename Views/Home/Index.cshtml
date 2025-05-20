@@ -411,12 +411,18 @@
                             reverseButtons: true
                         }).then((result) => {
                             if (result.dismiss === Swal.DismissReason.cancel) {
+                                // Barkod değerini ürün ekleme modalındaki input'a ata
+                                $('#barkodInputyeniurun').val(barkod);
+
+                                // Modalı aç
                                 var myModal = new bootstrap.Modal(document.getElementById('urunEkleModal'));
                                 myModal.show();
                             }
                         });
+
                         $('#barkodInput').val("").focus();
                     }
+
                 },
                 error: function () {
                     Swal.fire({
@@ -954,6 +960,37 @@
             }
         }
 
+        document.getElementById("barkodInputyeniurun").addEventListener("change", function () {
+            const barkod = this.value;
+
+            if (barkod.trim() === "") return;
+
+            fetch(`/Home/BarkodAraYeniUrun?barkod=${encodeURIComponent(barkod)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Sunucu hatası");
+                    return response.json();
+                })
+                .then(data => {
+                    if (data) {
+                        document.querySelector('input[name="UrunAd"]').value = data.UrunAd || "";
+                        document.querySelector('input[name="UrunKategori"]').value = data.UrunKategori || "";
+                        document.querySelector('input[name="UrunAlisFiyati"]').value = data.UrunAlisFiyati || "";
+                        document.querySelector('input[name="KDVOran"]').value = data.KDVOran || "";
+                        document.querySelector('input[name="UrunFiyat"]').value = data.UrunFiyat || "";
+                        document.querySelector('input[name="UrunResmi"]').value = data.UrunResmi || "";
+
+                        if (data.HizliUrunMu === true) {
+                            document.getElementById("HizliUrunMu").checked = true;
+                        } else {
+                            document.getElementById("HizliUrunMu").checked = false;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Hata:", error);
+                });
+        });
+
     </script>
     <script>
         function printDiv(divId) {
@@ -967,6 +1004,8 @@
             document.body.innerHTML = originalContents;
             location.reload();
         }
+
+
     </script>
 
     <script src="https://unpkg.com/ericblade/quagga2@2.0.0-beta.3/dist/quagga.min.js"></script>
