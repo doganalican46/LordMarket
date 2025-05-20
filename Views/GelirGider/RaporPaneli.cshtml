@@ -29,27 +29,44 @@
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">Filtrele</button>
         </div>
+        <div class="col-auto">
+            <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-secondary">Sıfırla</a>
+        </div>
     </form>
+
 
     @if (Model != null && Model.Any())
     {
         <div class="mb-4 w-50">
-            <h5>Toplam Ödemeler (Seçilen Tarih Aralığı)</h5>
-            <ul class="list-group">
+            <h5 class="mb-3"><i class="bi bi-cash-coin me-2 text-primary"></i>Toplam Ödemeler (Seçilen Tarih Aralığı)</h5>
+            <ul class="list-group shadow">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Nakit
+                    <span><i class="bi bi-cash-stack me-2 text-primary"></i>Nakit</span>
                     <span class="badge bg-primary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NakitToplam ?? 0)</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Kart
+                    <span><i class="bi bi-credit-card-2-front me-2 text-success"></i>Kart</span>
                     <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KartToplam ?? 0)</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Veresiye
-                    <span class="badge bg-warning rounded-pill">@String.Format("{0:N2} ₺", ViewBag.VeresiyeToplam ?? 0)</span>
+                    <span><i class="bi bi-journal-text me-2 text-warning"></i>Veresiye</span>
+                    <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.VeresiyeToplam ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-piggy-bank me-2 text-info"></i>Toplam Gelir</span>
+                    <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamGelir ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-cart-x me-2 text-danger"></i>Toplam Gider</span>
+                    <span class="badge bg-light text-dark border rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamGider ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+                    <span><i class="bi bi-graph-up-arrow me-2 text-dark"></i>NET KAZANÇ</span>
+                    <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NetKazanc ?? 0)</span>
                 </li>
             </ul>
         </div>
+
 
         <div class="card shadow-sm">
             <div class="table-responsive p-3">
@@ -71,6 +88,9 @@
                                     <a href="/GelirGider/SatisIslemGetir/@SatisIslem.ID" class="btn btn-light btn-sm ms-2" title="Detay">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
+                                    <a href="/GelirGider/SatisIslemSil/@SatisIslem.ID" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bu işlemi tamamen silmek istediğinizden emin misiniz?');" title="Sil">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
                                 </td>
                                 <td class="text-center">@SatisIslem.ToplamTutar ₺</td>
                                 <td class="text-center">@SatisIslem.Tarih</td>
@@ -81,6 +101,10 @@
                 </table>
             </div>
         </div>
+
+
+
+
 
         <!-- JQuery, DataTables ve Buttons CSS & JS -->
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />

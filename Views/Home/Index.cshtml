@@ -28,7 +28,7 @@
         }
 
         .header {
-            background-color: #343a40;
+            background-color: #003d60;
             color: white;
             padding: 15px;
             border-radius: 5px;
@@ -89,7 +89,7 @@
         }
 
         .total-section {
-            background-color: #28a745;
+            background-color: #003d60;
             color: white;
             padding: 15px;
             border-radius: 5px;
@@ -137,7 +137,7 @@
             #urunListesi th {
                 position: sticky;
                 top: 0;
-                background-color: #343a40;
+                background-color: #003d60;
                 color: white;
             }
 
@@ -217,22 +217,26 @@
 
             <div class="right-panel">
                 <div class="total-section">
-                    <div id="toplamFiyat" style="font-size: 40px; font-weight: bold; color: #333;">0.00 ₺</div>
+                    <div id="toplamFiyat" style="font-size: 48px; font-weight: bold; color: white;">0.00 ₺</div>
                 </div>
 
                 <div class="payment-section">
-                    <h5><i class="fas fa-money-bill-wave me-2"></i>Ödeme Seçenekleri</h5>
-                    <div class="payment-methods">
-                        <button type="button" class="btn btn-success odeme-btn active" data-tip="Nakit">
+                    <h5 class="mb-3">
+                        <i class="fas fa-money-bill-wave me-2 text-success"></i>Ödeme Seçenekleri
+                    </h5>
+
+                    <div class="payment-methods d-flex flex-wrap gap-3">
+                        <button type="button" class="btn btn-success odeme-btn btn-lg flex-fill active" data-tip="Nakit">
                             <i class="fas fa-money-bill me-2"></i>Nakit
                         </button>
-                        <button type="button" class="btn btn-info odeme-btn" data-tip="Kart">
+                        <button type="button" class="btn btn-info odeme-btn btn-lg flex-fill" data-tip="Kart">
                             <i class="fas fa-credit-card me-2"></i>Kart
                         </button>
-                        <button type="button" class="btn btn-warning odeme-btn" data-tip="Veresiye">
+                        <button type="button" class="btn btn-warning odeme-btn btn-lg flex-fill" data-tip="Veresiye">
                             <i class="fas fa-hand-holding-usd me-2"></i>Veresiye
                         </button>
                     </div>
+
                     <input type="hidden" id="odemeTipi" value="Nakit">
 
                     <div class="customer-select" id="customerSelectContainer" style="display: none;">
@@ -248,19 +252,25 @@
                 </div>
 
                 <div class="action-buttons d-flex gap-2 flex-wrap mb-3">
-                    <button class="btn btn-danger btn-sm d-flex align-items-center" onclick="temizle()">
-                        <i class="fas fa-trash-alt me-1"></i> Temizle
+
+                    <button class="btn btn-danger btn-sm d-flex align-items-center px-3 py-2 shadow-sm" onclick="temizle()">
+                        <i class="fas fa-trash-alt me-2"></i>Temizle
                     </button>
-                    <button type="button" class="btn btn-success btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
-                        <i class="fas fa-plus me-1"></i> Ürün İşlem
+
+                    <button type="button" class="btn btn-success btn-sm d-flex align-items-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
+                        <i class="fas fa-plus me-2"></i>Ürün İşlem
                     </button>
-                    <a href="/Admin/Index" class="btn btn-warning btn-sm d-flex align-items-center" title="Admin Ekranı">
-                        <i class="fas fa-toolbox me-2"></i>
+
+                    <a href="/Admin/Index" class="btn btn-warning btn-sm d-flex align-items-center justify-content-center px-3 py-2 shadow-sm" title="Admin Ekranı">
+                        <i class="fas fa-toolbox"></i>
                     </a>
-                    <button type="button" class="btn btn-info btn-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#makbuzModal" title="Son İşlemin Makbuzunu Yazdır">
+
+                    <button type="button" class="btn btn-info btn-sm d-flex align-items-center justify-content-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#makbuzModal" title="Son İşlemin Makbuzunu Yazdır">
                         🧾
                     </button>
+
                 </div>
+
 
 
 
@@ -269,7 +279,7 @@
                     <div class="d-flex flex-wrap">
                         @foreach (var item in Model.HizliUrunler)
                         {
-                            <button class="btn btn-warning btn-quick-product"
+                            <button class="btn btn-danger btn-quick-product"
                                     onclick="hizliUrunEkle('@item.Barkod')"
                                     oncontextmenu="kaldirmakIcinSor(@item.ID); return false;">
                                 <div>@item.UrunAd</div>
@@ -785,7 +795,7 @@
     <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content shadow">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-dark text-white">
                     <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle/Güncelle</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>

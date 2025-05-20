@@ -140,9 +140,15 @@ namespace LordMarket.Controllers
         public ActionResult RaporPaneli(DateTime? baslangicTarihi, DateTime? bitisTarihi)
         {
             UpdateSatisToplamTutar();
+
             var satislar = db.SatisIslem
                 .Where(x => (!baslangicTarihi.HasValue || x.Tarih >= baslangicTarihi) &&
                             (!bitisTarihi.HasValue || x.Tarih <= bitisTarihi))
+                .ToList();
+
+            var gelirGiderler = db.GelirGider
+                .Where(g => (!baslangicTarihi.HasValue || g.Tarih >= baslangicTarihi) &&
+                            (!bitisTarihi.HasValue || g.Tarih <= bitisTarihi))
                 .ToList();
 
             ViewBag.Baslangic = baslangicTarihi;
@@ -152,8 +158,14 @@ namespace LordMarket.Controllers
             ViewBag.KartToplam = satislar.Where(s => s.OdemeTipi == "Kart").Sum(s => s.ToplamTutar);
             ViewBag.VeresiyeToplam = satislar.Where(s => s.OdemeTipi == "Veresiye").Sum(s => s.ToplamTutar);
 
+            ViewBag.ToplamGelir = gelirGiderler.Where(g => g.Tur == "Gelir").Sum(g => g.Tutar);
+            ViewBag.ToplamGider = gelirGiderler.Where(g => g.Tur == "Gider").Sum(g => g.Tutar);
+            ViewBag.NetKazanc = ((decimal)ViewBag.ToplamGelir) - ((decimal)ViewBag.ToplamGider);
+
             return View(satislar);
         }
+
+
 
 
 
@@ -236,6 +248,22 @@ namespace LordMarket.Controllers
             }
 
             db.SaveChanges();
+        }
+
+
+
+        
+
+            [Authorize]
+        public ActionResult SatisIslemSil(int id)
+        {
+            var satis = db.SatisIslem.Find(id);
+            if (satis != null)
+            {
+                db.SatisIslem.Remove(satis);
+                db.SaveChanges();
+            }
+            return RedirectToAction("RaporPaneli");
         }
 
 
