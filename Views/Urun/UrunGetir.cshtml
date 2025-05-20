@@ -140,40 +140,52 @@
         qrRegion.style.display = "block";
         html5QrCode = new Html5Qrcode("qr-reader");
 
-        html5QrCode.start(
-            { facingMode: "environment" },
-            {
-                fps: 10,
-                qrbox: { width: 250, height: 250 }
-            },
-            barkod => {
-                const input = document.getElementById("Barkod");
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                // Arka kamerayı bul
+                let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
+                let kameraId = backCamera ? backCamera.id : devices[0].id;
 
-                // Barkod alanını temizle ve yeni değeri yapıştır
-                input.value = "";
-                input.value = barkod;
+                html5QrCode.start(
+                    kameraId,
+                    {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 }
+                    },
+                    barkod => {
+                        const input = document.getElementById("Barkod");
 
-                // Otomatik Enter bas
-                const event = new KeyboardEvent('keydown', {
-                    key: 'Enter',
-                    keyCode: 13,
-                    which: 13,
-                    bubbles: true
+                        input.value = "";
+                        input.value = barkod;
+
+                        // Enter tetikle
+                        const event = new KeyboardEvent('keydown', {
+                            key: 'Enter',
+                            keyCode: 13,
+                            which: 13,
+                            bubbles: true
+                        });
+                        input.dispatchEvent(event);
+
+                        // Tarayıcıyı durdur
+                        html5QrCode.stop().then(() => {
+                            html5QrCode.clear();
+                            html5QrCode = null;
+                            qrRegion.style.display = "none";
+                        }).catch(err => console.error("Tarayıcı durdurulamadı:", err));
+                    },
+                    error => {
+                        // Hataları sessiz geç
+                    }
+                ).catch(err => {
+                    console.error("Kamera başlatılamadı:", err);
                 });
-                input.dispatchEvent(event);
-
-                // Tarayıcıyı durdur
-                html5QrCode.stop().then(() => {
-                    html5QrCode.clear();
-                    html5QrCode = null;
-                    qrRegion.style.display = "none";
-                }).catch(err => console.error("Tarayıcı durdurulamadı:", err));
-            },
-            error => {
-                // Barkod okunmazsa sessiz geç
+            } else {
+                console.error("Kamera bulunamadı.");
             }
-        ).catch(err => {
-            console.error("Kamera başlatılamadı:", err);
+        }).catch(err => {
+            console.error("Kamera listesi alınamadı:", err);
         });
     }
+
 </script>

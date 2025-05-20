@@ -11,7 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
+    <script src="~/Scripts/scripts.js"></script>
     <link href="~/AdminLayout/css/satisEkran.css" rel="stylesheet" />
     <style>
         body {
@@ -784,20 +784,20 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
 
-                <form action="/Urun/YeniUrun" method="post" enctype="multipart/form-data">
+                <form action="/Home/YeniUrun" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
 
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="Barkod" class="form-label">Barkod</label>
                                 <div class="input-group">
-                                    <input type="text" name="Barkod" id="barkodInputyeni" class="form-control" required />
-                                    <button type="button" class="btn btn-outline-secondary" onclick="kameraAc()">📷</button>
+                                    <input type="text" name="Barkod" id="barkodInputyeniurun" class="form-control" required />
+                                    <button type="button" class="btn btn-outline-secondary" onclick="kameraAcSatisyeniurun()">📷</button>
                                 </div>
                             </div>
-                            <div id="kameraAlani" class="mt-3" style="display:none;">
-                                <div id="reader" style="width: 100%; max-width: 400px; margin: auto;"></div>
-                                <button type="button" class="btn btn-danger mt-2" onclick="kamerayiKapat()">Kapat</button>
+                            <div id="kameraAlaniyeniurun" class="mt-3" style="display:none;">
+                                <div id="reader" style="width: 100%; max-width: 500px; margin: auto;"></div>
+                                <button type="button" class="btn btn-danger mt-2" onclick="kamerayiKapatSatisyeniurun()">Kapat</button>
                             </div>
 
 
@@ -828,8 +828,8 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label for="UrunResmiFile" class="form-label">Ürün Resmi</label>
-                                <input type="file" name="UrunResmiFile" class="form-control" />
+                                <label for="UrunResmi" class="form-label">Ürün Resmi</label>
+                                <input type="text" name="UrunResmi" class="form-control" />
                             </div>
 
                             <div class="col-md-6 mt-4 d-flex align-items-center">
@@ -868,14 +868,14 @@
 
         let html5QrCode;
 
-        function kameraAc() {
-            document.getElementById("kameraAlani").style.display = "block";
-
+        function kameraAcSatisyeniurun() {
+            document.getElementById("kameraAlaniyeniurun").style.display = "block";
             html5QrCode = new Html5Qrcode("reader");
 
             Html5Qrcode.getCameras().then(devices => {
                 if (devices && devices.length) {
-                    var kameraId = devices[0].id;
+                    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
+                    let kameraId = backCamera ? backCamera.id : devices[0].id;
 
                     html5QrCode.start(
                         kameraId,
@@ -884,11 +884,12 @@
                             qrbox: { width: 250, height: 250 }
                         },
                         decodedText => {
-                            document.getElementById("barkodInputyeni").value = decodedText;
-                            kamerayiKapat();
+                            document.getElementById("barkodInputyeniurun").value = decodedText;
+                            kamerayiKapatSatisyeniurun(); // düzeltme: doğru fonksiyonu çağır
+                            barkodAra();
                         },
                         errorMessage => {
-                            // Sessiz geç, her hatayı göstermek zorunda değiliz
+                            // Hataları sessizce geç
                         }
                     );
                 }
@@ -897,24 +898,27 @@
             });
         }
 
-        function kamerayiKapat() {
+        function kamerayiKapatSatisyeniurun() {
             if (html5QrCode) {
                 html5QrCode.stop().then(() => {
                     html5QrCode.clear();
-                    document.getElementById("kameraAlani").style.display = "none";
+                    document.getElementById("kameraAlaniyeniurun").style.display = "none";
                 });
             }
         }
 
+       
 
-        function kameraAcSatis    () {
+
+        function kameraAcSatis() {
             document.getElementById("kameraAlani").style.display = "block";
 
             html5QrCode = new Html5Qrcode("reader");
 
             Html5Qrcode.getCameras().then(devices => {
                 if (devices && devices.length) {
-                    var kameraId = devices[0].id;
+                    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
+                    let kameraId = backCamera ? backCamera.id : devices[0].id;
 
                     html5QrCode.start(
                         kameraId,
@@ -924,11 +928,11 @@
                         },
                         decodedText => {
                             document.getElementById("barkodInput").value = decodedText;
-                            kamerayiKapat();
+                            kamerayiKapatSatis();
                             barkodAra();
                         },
                         errorMessage => {
-                            // Sessiz geç, her hatayı göstermek zorunda değiliz
+                            // Hataları sessizce geç
                         }
                     );
                 }
@@ -945,6 +949,7 @@
                 });
             }
         }
+
     </script>
     <script>
         function printDiv(divId) {

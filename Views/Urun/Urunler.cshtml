@@ -239,8 +239,8 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label for="UrunResmiFile" class="form-label">Ürün Resmi</label>
-                            <input type="file" name="UrunResmiFile" class="form-control" />
+                            <label for="UrunResmi" class="form-label">Ürün Resmi</label>
+                            <input type="text" name="UrunResmi" class="form-control" />
                         </div>
 
                         <div class="col-md-6 mt-4 d-flex align-items-center">
@@ -286,7 +286,9 @@
 
         Html5Qrcode.getCameras().then(devices => {
             if (devices && devices.length) {
-                var kameraId = devices[0].id;
+                // Arka kamera olup olmadığını kontrol et
+                let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
+                let kameraId = backCamera ? backCamera.id : devices[0].id;
 
                 html5QrCode.start(
                     kameraId,
@@ -299,7 +301,7 @@
                         kamerayiKapat();
                     },
                     errorMessage => {
-                        // Sessiz geç, her hatayı göstermek zorunda değiliz
+                        // Hataları sessizce geç
                     }
                 );
             }
