@@ -789,15 +789,15 @@
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="Barkod" class="form-label">Barkod</label>
+                                <label for="barkodInputyeniurun" class="form-label">Barkod</label>
                                 <div class="input-group">
                                     <input type="text" name="Barkod" id="barkodInputyeniurun" class="form-control" required />
-                                    <button type="button" class="btn btn-outline-secondary" onclick="kameraAcSatisyeniurun()">📷</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="kameraAc()">📷</button>
                                 </div>
                             </div>
                             <div id="kameraAlaniyeniurun" class="mt-3" style="display:none;">
-                                <div id="reader" style="width: 100%; max-width: 500px; margin: auto;"></div>
-                                <button type="button" class="btn btn-danger mt-2" onclick="kamerayiKapatSatisyeniurun()">Kapat</button>
+                                <div id="reader" style="width: 100%; max-width: 400px; margin: auto;"></div>
+                                <button type="button" class="btn btn-danger mt-2" onclick="kamerayiKapat()">Kapat</button>
                             </div>
 
 
@@ -868,12 +868,15 @@
 
         let html5QrCode;
 
-        function kameraAcSatisyeniurun() {
+
+        function kameraAc() {
             document.getElementById("kameraAlaniyeniurun").style.display = "block";
+
             html5QrCode = new Html5Qrcode("reader");
 
             Html5Qrcode.getCameras().then(devices => {
                 if (devices && devices.length) {
+                    // Arka kamera olup olmadığını kontrol et
                     let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
                     let kameraId = backCamera ? backCamera.id : devices[0].id;
 
@@ -885,8 +888,7 @@
                         },
                         decodedText => {
                             document.getElementById("barkodInputyeniurun").value = decodedText;
-                            kamerayiKapatSatisyeniurun(); // düzeltme: doğru fonksiyonu çağır
-                            barkodAra();
+                            kamerayiKapat();
                         },
                         errorMessage => {
                             // Hataları sessizce geç
@@ -898,7 +900,7 @@
             });
         }
 
-        function kamerayiKapatSatisyeniurun() {
+        function kamerayiKapat() {
             if (html5QrCode) {
                 html5QrCode.stop().then(() => {
                     html5QrCode.clear();
@@ -906,6 +908,8 @@
                 });
             }
         }
+
+      
 
        
 

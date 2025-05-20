@@ -36,9 +36,7 @@
                         <button id="exportPDF" class="btn btn-danger btn-sm me-2" title="PDF Oluştur">
                             <i class="fas fa-file-pdf me-1"></i> PDF
                         </button>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
-                            Yeni Ürün Ekle
-                        </button>
+                        
                     </div>
 
                 </div>
@@ -55,7 +53,6 @@
                             <th width="80px">Resim</th>
                             <th>Ürün Adı</th>
                             <th width="120px" class="text-end">Fiyat</th>
-                            <th width="100px" class="text-center">Stok</th>
                             <th width="100px" class="text-center">Durum</th>
                             <th width="150px" class="text-center">İşlemler</th>
                         </tr>
@@ -78,11 +75,7 @@
                                 </td>
                                 <td class="fw-semibold">@urun.UrunAd</td>
                                 <td class="text-end">@urun.UrunFiyat ₺</td>
-                                <td class="text-center">
-                                    <span class="badge @(urun.Stok > 0 ? "bg-success" : "bg-secondary") rounded-pill">
-                                        @urun.Stok @(urun.Stok > 0 ? "Stokta" : "Tükendi")
-                                    </span>
-                                </td>
+                                
                                 <td>
                                     <span class="badge @(urun.Status==true ? "bg-success" : "bg-danger")">@(urun.Status==true ? "Aktif" : "Pasif")</span>
                                 </td>
