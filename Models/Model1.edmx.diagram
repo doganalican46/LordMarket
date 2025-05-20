@@ -5,11 +5,11 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="7441ceac73ad4ae1bb2a9b35664c796e" Name="Diagram1">
-        <EntityTypeShape EntityType="LordMarketDBModel.GelirGider" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="LordMarketDBModel.Kullanicilar" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LordMarketDBModel.GelirGider" Width="1.5" PointX="0.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="LordMarketDBModel.Kullanicilar" Width="1.5" PointX="3" PointY="4.625" IsExpanded="true" />
         <EntityTypeShape EntityType="LordMarketDBModel.Musteriler" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="LordMarketDBModel.SatisIslem" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="LordMarketDBModel.Urunler" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="LordMarketDBModel.SatisIslem" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="LordMarketDBModel.Urunler" Width="1.5" PointX="5.375" PointY="1.125" IsExpanded="true" />
         <AssociationConnector Association="LordMarketDBModel.FK_SatisIslem_Musteriler" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
