@@ -11,153 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-    <script src="~/Scripts/scripts.js"></script>
-    <link href="~/AdminLayout/css/satisEkran.css" rel="stylesheet" />
-    <style>
-        body {
-            padding: 20px;
-            background-color: #f8f9fa;
-            height: 100vh;
-            overflow: hidden;
-        }
+    <link href="@Url.Content("~/Assets/HomeAssets/style.css")" rel="stylesheet" />
 
-        .container-fluid {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        .header {
-            background-color: #003d60;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-
-        .main-content {
-            display: flex;
-            flex: 1;
-            gap: 20px;
-            overflow: hidden;
-        }
-
-        .left-panel {
-            flex: 3;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .right-panel {
-            flex: 2;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .barcode-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .product-table-container {
-            flex: 1;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            overflow-y: auto;
-        }
-
-        .payment-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        .quick-products {
-            flex: 1;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            overflow-y: auto;
-        }
-
-        .total-section {
-            background-color: #003d60;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            font-size: 1.5rem;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .btn-action {
-            flex: 1;
-            padding: 10px;
-            font-size: 1.1rem;
-        }
-
-        .btn-quick-product {
-            width: 120px;
-            height: 80px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 5px;
-            white-space: normal;
-        }
-
-        .odeme-btn {
-            flex: 1;
-        }
-
-            .odeme-btn.active {
-                background-color: #007bff;
-                color: white;
-            }
-
-        #urunListesi {
-            width: 100%;
-        }
-
-            #urunListesi th {
-                position: sticky;
-                top: 0;
-                background-color: #003d60;
-                color: white;
-            }
-
-        .payment-methods {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .customer-select {
-            margin-bottom: 15px;
-        }
-
-        .other-product-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -301,7 +158,330 @@
         </div>
     </div>
 
+
+
+    <div class="modal fade" id="makbuzModal" tabindex="-1" aria-labelledby="makbuzModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content mx-auto" style="width: 100%; max-width: 58mm; padding: 0; margin: 0;">
+                <div class="modal-header py-1 justify-content-center">
+                    <h5 class="modal-title" id="makbuzModalLabel" style="font-size: 13px;">İşlem Makbuzu</h5>
+                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+
+                <div id="printableReceipt"
+                     style="font-family: 'Courier New', monospace; font-size: 15px; width: 100%; box-sizing: border-box; padding: 2px 3px; line-height: 1.1; word-break: break-word; overflow-wrap: break-word;">
+
+                    <div style="font-weight: bold; font-size: 15px; text-align: center; margin-bottom: 2px;">LORD BÜFE & MARKET</div>
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 2px;">TEL: 0544 940 8134</div>
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 2px;">-----------------------</div>
+
+                    <div style="font-weight: bold; margin-bottom: 1px;">
+                        Tarih: @(Model?.SonSatis?.Tarih?.ToString("dd.MM.yyyy HH:mm") ?? "-")
+                    </div>
+                    <div style="font-weight: bold; margin-bottom: 1px;">
+                        Satış No: @(Model?.SonSatis?.SatisNo?.ToString() ?? "-")
+                    </div>
+                    <div style="text-align: center; margin: 2px 0;">-----------------------</div>
+
+                    <table style="width: 100%; font-size: 13px; text-align: center; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="font-weight: bold; text-align: left;">Ürün</th>
+                                <th>Ad</th>
+                                <th style="font-weight: bold; text-align: right;">Tutar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!string.IsNullOrEmpty(Model?.SonSatis?.UrunListesi))
+                            {
+                                foreach (var satir in Model.SonSatis.UrunListesi.Split('\n'))
+                                {
+                                    if (string.IsNullOrWhiteSpace(satir))
+                                    {
+                                        continue;
+                                    }
+
+                                    var parcalar = satir.Split(new[] { " - " }, StringSplitOptions.None);
+                                    string urunAd = "-", adet = "-", tutar = "-";
+
+                                    foreach (var parca in parcalar)
+                                    {
+                                        if (parca.StartsWith("Ürün: "))
+                                        {
+                                            urunAd = parca.Replace("Ürün: ", "").Trim();
+                                        }
+                                        else if (parca.StartsWith("Adet: "))
+                                        {
+                                            adet = parca.Replace("Adet: ", "").Trim();
+                                        }
+                                        else if (parca.StartsWith("Tutar: "))
+                                        {
+                                            tutar = parca.Replace("Tutar: ", "").Trim();
+                                        }
+                                    }
+
+                                    <tr>
+                                        <td style="font-weight: bold; text-align: left;">@urunAd</td>
+                                        <td>@adet</td>
+                                        <td style="font-weight: bold; text-align: right;">@tutar</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="3" style="font-weight: bold; text-align: center;">Ürün listesi mevcut değil</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div style="text-align: center; margin: 2px 0;">-----------------------</div>
+
+                    <div style="font-weight: bold; display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 1px;">
+                        <span>Toplam:</span>
+                        <span>@(Model?.SonSatis?.ToplamTutar?.ToString() ?? "-") ₺</span>
+                    </div>
+                    <div style="font-weight: bold; display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 2px;">
+                        <span>Ödeme Tipi:</span>
+                        <span>@(Model?.SonSatis?.OdemeTipi ?? "-")</span>
+                    </div>
+
+                    @if (Model?.SonSatis?.MusteriID != null)
+                    {
+                        <div style="font-weight: bold; margin-bottom: 2px;">Müşteri: @(Model?.MusteriAdSoyad ?? "-")</div>
+                    }
+
+                    <div style="text-align: center; margin: 2px 0;">-----------------------</div>
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 2px;">MALİ DEĞERİ YOKTUR</div>
+                    <div style="text-align: center; margin: 2px 0;">-----------------------</div>
+
+                    <div style="font-weight: bold; text-align: center; font-size: 13px;">
+                        ADRES: NARLI CUMHURİYET MAH.<br />
+                        13007.SK NO:12/A
+                    </div>
+                </div>
+
+                <div class="modal-footer py-1 justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Kapat</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="printDiv('printableReceipt')">🖨 Yazdır</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content shadow">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle/Güncelle</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+
+                <form action="/Home/YeniUrun" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="barkodInputyeniurun" class="form-label">Barkod</label>
+                                <div class="input-group">
+                                    <input type="text" name="Barkod" id="barkodInputyeniurun" class="form-control" required />
+                                    <button type="button" class="btn btn-outline-secondary" onclick="kameraAc()">📷</button>
+                                </div>
+                            </div>
+                            <div id="kameraAlaniyeniurun" class="mt-3" style="display:none;">
+                                <div id="reader" style="width: 100%; max-width: 400px; margin: auto;"></div>
+                                <button type="button" class="btn btn-danger mt-2" onclick="kamerayiKapat()">Kapat</button>
+                            </div>
+
+
+
+                            <div class="col-md-6">
+                                <label for="UrunAd" class="form-label">Ürün Adı</label>
+                                <input type="text" name="UrunAd" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="UrunKategori" class="form-label">Ürün Kategorisi</label>
+                                <input type="text" name="UrunKategori" class="form-control" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="UrunAlisFiyati" class="form-label">Ürün Alış Fiyatı</label>
+                                <input type="number" step="0.01" name="UrunAlisFiyati" id="UrunAlisFiyati" class="form-control" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="KDVOran" class="form-label">KDV Oranı (%)</label>
+                                <input type="number" step="0.01" name="KDVOran" id="KDVOran" class="form-control" value="18" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="UrunFiyat" class="form-label">Hesaplanan Ürün Fiyatı</label>
+                                <input type="number" step="0.01" name="UrunFiyat" id="UrunFiyat" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="UrunResmi" class="form-label">Ürün Resmi</label>
+                                <input type="text" name="UrunResmi" class="form-control" />
+                            </div>
+
+                            <div class="col-md-6 mt-4 d-flex align-items-center">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="HizliUrunMu" value="true" id="HizliUrunMu" />
+                                    <label class="form-check-label" for="HizliUrunMu">Hızlı Ürün mü?</label>
+                                </div>
+                                <input type="hidden" name="HizliUrunMu" value="false" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Kaydet</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <script>
+
+        const alisInput = document.getElementById("UrunAlisFiyati");
+        const kdvInput = document.getElementById("KDVOran");
+        const fiyatInput = document.getElementById("UrunFiyat");
+
+        function hesaplaFiyat() {
+            let alis = parseFloat(alisInput.value) || 0;
+            let kdv = parseFloat(kdvInput.value) || 0;
+            let hesaplanan = alis + (alis * kdv / 100);
+            fiyatInput.value = hesaplanan.toFixed(2);
+        }
+
+        alisInput.addEventListener("input", hesaplaFiyat);
+        kdvInput.addEventListener("input", hesaplaFiyat);
+
+        let html5QrCode;
+
+
+        function kameraAc() {
+            document.getElementById("kameraAlaniyeniurun").style.display = "block";
+
+            html5QrCode = new Html5Qrcode("reader");
+
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    // Arka kamera olup olmadığını kontrol et
+                    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
+                    let kameraId = backCamera ? backCamera.id : devices[0].id;
+
+                    html5QrCode.start(
+                        kameraId,
+                        {
+                            fps: 10,
+                            qrbox: { width: 250, height: 250 }
+                        },
+                        decodedText => {
+                            document.getElementById("barkodInputyeniurun").value = decodedText;
+                            kamerayiKapat();
+                        },
+                        errorMessage => {
+                            // Hataları sessizce geç
+                        }
+                    );
+                }
+            }).catch(err => {
+                alert("Kamera erişim hatası: " + err);
+            });
+        }
+
+        function kamerayiKapat() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    document.getElementById("kameraAlaniyeniurun").style.display = "none";
+                });
+            }
+        }
+
+
+
+
+
+
+        function kameraAcSatis() {
+            document.getElementById("kameraAlani").style.display = "block";
+
+            html5QrCode = new Html5Qrcode("reader");
+
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
+                    let kameraId = backCamera ? backCamera.id : devices[0].id;
+
+                    html5QrCode.start(
+                        kameraId,
+                        {
+                            fps: 10,
+                            qrbox: { width: 250, height: 250 }
+                        },
+                        decodedText => {
+                            document.getElementById("barkodInput").value = decodedText;
+                            kamerayiKapatSatis();
+                            barkodAra();
+                        },
+                        errorMessage => {
+                            // Hataları sessizce geç
+                        }
+                    );
+                }
+            }).catch(err => {
+                alert("Kamera erişim hatası: " + err);
+            });
+        }
+
+        function kamerayiKapatSatis() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    document.getElementById("kameraAlani").style.display = "none";
+                });
+            }
+        }
+
+        document.getElementById("barkodInputyeniurun").addEventListener("change", function () {
+            const barkod = this.value;
+
+            if (barkod.trim() === "") return;
+
+            fetch(`/Home/BarkodAraYeniUrun?barkod=${encodeURIComponent(barkod)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Sunucu hatası");
+                    return response.json();
+                })
+                .then(data => {
+                    if (data) {
+                        document.querySelector('input[name="UrunAd"]').value = data.UrunAd || "";
+                        document.querySelector('input[name="UrunKategori"]').value = data.UrunKategori || "";
+                        document.querySelector('input[name="UrunAlisFiyati"]').value = data.UrunAlisFiyati || "";
+                        document.querySelector('input[name="KDVOran"]').value = data.KDVOran || "";
+                        document.querySelector('input[name="UrunFiyat"]').value = data.UrunFiyat || "";
+                        document.querySelector('input[name="UrunResmi"]').value = data.UrunResmi || "";
+
+                        if (data.HizliUrunMu === true) {
+                            document.getElementById("HizliUrunMu").checked = true;
+                        } else {
+                            document.getElementById("HizliUrunMu").checked = false;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Hata:", error);
+                });
+        });
 
         function islemBeklet() {
             Swal.fire({
@@ -379,6 +559,7 @@
             $('.odeme-btn[data-tip="Nakit"]').addClass('active');
             $('#musteriSelect').val('');
             $('#customerSelectContainer').hide();
+            $('#barkodInput').val('').focus();
         }
 
         function updateGenelToplam() {
@@ -702,335 +883,6 @@
                 }
             });
         });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <div class="modal fade" id="makbuzModal" tabindex="-1" aria-labelledby="makbuzModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content mx-auto" style="width: 100%; max-width: 58mm; padding: 0; margin: 0;">
-                <div class="modal-header py-1 justify-content-center">
-                    <h5 class="modal-title" id="makbuzModalLabel" style="font-size: 13px;">İşlem Makbuzu</h5>
-                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Kapat"></button>
-                </div>
-
-                <div id="printableReceipt"
-                     style="font-family: 'Courier New', monospace; font-size: 15px; width: 100%; box-sizing: border-box; padding: 2px 3px; line-height: 1.1; word-break: break-word; overflow-wrap: break-word;">
-
-                    <div style="font-weight: bold; font-size: 15px; text-align: center; margin-bottom: 2px;">LORD BÜFE & MARKET</div>
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 2px;">TEL: 0544 940 8134</div>
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 2px;">-----------------------</div>
-
-                    <div style="font-weight: bold; margin-bottom: 1px;">
-                        Tarih: @(Model?.SonSatis?.Tarih?.ToString("dd.MM.yyyy HH:mm") ?? "-")
-                    </div>
-                    <div style="font-weight: bold; margin-bottom: 1px;">
-                        Satış No: @(Model?.SonSatis?.SatisNo?.ToString() ?? "-")
-                    </div>
-                    <div style="text-align: center; margin: 2px 0;">-----------------------</div>
-
-                    <table style="width: 100%; font-size: 13px; text-align: center; border-collapse: collapse;">
-                        <thead>
-                            <tr>
-                                <th style="font-weight: bold; text-align: left;">Ürün</th>
-                                <th>Ad</th>
-                                <th style="font-weight: bold; text-align: right;">Tutar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (!string.IsNullOrEmpty(Model?.SonSatis?.UrunListesi))
-                            {
-                                foreach (var satir in Model.SonSatis.UrunListesi.Split('\n'))
-                                {
-                                    if (string.IsNullOrWhiteSpace(satir))
-                                    {
-                                        continue;
-                                    }
-
-                                    var parcalar = satir.Split(new[] { " - " }, StringSplitOptions.None);
-                                    string urunAd = "-", adet = "-", tutar = "-";
-
-                                    foreach (var parca in parcalar)
-                                    {
-                                        if (parca.StartsWith("Ürün: "))
-                                        {
-                                            urunAd = parca.Replace("Ürün: ", "").Trim();
-                                        }
-                                        else if (parca.StartsWith("Adet: "))
-                                        {
-                                            adet = parca.Replace("Adet: ", "").Trim();
-                                        }
-                                        else if (parca.StartsWith("Tutar: "))
-                                        {
-                                            tutar = parca.Replace("Tutar: ", "").Trim();
-                                        }
-                                    }
-
-                                    <tr>
-                                        <td style="font-weight: bold; text-align: left;">@urunAd</td>
-                                        <td>@adet</td>
-                                        <td style="font-weight: bold; text-align: right;">@tutar</td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="3" style="font-weight: bold; text-align: center;">Ürün listesi mevcut değil</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                    <div style="text-align: center; margin: 2px 0;">-----------------------</div>
-
-                    <div style="font-weight: bold; display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 1px;">
-                        <span>Toplam:</span>
-                        <span>@(Model?.SonSatis?.ToplamTutar?.ToString() ?? "-") ₺</span>
-                    </div>
-                    <div style="font-weight: bold; display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 2px;">
-                        <span>Ödeme Tipi:</span>
-                        <span>@(Model?.SonSatis?.OdemeTipi ?? "-")</span>
-                    </div>
-
-                    @if (Model?.SonSatis?.MusteriID != null)
-                    {
-                        <div style="font-weight: bold; margin-bottom: 2px;">Müşteri: @(Model?.MusteriAdSoyad ?? "-")</div>
-                    }
-
-                    <div style="text-align: center; margin: 2px 0;">-----------------------</div>
-                    <div style="font-weight: bold; text-align: center; margin-bottom: 2px;">MALİ DEĞERİ YOKTUR</div>
-                    <div style="text-align: center; margin: 2px 0;">-----------------------</div>
-
-                    <div style="font-weight: bold; text-align: center; font-size: 13px;">
-                        ADRES: NARLI CUMHURİYET MAH.<br />
-                        13007.SK NO:12/A
-                    </div>
-                </div>
-
-                <div class="modal-footer py-1 justify-content-center">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Kapat</button>
-                    <button type="button" class="btn btn-primary btn-sm" onclick="printDiv('printableReceipt')">🖨 Yazdır</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-   
-
-    <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content shadow">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle/Güncelle</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
-                </div>
-
-                <form action="/Home/YeniUrun" method="post" enctype="multipart/form-data">
-                    <div class="modal-body">
-
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="barkodInputyeniurun" class="form-label">Barkod</label>
-                                <div class="input-group">
-                                    <input type="text" name="Barkod" id="barkodInputyeniurun" class="form-control" required />
-                                    <button type="button" class="btn btn-outline-secondary" onclick="kameraAc()">📷</button>
-                                </div>
-                            </div>
-                            <div id="kameraAlaniyeniurun" class="mt-3" style="display:none;">
-                                <div id="reader" style="width: 100%; max-width: 400px; margin: auto;"></div>
-                                <button type="button" class="btn btn-danger mt-2" onclick="kamerayiKapat()">Kapat</button>
-                            </div>
-
-
-
-                            <div class="col-md-6">
-                                <label for="UrunAd" class="form-label">Ürün Adı</label>
-                                <input type="text" name="UrunAd" class="form-control" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="UrunKategori" class="form-label">Ürün Kategorisi</label>
-                                <input type="text" name="UrunKategori" class="form-control" />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="UrunAlisFiyati" class="form-label">Ürün Alış Fiyatı</label>
-                                <input type="number" step="0.01" name="UrunAlisFiyati" id="UrunAlisFiyati" class="form-control" />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="KDVOran" class="form-label">KDV Oranı (%)</label>
-                                <input type="number" step="0.01" name="KDVOran" id="KDVOran" class="form-control" value="18" />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="UrunFiyat" class="form-label">Hesaplanan Ürün Fiyatı</label>
-                                <input type="number" step="0.01" name="UrunFiyat" id="UrunFiyat" class="form-control" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="UrunResmi" class="form-label">Ürün Resmi</label>
-                                <input type="text" name="UrunResmi" class="form-control" />
-                            </div>
-
-                            <div class="col-md-6 mt-4 d-flex align-items-center">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="HizliUrunMu" value="true" id="HizliUrunMu" />
-                                    <label class="form-check-label" for="HizliUrunMu">Hızlı Ürün mü?</label>
-                                </div>
-                                <input type="hidden" name="HizliUrunMu" value="false" />
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Kaydet</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const alisInput = document.getElementById("UrunAlisFiyati");
-        const kdvInput = document.getElementById("KDVOran");
-        const fiyatInput = document.getElementById("UrunFiyat");
-
-        function hesaplaFiyat() {
-            let alis = parseFloat(alisInput.value) || 0;
-            let kdv = parseFloat(kdvInput.value) || 0;
-            let hesaplanan = alis + (alis * kdv / 100);
-            fiyatInput.value = hesaplanan.toFixed(2);
-        }
-
-        alisInput.addEventListener("input", hesaplaFiyat);
-        kdvInput.addEventListener("input", hesaplaFiyat);
-
-        let html5QrCode;
-
-
-        function kameraAc() {
-            document.getElementById("kameraAlaniyeniurun").style.display = "block";
-
-            html5QrCode = new Html5Qrcode("reader");
-
-            Html5Qrcode.getCameras().then(devices => {
-                if (devices && devices.length) {
-                    // Arka kamera olup olmadığını kontrol et
-                    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
-                    let kameraId = backCamera ? backCamera.id : devices[0].id;
-
-                    html5QrCode.start(
-                        kameraId,
-                        {
-                            fps: 10,
-                            qrbox: { width: 250, height: 250 }
-                        },
-                        decodedText => {
-                            document.getElementById("barkodInputyeniurun").value = decodedText;
-                            kamerayiKapat();
-                        },
-                        errorMessage => {
-                            // Hataları sessizce geç
-                        }
-                    );
-                }
-            }).catch(err => {
-                alert("Kamera erişim hatası: " + err);
-            });
-        }
-
-        function kamerayiKapat() {
-            if (html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    html5QrCode.clear();
-                    document.getElementById("kameraAlaniyeniurun").style.display = "none";
-                });
-            }
-        }
-
-      
-
-       
-
-
-        function kameraAcSatis() {
-            document.getElementById("kameraAlani").style.display = "block";
-
-            html5QrCode = new Html5Qrcode("reader");
-
-            Html5Qrcode.getCameras().then(devices => {
-                if (devices && devices.length) {
-                    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
-                    let kameraId = backCamera ? backCamera.id : devices[0].id;
-
-                    html5QrCode.start(
-                        kameraId,
-                        {
-                            fps: 10,
-                            qrbox: { width: 250, height: 250 }
-                        },
-                        decodedText => {
-                            document.getElementById("barkodInput").value = decodedText;
-                            kamerayiKapatSatis();
-                            barkodAra();
-                        },
-                        errorMessage => {
-                            // Hataları sessizce geç
-                        }
-                    );
-                }
-            }).catch(err => {
-                alert("Kamera erişim hatası: " + err);
-            });
-        }
-
-        function kamerayiKapatSatis() {
-            if (html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    html5QrCode.clear();
-                    document.getElementById("kameraAlani").style.display = "none";
-                });
-            }
-        }
-
-        document.getElementById("barkodInputyeniurun").addEventListener("change", function () {
-            const barkod = this.value;
-
-            if (barkod.trim() === "") return;
-
-            fetch(`/Home/BarkodAraYeniUrun?barkod=${encodeURIComponent(barkod)}`)
-                .then(response => {
-                    if (!response.ok) throw new Error("Sunucu hatası");
-                    return response.json();
-                })
-                .then(data => {
-                    if (data) {
-                        document.querySelector('input[name="UrunAd"]').value = data.UrunAd || "";
-                        document.querySelector('input[name="UrunKategori"]').value = data.UrunKategori || "";
-                        document.querySelector('input[name="UrunAlisFiyati"]').value = data.UrunAlisFiyati || "";
-                        document.querySelector('input[name="KDVOran"]').value = data.KDVOran || "";
-                        document.querySelector('input[name="UrunFiyat"]').value = data.UrunFiyat || "";
-                        document.querySelector('input[name="UrunResmi"]').value = data.UrunResmi || "";
-
-                        if (data.HizliUrunMu === true) {
-                            document.getElementById("HizliUrunMu").checked = true;
-                        } else {
-                            document.getElementById("HizliUrunMu").checked = false;
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error("Hata:", error);
-                });
-        });
-
-    </script>
-    <script>
         function printDiv(divId) {
             var printContents = document.getElementById(divId).innerHTML;
             var originalContents = document.body.innerHTML;

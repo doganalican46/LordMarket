@@ -195,26 +195,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AdminLayout\401.html" />
-    <Content Include="AdminLayout\404.html" />
-    <Content Include="AdminLayout\500.html" />
-    <Content Include="AdminLayout\assets\demo\chart-area-demo.js" />
-    <Content Include="AdminLayout\assets\demo\chart-bar-demo.js" />
-    <Content Include="AdminLayout\assets\demo\chart-pie-demo.js" />
-    <Content Include="AdminLayout\assets\demo\datatables-demo.js" />
-    <Content Include="AdminLayout\assets\img\error-404-monochrome.svg" />
-    <Content Include="AdminLayout\charts.html" />
-    <Content Include="AdminLayout\css\satisEkran.css" />
-    <Content Include="AdminLayout\css\styles.css" />
-    <Content Include="AdminLayout\index.html" />
-    <Content Include="AdminLayout\js\datatables-simple-demo.js" />
-    <Content Include="AdminLayout\js\scripts.js" />
-    <Content Include="AdminLayout\layout-sidenav-light.html" />
-    <Content Include="AdminLayout\layout-static.html" />
-    <Content Include="AdminLayout\login.html" />
-    <Content Include="AdminLayout\password.html" />
-    <Content Include="AdminLayout\register.html" />
-    <Content Include="AdminLayout\tables.html" />
+    <Content Include="Assets\AdminAssets\styles.css" />
+    <Content Include="Assets\AdminAssets\scripts.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -268,7 +250,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\scripts.js" />
+    <Content Include="Assets\HomeAssets\scripts.js" />
+    <Content Include="Assets\HomeAssets\style.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

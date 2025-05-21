@@ -141,6 +141,14 @@ namespace LordMarket.Controllers
         {
             UpdateSatisToplamTutar();
 
+            if (!baslangicTarihi.HasValue || !bitisTarihi.HasValue)
+            {
+                baslangicTarihi = DateTime.Today;
+                bitisTarihi = DateTime.Today.AddDays(+1);
+            }
+
+           
+
             var satislar = db.SatisIslem
                 .Where(x => (!baslangicTarihi.HasValue || x.Tarih >= baslangicTarihi) &&
                             (!bitisTarihi.HasValue || x.Tarih <= bitisTarihi) && x.Status == true)
