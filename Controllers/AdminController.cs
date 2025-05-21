@@ -26,6 +26,43 @@ namespace LordMarket.Controllers
             var bugun = DateTime.Today;
             var yarin = bugun.AddDays(1);
 
+            var urunSayilari = new Dictionary<string, int>();
+
+            foreach (var satis in satislar)
+            {
+                if (string.IsNullOrEmpty(satis.UrunListesi)) continue;
+
+                var satirlar = satis.UrunListesi.Split('\n');
+
+                foreach (var satir in satirlar)
+                {
+                    if (string.IsNullOrWhiteSpace(satir)) continue;
+
+                    var urunParcala = satir.Split('-');
+
+                    if (urunParcala.Length >= 2)
+                    {
+                        var urunAdi = urunParcala[0].Replace("Ürün:", "").Trim();
+                        var adetStr = urunParcala[1].Replace("Adet:", "").Trim();
+
+                        if (int.TryParse(adetStr, out int adet))
+                        {
+                            if (urunSayilari.ContainsKey(urunAdi))
+                                urunSayilari[urunAdi] += adet;
+                            else
+                                urunSayilari[urunAdi] = adet;
+                        }
+                    }
+                }
+            }
+
+            var enCokSatilanUrunler = urunSayilari
+                .OrderByDescending(x => x.Value)
+                .Take(5)
+                .ToList();
+
+            ViewBag.EnCokSatilanUrunler = enCokSatilanUrunler;
+
 
             // Günün toplam satış tutarı
             var gununToplamSatis = satislar
@@ -167,6 +204,80 @@ namespace LordMarket.Controllers
         }
 
 
+
+        [Authorize]
+        public ActionResult Toptancilar()
+        {
+            var Toptancilar = db.Kullanicilar.Where(x=>x.Role=="toptanci").ToList();
+            return View(Toptancilar);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult YeniToptanci()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult YeniToptanci(Kullanicilar Kullanici)
+        {
+            if (ModelState.IsValid)
+            {
+                Kullanici.Status = true;
+                Kullanici.SonGuncellenmeTarihi = DateTime.Now.ToString();
+                db.Kullanicilar.Add(Kullanici);
+                db.SaveChanges();
+                return RedirectToAction("Toptancilar");
+            }
+
+            return View(Kullanici);
+        }
+
+        [Authorize]
+        public ActionResult ToptanciSil(int id)
+        {
+            var Kullanici = db.Kullanicilar.Find(id);
+            if (Kullanici != null)
+            {
+                Kullanici.Status = false;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Toptancilar");
+        }
+
+        [Authorize]
+        public ActionResult ToptanciGetir(int id)
+        {
+            var Kullanici = db.Kullanicilar.Find(id);
+            if (Kullanici == null) return HttpNotFound();
+
+            return View(Kullanici);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult ToptanciGuncelle(Kullanicilar y)
+        {
+            if (ModelState.IsValid)
+            {
+                var Kullanici = db.Kullanicilar.Find(y.ID);
+                if (Kullanici == null) return HttpNotFound();
+
+                Kullanici.Username = y.Username;
+                Kullanici.Password = y.Password;
+                Kullanici.Image = y.Image;
+                Kullanici.Role = y.Role;
+                Kullanici.SonGuncellenmeTarihi = DateTime.Now.ToString();
+                Kullanici.Status = y.Status;
+
+                db.SaveChanges();
+                return RedirectToAction("Toptancilar");
+            }
+
+            return View("ToptanciGetir", y);
+        }
 
 
     }
