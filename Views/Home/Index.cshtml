@@ -443,6 +443,12 @@
             });
         }
 
+        window.onload = function () {
+            $('#barkodInput').val("").focus();
+        };
+
+
+
         function kamerayiKapatSatis() {
             if (html5QrCode) {
                 html5QrCode.stop().then(() => {
@@ -702,6 +708,7 @@
                         modal.show();
                     } else {
                         $('#barkodInput').focus();
+                        location.reload();
                     }
                 });
                 return;
@@ -715,6 +722,7 @@
                     confirmButtonText: 'Tamam'
                 }).then(() => {
                     $('#barkodInput').focus();
+
                 });
                 return;
             }
@@ -748,6 +756,7 @@
                             if (result.isConfirmed) {
                                 temizle();
                                 $('#barkodInput').focus();
+                                location.reload();
                             } else if (result.dismiss === Swal.DismissReason.cancel) {
                                 localStorage.setItem('fisYazdirClicked', 'true');
                                 Swal.fire({
