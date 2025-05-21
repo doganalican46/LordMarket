@@ -1,0 +1,102 @@
+﻿@model List<LordMarket.Models.SatisIslem>
+@{
+    ViewBag.Title = "Satış Geçmişi";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0"><i class="fas fa-file-alt me-2 text-dark"></i>Satış Geçmişi</h1>
+        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item active">Satış Geçmişi</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive p-3">
+            <table id="raporDataTable" class="table table-bordered table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Satış No</th>
+                        <th class="text-center">Toplam Tutar</th>
+                        <th class="text-center">Tarih</th>
+                        <th class="text-center">Ödeme Tipi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var SatisIslem in Model)
+                    {
+                        <tr>
+                            <td>
+                                @SatisIslem.SatisNo
+                                <a href="/GelirGider/SatisIslemGetir/@SatisIslem.ID" class="btn btn-light btn-sm ms-2" title="Detay">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="/GelirGider/SatisIslemSil/@SatisIslem.ID" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bu işlemi tamamen silmek istediğinizden emin misiniz?');" title="Sil">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </td>
+                            <td class="text-center">@SatisIslem.ToplamTutar ₺</td>
+                            <td class="text-center">@SatisIslem.Tarih</td>
+                            <td class="text-center">@SatisIslem.OdemeTipi</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- JQuery, DataTables ve Buttons CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#raporDataTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json'
+                },
+                pageLength: 10,
+                dom: 'Bfrtip', // Butonları tablo üstüne koyar
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel"></i> Excel',
+                        className: 'btn btn-success btn-sm',
+                        title: 'Satış_Raporu'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fas fa-file-pdf"></i> PDF',
+                        className: 'btn btn-danger btn-sm',
+                        title: 'Satış_Raporu',
+                        orientation: 'landscape',
+                        pageSize: 'A4',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+   
+
+</div>

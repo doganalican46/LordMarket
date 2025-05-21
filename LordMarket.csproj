@@ -283,6 +283,7 @@
     <Content Include="Views\Kullanici\KullaniciGetir.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Admin\UserProfile.cshtml" />
+    <Content Include="Views\GelirGider\SatisGecmis.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

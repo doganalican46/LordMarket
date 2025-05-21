@@ -352,4 +352,21 @@
                 console.error("Hata:", error);
             });
     });
+
+    const urunEkleModal = document.getElementById('urunEkleModal');
+    urunEkleModal.addEventListener('hidden.bs.modal', function () {
+        // Formu sıfırla
+        const form = urunEkleModal.querySelector('form');
+        form.reset();
+
+        // Kamera alanını da gizle (aktifse)
+        document.getElementById("kameraAlani").style.display = "none";
+
+        // QR kod okuyucu temizliği
+        if (html5QrCode) {
+            html5QrCode.stop().then(() => {
+                html5QrCode.clear();
+            }).catch(() => { });
+        }
+    });
 </script>

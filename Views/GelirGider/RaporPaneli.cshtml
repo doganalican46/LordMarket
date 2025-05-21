@@ -19,11 +19,11 @@
 
     <form method="get" class="row g-3 mb-4 align-items-end">
         <div class="col-auto">
-            <label for="baslangicTarihi" class="form-label">Başlangıç:</label>
+            <label for="baslangicTarihi" class="form-label"> <strong>Başlangıç:</strong> </label>
             <input id="baslangicTarihi" type="date" name="baslangicTarihi" value="@(((DateTime?)ViewBag.Baslangic)?.ToString("yyyy-MM-dd"))" class="form-control" />
         </div>
         <div class="col-auto">
-            <label for="bitisTarihi" class="form-label">Bitiş:</label>
+            <label for="bitisTarihi" class="form-label"><strong>Bitiş:</strong></label>
             <input id="bitisTarihi" type="date" name="bitisTarihi" value="@(((DateTime?)ViewBag.Bitis)?.ToString("yyyy-MM-dd"))" class="form-control" />
         </div>
         <div class="col-auto">
@@ -39,7 +39,7 @@
     {
         <div class="mb-4 w-50">
             <h5 class="mb-3">
-                <i class="bi bi-cash-coin me-2 text-primary"></i>Toplam Ödemeler (Seçilen Tarih Aralığı)
+                <i class="bi bi-cash-coin me-2 text-primary"></i>Detaylı Rapor (Seçilen Tarih Aralığı)
             </h5>
 
             <ul class="list-group shadow">
@@ -111,49 +111,12 @@
                     <span><i class="bi bi-bar-chart-line me-2 text-warning"></i>Tahmini Kar (%15)</span>
                     <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.TahminiKar ?? 0)</span>
                 </li>
-               
+
 
             </ul>
         </div>
 
 
-
-
-
-
-        <div class="card shadow-sm">
-            <div class="table-responsive p-3">
-                <table id="raporDataTable" class="table table-bordered table-striped table-hover align-middle">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Satış No</th>
-                            <th class="text-center">Toplam Tutar</th>
-                            <th class="text-center">Tarih</th>
-                            <th class="text-center">Ödeme Tipi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var SatisIslem in Model)
-                        {
-                            <tr>
-                                <td>
-                                    @SatisIslem.SatisNo
-                                    <a href="/GelirGider/SatisIslemGetir/@SatisIslem.ID" class="btn btn-light btn-sm ms-2" title="Detay">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a href="/GelirGider/SatisIslemSil/@SatisIslem.ID" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bu işlemi tamamen silmek istediğinizden emin misiniz?');" title="Sil">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                </td>
-                                <td class="text-center">@SatisIslem.ToplamTutar ₺</td>
-                                <td class="text-center">@SatisIslem.Tarih</td>
-                                <td class="text-center">@SatisIslem.OdemeTipi</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
 
 

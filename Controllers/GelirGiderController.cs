@@ -98,6 +98,19 @@ namespace LordMarket.Controllers
             public DateTime? BitisTarihi { get; set; }
         }
 
+        
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult SatisGecmis()
+        {
+            UpdateSatisToplamTutar();
+            var satislar = db.SatisIslem.ToList();
+            return View(satislar);
+        }
+
+        
+
 
         [Authorize]
         [HttpGet]

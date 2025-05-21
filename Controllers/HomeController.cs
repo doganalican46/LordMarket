@@ -44,6 +44,9 @@ namespace LordMarket.Controllers
                 musteriAdSoyad = musteri != null ? musteri.MusteriAdSoyad : null;
             }
 
+
+
+
             var viewModel = new SatisIslemViewModel1
             {
                 GelirGider = db.GelirGider.Where(h => h.Status == true).ToList(),

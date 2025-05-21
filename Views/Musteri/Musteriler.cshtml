@@ -57,7 +57,8 @@
                         @foreach (var Musteri in Model)
                         {
                             <tr>
-                                <td class="fw-semibold">@Musteri.MusteriAdSoyad</td>
+                                <td class="fw-semibold">@Musteri.MusteriAdSoyad </td>
+                                    
 
                                 <td class="text-center">
                                     @(Musteri.ToplamBorc.HasValue ? Musteri.ToplamBorc.Value.ToString("C2") : "₺0,00")
@@ -263,7 +264,7 @@
                 <input type="hidden" id="borcMusteriId" />
                 <div class="form-group">
                     <label>Ödenen Borç Tutarı</label>
-                    <input type="number" id="OdenenBorcTutar" class="form-control" step="0.01" required />
+                    <input type="text" id="OdenenBorcTutar" class="form-control"  required />
                 </div>
                 <div class="form-group mt-2">
                     <label>Kısa Not (İsteğe Bağlı)</label>
@@ -291,7 +292,7 @@
                 <input type="hidden" id="veresiyeMusteriId" />
                 <div class="form-group">
                     <label>Veresiye Tutarı</label>
-                    <input type="number" id="VeresiyeTutar" class="form-control" step="0.01" required />
+                    <input type="text" id="VeresiyeTutar" class="form-control"  required />
                 </div>
                 <div class="form-group mt-2">
                     <label>Kısa Not (İsteğe Bağlı)</label>

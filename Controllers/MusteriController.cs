@@ -14,7 +14,7 @@ namespace LordMarket.Controllers
         [Authorize]
         public ActionResult Musteriler()
         {
-            var Musteriler = db.Musteriler.ToList();
+            var Musteriler = db.Musteriler.Where(x => x.Status == true).ToList();
             return View(Musteriler);
         }
 
@@ -47,11 +47,14 @@ namespace LordMarket.Controllers
             var Musteri = db.Musteriler.Find(id);
             if (Musteri != null)
             {
+                Musteri.ToplamBorc = 0;
                 Musteri.Status = false;
                 db.SaveChanges();
             }
             return RedirectToAction("Musteriler");
         }
+
+       
 
         [Authorize]
         public ActionResult MusteriGetir(int id)

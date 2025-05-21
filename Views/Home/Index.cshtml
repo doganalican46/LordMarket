@@ -66,7 +66,7 @@
                     <h5><i class="fas fa-tag me-2"></i>Diğer Ürün Ekle</h5>
                     <div class="input-group">
                         <span class="input-group-text">Fiyat (₺)</span>
-                        <input type="number" id="digerUrunFiyat" class="form-control" placeholder="Fiyat girin" min="0" step="0.01">
+                        <input type="text" id="digerUrunFiyat" class="form-control" placeholder="Fiyat girin" >
                         <button class="btn btn-secondary" onclick="digerUrunEkle()"><i class="fas fa-plus me-2"></i>Ekle</button>
                     </div>
                 </div>
@@ -894,7 +894,22 @@
             document.body.innerHTML = originalContents;
             location.reload();
         }
+        const urunEkleModal = document.getElementById('urunEkleModal');
+        urunEkleModal.addEventListener('hidden.bs.modal', function () {
+            // Formu sıfırla
+            const form = urunEkleModal.querySelector('form');
+            form.reset();
 
+            // Kamera alanını da gizle (aktifse)
+            document.getElementById("kameraAlani").style.display = "none";
+
+            // QR kod okuyucu temizliği
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                }).catch(() => { });
+            }
+        });
 
     </script>
 
