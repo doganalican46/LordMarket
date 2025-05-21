@@ -309,8 +309,13 @@
                 title: 'Bilgi',
                 text: 'Bu fonksiyon şu anda aktif değildir.',
                 confirmButtonText: 'Tamam'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#barkodInput').val("").focus();
+                }
             });
         }
+
 
         function kaldirmakIcinSor(id) {
             Swal.fire({
@@ -514,6 +519,8 @@
                     if (result.dismiss === Swal.DismissReason.cancel) {
                         var modal = new bootstrap.Modal(document.getElementById('urunEkleModal'));
                         modal.show();
+                    } else {
+                        $('#barkodInput').focus();
                     }
                 });
                 return;
@@ -525,6 +532,8 @@
                     text: 'Veresiye satış için müşteri seçmelisiniz.',
                     icon: 'info',
                     confirmButtonText: 'Tamam'
+                }).then(() => {
+                    $('#barkodInput').focus();
                 });
                 return;
             }
@@ -557,8 +566,9 @@
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 temizle();
+                                $('#barkodInput').focus();
                             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                                localStorage.setItem('fisYazdirClicked', 'true');  // işaretle
+                                localStorage.setItem('fisYazdirClicked', 'true');
                                 Swal.fire({
                                     title: 'Fiş hazırlanıyor...',
                                     timer: 2400,
@@ -573,32 +583,32 @@
                                 });
                             }
                         });
-
                     } else {
                         Swal.fire({
                             title: 'Hata',
                             text: 'Hata: ' + res.message,
                             icon: 'error',
                             confirmButtonText: 'Tamam'
+                        }).then(() => {
+                            $('#barkodInput').focus();
                         });
                     }
                 },
-
                 error: function (xhr, status, error) {
                     Swal.fire({
                         title: 'Hata',
                         text: 'Satış işlemi sırasında sistemsel bir hata oluştu.',
                         icon: 'error',
                         confirmButtonText: 'Tamam'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
+                    }).then(() => {
+                        $('#barkodInput').focus();
+                        location.reload();
                     });
                     console.error("Hata Detayı:", xhr.responseText, status, error);
                 }
             });
         }
+
 
         function hizliUrunEkle(barkod) {
             $('#barkodInput').val(barkod);
