@@ -38,34 +38,90 @@
     @if (Model != null && Model.Any())
     {
         <div class="mb-4 w-50">
-            <h5 class="mb-3"><i class="bi bi-cash-coin me-2 text-primary"></i>Toplam Ödemeler (Seçilen Tarih Aralığı)</h5>
+            <h5 class="mb-3">
+                <i class="bi bi-cash-coin me-2 text-primary"></i>Toplam Ödemeler (Seçilen Tarih Aralığı)
+            </h5>
+
             <ul class="list-group shadow">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-cash-stack me-2 text-primary"></i>Nakit</span>
-                    <span class="badge bg-primary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NakitToplam ?? 0)</span>
+
+                <!-- SATIŞLARDAN GELENLER -->
+                <li class="list-group-item active fw-bold text-center bg-dark">
+                    <i class="bi bi-basket me-2"></i>Satışlardan Gelenler
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-credit-card-2-front me-2 text-success"></i>Kart</span>
-                    <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KartToplam ?? 0)</span>
+                    <span><i class="bi bi-cash me-2 text-success"></i>Satış - Nakit</span>
+                    <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NakitToplam ?? 0)</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-journal-text me-2 text-warning"></i>Veresiye</span>
+                    <span><i class="bi bi-credit-card me-2 text-primary"></i>Satış - Kart</span>
+                    <span class="badge bg-primary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KartToplam ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-journal-bookmark me-2 text-warning"></i>Satış - Veresiye</span>
                     <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.VeresiyeToplam ?? 0)</span>
                 </li>
+
+                <!-- GİDERLER -->
+                <li class="list-group-item active fw-bold text-center mt-2  bg-dark">
+                    <i class="bi bi-cart-x me-2"></i>Giderler
+                </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span><i class="bi bi-piggy-bank me-2 text-info"></i>Toplam Gelir</span>
-                    <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamGelir ?? 0)</span>
+                    <span><i class="bi bi-cash me-2 text-danger"></i>Nakit Gider</span>
+                    <span class="badge bg-danger rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamNakitGider ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-credit-card-2-back me-2 text-secondary"></i>Kart Gider</span>
+                    <span class="badge bg-secondary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamKartGider ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-bank me-2 text-info"></i>Kasa Gider</span>
+                    <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamKasaGider ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-question-circle me-2 text-dark"></i>Diğer Gider</span>
+                    <span class="badge bg-dark text-light rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamDigerGider ?? 0)</span>
+                </li>
+
+                <!-- GENEL FİNANSAL DURUM -->
+                <li class="list-group-item active fw-bold text-center mt-2  bg-dark">
+                    <i class="bi bi-bar-chart me-2"></i>Günlük Finansal Durum
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-piggy-bank me-2 text-success"></i>Toplam Gelir</span>
+                    <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamGelir ?? 0)</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span><i class="bi bi-cart-x me-2 text-danger"></i>Toplam Gider</span>
-                    <span class="badge bg-light text-dark border rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamGider ?? 0)</span>
+                    <span class="badge bg-danger-subtle text-dark border rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamGider ?? 0)</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
                     <span><i class="bi bi-graph-up-arrow me-2 text-dark"></i>NET KAZANÇ</span>
                     <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NetKazanc ?? 0)</span>
                 </li>
+
+                <!-- TAHMİNİ VE GÜNLÜK -->
+                <li class="list-group-item active fw-bold text-center mt-2  bg-dark">
+                    <i class="bi bi-calendar2-day me-2"></i>Tahmini & Günlük Bilgiler
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-wallet2 me-2 text-info"></i>Kasada Olması Gereken</span>
+                    <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KasadaOlmasiGereken ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-bar-chart-line me-2 text-warning"></i>Tahmini Kar (%15)</span>
+                    <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.TahminiKar ?? 0)</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+                    <span><i class="bi bi-cash-stack me-2 text-dark"></i>Günlük Kalan (Nakit - Gider)</span>
+                    <span class="badge bg-dark text-light rounded-pill">@String.Format("{0:N2} ₺", ViewBag.GunlukKalan ?? 0)</span>
+                </li>
+
             </ul>
         </div>
+
+
+
+
 
 
         <div class="card shadow-sm">

@@ -477,12 +477,13 @@
 
             let fiyat = parseFloat(satir.find('.fiyat').text());
             satir.find('.satirToplam').text((adet * fiyat).toFixed(2));
-
+            $('#barkodInput').val('').focus();
             updateGenelToplam();
         }
 
         function sil(btn) {
             $(btn).closest('tr').remove();
+            $('#barkodInput').val('').focus();
             updateGenelToplam();
         }
 
@@ -639,7 +640,8 @@
             );
 
             updateGenelToplam();
-            fiyatInput.val("").focus();
+            fiyatInput.val("");
+            barkodInput.focus();
         }
 
         $('.odeme-btn').click(function () {
@@ -704,14 +706,14 @@
                 <div id="printableReceipt"
                      style="font-family: 'Courier New', monospace; font-size: 15px; width: 100%; box-sizing: border-box; padding: 2px 3px; line-height: 1.1; word-break: break-word; overflow-wrap: break-word;">
 
-                    <div style="font-size: 15px; text-align: center; margin-bottom: 2px;">LORD BÜFE & MARKET</div>
-                    <div style="text-align: center; margin-bottom: 2px;">TEL: 0544 940 8134</div>
-                    <div style="text-align: center; margin-bottom: 2px;">-----------------------</div>
+                    <div style="font-weight: bold; font-size: 15px; text-align: center; margin-bottom: 2px;">LORD BÜFE & MARKET</div>
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 2px;">TEL: 0544 940 8134</div>
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 2px;">-----------------------</div>
 
-                    <div style="margin-bottom: 1px;">
+                    <div style="font-weight: bold; margin-bottom: 1px;">
                         Tarih: @(Model?.SonSatis?.Tarih?.ToString("dd.MM.yyyy HH:mm") ?? "-")
                     </div>
-                    <div style="margin-bottom: 1px;">
+                    <div style="font-weight: bold; margin-bottom: 1px;">
                         Satış No: @(Model?.SonSatis?.SatisNo?.ToString() ?? "-")
                     </div>
                     <div style="text-align: center; margin: 2px 0;">-----------------------</div>
@@ -719,9 +721,9 @@
                     <table style="width: 100%; font-size: 13px; text-align: center; border-collapse: collapse;">
                         <thead>
                             <tr>
-                                <th style="text-align: left;">Ürün</th>
+                                <th style="font-weight: bold; text-align: left;">Ürün</th>
                                 <th>Ad</th>
-                                <th style="text-align: right;">Tutar</th>
+                                <th style="font-weight: bold; text-align: right;">Tutar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -754,16 +756,16 @@
                                     }
 
                                     <tr>
-                                        <td style="text-align: left;">@urunAd</td>
+                                        <td style="font-weight: bold; text-align: left;">@urunAd</td>
                                         <td>@adet</td>
-                                        <td style="text-align: right;">@tutar</td>
+                                        <td style="font-weight: bold; text-align: right;">@tutar</td>
                                     </tr>
                                 }
                             }
                             else
                             {
                                 <tr>
-                                    <td colspan="3" style="text-align:center;">Ürün listesi mevcut değil</td>
+                                    <td colspan="3" style="font-weight: bold; text-align: center;">Ürün listesi mevcut değil</td>
                                 </tr>
                             }
                         </tbody>
@@ -771,25 +773,25 @@
 
                     <div style="text-align: center; margin: 2px 0;">-----------------------</div>
 
-                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 1px;">
+                    <div style="font-weight: bold; display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 1px;">
                         <span>Toplam:</span>
                         <span>@(Model?.SonSatis?.ToplamTutar?.ToString() ?? "-") ₺</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 2px;">
+                    <div style="font-weight: bold; display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 2px;">
                         <span>Ödeme Tipi:</span>
                         <span>@(Model?.SonSatis?.OdemeTipi ?? "-")</span>
                     </div>
 
                     @if (Model?.SonSatis?.MusteriID != null)
                     {
-                        <div style="margin-bottom: 2px;">Müşteri: @(Model?.MusteriAdSoyad ?? "-")</div>
+                        <div style="font-weight: bold; margin-bottom: 2px;">Müşteri: @(Model?.MusteriAdSoyad ?? "-")</div>
                     }
 
                     <div style="text-align: center; margin: 2px 0;">-----------------------</div>
-                    <div style="text-align: center; margin-bottom: 2px;">MALİ DEĞERİ YOKTUR</div>
+                    <div style="font-weight: bold; text-align: center; margin-bottom: 2px;">MALİ DEĞERİ YOKTUR</div>
                     <div style="text-align: center; margin: 2px 0;">-----------------------</div>
 
-                    <div style="text-align: center; font-size: 13px;">
+                    <div style="font-weight: bold; text-align: center; font-size: 13px;">
                         ADRES: NARLI CUMHURİYET MAH.<br />
                         13007.SK NO:12/A
                     </div>

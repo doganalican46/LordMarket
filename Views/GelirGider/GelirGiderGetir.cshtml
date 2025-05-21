@@ -21,14 +21,14 @@
                 {
                     "Gelir",
                     "Gider",
-                    "Yatırım",
-                    "Borç",
-                    "Alacak",
-                    "Diğer"
+                    "NakitGider",
+                    "KartGider",
+                    "KasaGider",
+                    "Diger"
                 }), "Tür seçin", new { @class = "form-control", required = "required" })
             </div>
 
-
+           
             <div class="mb-3">
                 <label>Notlar:</label>
                 @Html.TextBoxFor(k => k.Notlar, new { @class = "form-control", id = "Notlar", required = "required", placeholder = "Notlar" })

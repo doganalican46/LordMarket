@@ -101,9 +101,15 @@
                             <option value="" disabled selected>Bir tür seçin</option>
                             <option value="Gelir">Gelir</option>
                             <option value="Gider">Gider</option>
-                            <option value="Diğer">Diğer</option>
+                            <option value="NakitGider">Nakit Gider</option>
+                            <option value="KartGider">Kart Gider</option>
+                            <option value="KasaGider">Kasa Gider</option>
+                            <option value="Diger">Diğer</option>
+
                         </select>
                     </div>
+                    
+
                     <div class="mb-3">
                         <label for="Notlar" class="form-label fw-semibold">Açıklama:</label>
                         <input type="text" id="Notlar" name="Notlar" class="form-control" required placeholder="Örn: Elektrik faturası" />
@@ -129,6 +135,8 @@
 
 @section Scripts {
     <script>
+
+        
         // Excel Export
         document.getElementById('exportExcel').addEventListener('click', function () {
             const table = document.getElementById('DataTable');

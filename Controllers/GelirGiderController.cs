@@ -143,24 +143,65 @@ namespace LordMarket.Controllers
 
             var satislar = db.SatisIslem
                 .Where(x => (!baslangicTarihi.HasValue || x.Tarih >= baslangicTarihi) &&
-                            (!bitisTarihi.HasValue || x.Tarih <= bitisTarihi))
+                            (!bitisTarihi.HasValue || x.Tarih <= bitisTarihi) && x.Status == true)
                 .ToList();
 
             var gelirGiderler = db.GelirGider
                 .Where(g => (!baslangicTarihi.HasValue || g.Tarih >= baslangicTarihi) &&
-                            (!bitisTarihi.HasValue || g.Tarih <= bitisTarihi))
+                            (!bitisTarihi.HasValue || g.Tarih <= bitisTarihi) && g.Status == true)
                 .ToList();
 
             ViewBag.Baslangic = baslangicTarihi;
             ViewBag.Bitis = bitisTarihi;
 
-            ViewBag.NakitToplam = satislar.Where(s => s.OdemeTipi == "Nakit").Sum(s => s.ToplamTutar);
-            ViewBag.KartToplam = satislar.Where(s => s.OdemeTipi == "Kart").Sum(s => s.ToplamTutar);
-            ViewBag.VeresiyeToplam = satislar.Where(s => s.OdemeTipi == "Veresiye").Sum(s => s.ToplamTutar);
+            // Satışlar
+            var nakitSatis = satislar.Where(s => s.OdemeTipi == "Nakit").Sum(s => s.ToplamTutar);
+            var kartSatis = satislar.Where(s => s.OdemeTipi == "Kart").Sum(s => s.ToplamTutar);
+            var veresiyeSatis = satislar.Where(s => s.OdemeTipi == "Veresiye").Sum(s => s.ToplamTutar);
 
-            ViewBag.ToplamGelir = gelirGiderler.Where(g => g.Tur == "Gelir").Sum(g => g.Tutar);
-            ViewBag.ToplamGider = gelirGiderler.Where(g => g.Tur == "Gider").Sum(g => g.Tutar);
-            ViewBag.NetKazanc = ((decimal)ViewBag.ToplamGelir) - ((decimal)ViewBag.ToplamGider);
+            ViewBag.NakitToplam = nakitSatis;
+            ViewBag.KartToplam = kartSatis;
+            ViewBag.VeresiyeToplam = veresiyeSatis;
+
+            // Giderler
+            var nakitGider = gelirGiderler.Where(g => g.Tur == "NakitGider").Sum(g => g.Tutar);
+            var kartGider = gelirGiderler.Where(g => g.Tur == "KartGider").Sum(g => g.Tutar);
+            var kasaGider = gelirGiderler.Where(g => g.Tur == "KasaGider").Sum(g => g.Tutar);
+            var digerGider = gelirGiderler.Where(g => g.Tur == "Diger").Sum(g => g.Tutar);
+
+            ViewBag.ToplamNakitGider = nakitGider;
+            ViewBag.ToplamKartGider = kartGider;
+            ViewBag.ToplamKasaGider = kasaGider;
+            ViewBag.ToplamDigerGider = digerGider;
+
+            var toplamGelir = nakitSatis + kartSatis;
+            var toplamGider = nakitGider + kartGider + kasaGider + digerGider;
+
+            ViewBag.ToplamGelir = toplamGelir;
+            ViewBag.ToplamGider = toplamGider;
+            ViewBag.NetKazanc = toplamGelir - toplamGider;
+
+
+            // Günlük Kazanç = nakit + kart satış
+            ViewBag.GunlukKazanc = nakitSatis + kartSatis;
+
+            // Nakit Gider + Kart Gider
+            ViewBag.ToplamHarcananPara = nakitGider + kartGider + kasaGider + digerGider;
+
+            var kasadaOlmasiGereken = (nakitSatis+toplamGelir) - kasaGider;
+            ViewBag.KasadaOlmasiGereken = kasadaOlmasiGereken;
+
+            // Kar (Kasadaki Paranın %15'i)
+            ViewBag.TahminiKar = kasadaOlmasiGereken * 0.15m;
+
+            // Günlük Toplam Kazanç (gün sonu): Nakit + Kart satış
+            ViewBag.GunSonuToplam = nakitSatis + kartSatis;
+
+            // Toplam Gider = nakit + kart gider + 
+            ViewBag.ToplamGiderAna = nakitGider + kartGider + kasaGider + digerGider;
+
+            // Günlük Kalan = Gider - (sadece nakit gelir)
+            ViewBag.GunlukKalan = (nakitGider + kartGider) - nakitSatis;
 
             return View(satislar);
         }
