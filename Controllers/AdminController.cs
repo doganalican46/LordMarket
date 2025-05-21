@@ -24,6 +24,8 @@ namespace LordMarket.Controllers
             var gelirGiderler = db.GelirGider.Where(g => g.Status == true).ToList();
 
             var bugun = DateTime.Today;
+            var yarin = bugun.AddDays(1);
+
 
             // Günün toplam satış tutarı
             var gununToplamSatis = satislar
@@ -43,13 +45,23 @@ namespace LordMarket.Controllers
 
             // Günün gelirleri ve giderleri (tarih filtresi eklendi)
             var gununGelirleri = gelirGiderler
-                .Where(g => g.Tur == "Gelir" && g.Tarih.HasValue && g.Tarih.Value.Date == bugun)
+    .Where(g => g.Tur == "Gelir" && g.Tarih >= bugun && g.Tarih < bugun.AddDays(1))
+    .Sum(g => (decimal?)g.Tutar) ?? 0;
+
+            var gununKartGiderleri = gelirGiderler
+                .Where(g => g.Tur == "KartGider" && g.Tarih >= bugun && g.Tarih < bugun.AddDays(1))
                 .Sum(g => (decimal?)g.Tutar) ?? 0;
-            var gununGiderleri = gelirGiderler
-                .Where(g => g.Tur == "Gider" && g.Tarih.HasValue && g.Tarih.Value.Date == bugun)
+            var gununNakitGiderleri = gelirGiderler
+                .Where(g => g.Tur == "NakitGider" && g.Tarih >= bugun && g.Tarih < bugun.AddDays(1))
                 .Sum(g => (decimal?)g.Tutar) ?? 0;
+            var gununKasaGider = gelirGiderler
+                .Where(g => g.Tur == "KasaGider" && g.Tarih >= bugun && g.Tarih < bugun.AddDays(1))
+                .Sum(g => (decimal?)g.Tutar) ?? 0;
+
             ViewBag.GununToplamGelir = gununGelirleri;
-            ViewBag.GununToplamGider = gununGiderleri;
+            ViewBag.gununKartGiderleri = gununKartGiderleri;
+            ViewBag.gununNakitGiderleri = gununNakitGiderleri;
+            ViewBag.gununKasaGider = gununKasaGider;
 
             // Ödeme tiplerine göre toplamlar
             ViewBag.NakitToplam = satislar.Where(s => s.OdemeTipi == "Nakit").Sum(s => (decimal?)s.ToplamTutar) ?? 0;

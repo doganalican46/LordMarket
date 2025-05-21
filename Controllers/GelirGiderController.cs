@@ -188,7 +188,7 @@ namespace LordMarket.Controllers
             // Nakit Gider + Kart Gider
             ViewBag.ToplamHarcananPara = nakitGider + kartGider + kasaGider + digerGider;
 
-            var kasadaOlmasiGereken = (nakitSatis+toplamGelir) - kasaGider;
+            var kasadaOlmasiGereken = (nakitSatis) - kasaGider;
             ViewBag.KasadaOlmasiGereken = kasadaOlmasiGereken;
 
             // Kar (Kasadaki Paranın %15'i)
