@@ -16,7 +16,7 @@ namespace LordMarket.Controllers
         [Authorize]
         public ActionResult Kullanicilar()
         {
-            var Kullanicilar = db.Kullanicilar.ToList();
+            var Kullanicilar = db.Kullanicilar.Where(x=>x.Role=="admin"|| x.Role== "user").ToList();
             return View(Kullanicilar);
         }
 

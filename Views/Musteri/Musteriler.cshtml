@@ -144,26 +144,25 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({
                 orientation: 'landscape',
-                unit: 'mm'
+                unit: 'mm',
+                format: 'a4'
             });
 
-            // Başlık
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(16);
-            doc.text('Musteri Listesi', 14, 15);
-
+            // Türkçe karakter destekli font yükle (Arial veya custom Base64 font kullanılabilir)
             doc.setFont('helvetica', 'normal');
-            doc.setFontSize(10);
-            doc.text(`Oluşturulma Tarihi: ${new Date().toLocaleDateString()}`, 14, 22);
 
-            // Tablo verileri
+            doc.setFontSize(16);
+            doc.text('Müşteri Listesi', 14, 15, { encoding: "WinAnsi" });
+
+            doc.setFontSize(10);
+            doc.text(`Oluşturulma Tarihi: ${new Date().toLocaleDateString('tr-TR')}`, 14, 22);
+
             const table = document.getElementById('DataTable');
             const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.innerText.trim());
             const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => {
                 return Array.from(tr.querySelectorAll('td')).map(td => td.innerText.trim());
             });
 
-            // PDF oluşturma
             doc.autoTable({
                 head: [headers],
                 body: rows,
@@ -174,25 +173,28 @@
                     textColor: 255,
                     fontStyle: 'bold'
                 },
-                columnStyles: {
-                    0: { cellWidth: 10 },
-                    1: { cellWidth: 15 },
-                    2: { cellWidth: 'auto' },
-                    3: { cellWidth: 20 },
-                    4: { cellWidth: 15 },
-                    5: { cellWidth: 15 },
-                    6: { cellWidth: 25 }
-                },
                 styles: {
                     fontSize: 8,
                     cellPadding: 2,
-                    halign: 'center'
+                    halign: 'center',
+                    overflow: 'linebreak' // metin sığmazsa alt satıra geç
                 },
-                margin: { top: 30 }
+                margin: { top: 30 },
+                columnStyles: {
+                    // genişlikleri otomatik ayarla
+                    0: { cellWidth: 'auto' },
+                    1: { cellWidth: 'auto' },
+                    2: { cellWidth: 'auto' },
+                    3: { cellWidth: 'auto' },
+                    4: { cellWidth: 'auto' },
+                    5: { cellWidth: 'auto' },
+                    6: { cellWidth: 'auto' },
+                }
             });
 
-            doc.save(`Musteriler_${new Date().toLocaleDateString()}.pdf`);
+            doc.save(`Musteriler_${new Date().toLocaleDateString('tr-TR')}.pdf`);
         });
+
 
         // Arama fonksiyonu
         document.getElementById('searchInput').addEventListener('input', function () {
@@ -235,7 +237,7 @@
 
                     <div class="mb-3">
                         <label for="ToplamBorc" class="form-label">Toplam Borç</label>
-                        <input type="number" step="0.01" id="ToplamBorc" name="ToplamBorc" class="form-control" required placeholder="0.00" />
+                        <input type="text"  id="ToplamBorc" name="ToplamBorc" class="form-control" required placeholder="0.00" value="0" />
                     </div>
 
                     <input type="hidden" name="Status" value="true" />
