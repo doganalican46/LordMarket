@@ -60,6 +60,18 @@ namespace LordMarket.Controllers
         }
 
         [Authorize]
+        public ActionResult GelirGiderKaldir(int id)
+        {
+            var gelirgider = db.GelirGider.Find(id);
+            if (gelirgider != null)
+            {
+                db.GelirGider.Remove(gelirgider);
+                db.SaveChanges();
+            }
+            return RedirectToAction("GelirGider");
+        }
+
+        [Authorize]
         public ActionResult GelirGiderGetir(int id)
         {
             var GelirGider = db.GelirGider.Find(id);
