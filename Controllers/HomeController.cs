@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -68,8 +70,10 @@ namespace LordMarket.Controllers
         [HttpPost]
         public JsonResult BarkodAra(string barkod)
         {
-            var urun = db.Urunler.FirstOrDefault(x => x.Barkod == barkod && x.Status == true);
-
+            var urun = db.Urunler
+                         .Where(x => x.Barkod == barkod && x.Status == true)
+                         .Select(x => new { x.UrunAd, x.UrunFiyat })
+                         .FirstOrDefault();
             if (urun != null)
             {
                 return Json(new
@@ -359,10 +363,124 @@ namespace LordMarket.Controllers
             return Json(new { success = false });
         }
 
-       
 
 
 
+        [Authorize]
+        [HttpGet]
+        public JsonResult ToptanciBildirimi()
+        {
+            string bugun = DateTime.Today.ToString("dddd", new System.Globalization.CultureInfo("tr-TR"));
+            var aktifToptancilar = db.Kullanicilar
+                .Where(k => k.Role == "toptanci" && k.Status == true)
+                .ToList();
+
+            bool bugunGelenToptanciVarMi = aktifToptancilar.Any(k =>
+                !string.IsNullOrEmpty(k.Password) &&
+                k.Password.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                          .Any(gun => gun.Trim().Equals(bugun, StringComparison.OrdinalIgnoreCase))
+            );
+
+            var result = new { mailGonderildi = false, mesaj = "" };
+
+            if (bugunGelenToptanciVarMi)
+            {
+                // Saat kontrolü 09:00 - 12:00 arası
+                var now = DateTime.Now.TimeOfDay;
+                var baslangic = new TimeSpan(9, 0, 0);
+                var bitis = new TimeSpan(15, 0, 0);
+
+                if (now >= baslangic && now <= bitis)
+                {
+                    // Mail gönderme sınır kontrolü için session kullanalım
+                    int mailSayisi = 0;
+                    if (System.Web.HttpContext.Current.Session["mailSayisi"] != null)
+                    {
+                        mailSayisi = (int)System.Web.HttpContext.Current.Session["mailSayisi"];
+                    }
+
+                    if (mailSayisi < 5)
+                    {
+                        try
+                        {
+                            var smtpClient = new SmtpClient("smtp.gmail.com")
+                            {
+                                Port = 587,
+                                Credentials = new NetworkCredential("lordtekelbufe@gmail.com", "pofz rmri bmnl odgb"),
+                                EnableSsl = true
+                            };
+
+                            string mailBody = $@"
+<html>
+<body style='font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;'>
+    <div style='background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);'>
+        <h2 style='color: #007bff;'>Loooooooooo!!!! Bugün Gelecek Toptancılar Var Hazırlık yap :) </h2>
+        <p><strong>Bugün hangi gün ki? </strong> {bugun}</p>
+        <hr />
+        <ul style='padding-left: 20px;'>";
+
+                            foreach (var k in aktifToptancilar)
+                            {
+                                if (!string.IsNullOrEmpty(k.Password) &&
+                                    k.Password.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                                              .Any(gun => gun.Trim().Equals(bugun, StringComparison.OrdinalIgnoreCase)))
+                                {
+                                    mailBody += $@"
+            <li style='margin-bottom:10px;'>
+                <strong>Toptancı Adı:</strong> {k.Username} <br />
+                <strong>Diğer geldiği günler:</strong> {k.Password}
+            </li>";
+                                }
+                            }
+
+                            mailBody += @"
+        </ul>
+        <hr />
+        <footer style='font-size:12px; color:#666; margin-top:20px;'>
+            Lord Büfe&Market - <a href='https://doganalican46.dev' target='_blank'>doganalican46.dev</a>
+        </footer>
+    </div>
+</body>
+</html>";
+
+                            var mailMessage = new MailMessage
+                            {
+                                From = new MailAddress("lordtekelbufe@gmail.com"),
+                                Subject = $"Toptancı Bildirimi ({bugun}) - Lord Tekel Büfe",
+                                Body = mailBody,
+                                IsBodyHtml = true
+                            };
+
+                            mailMessage.To.Add("alicanalican4141@gmail.com");
+                            smtpClient.Send(mailMessage);
+
+                            // Mail sayısını arttır
+                            System.Web.HttpContext.Current.Session["mailSayisi"] = mailSayisi + 1;
+
+                            result = new { mailGonderildi = true, mesaj = "Mail gönderildi." };
+                        }
+                        catch (Exception ex)
+                        {
+                            result = new { mailGonderildi = false, mesaj = "Mail gönderim hatası: " + ex.Message };
+                        }
+                    }
+                    else
+                    {
+                        result = new { mailGonderildi = false, mesaj = "Mail gönderme sınırı aşıldı." };
+                    }
+                }
+                else
+                {
+                    result = new { mailGonderildi = false, mesaj = "Mail gönderim saati değil." };
+                }
+            }
+            else
+            {
+                result = new { mailGonderildi = false, mesaj = "Bugün gelen toptancı yok." };
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
 
 

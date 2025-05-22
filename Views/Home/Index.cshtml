@@ -35,7 +35,7 @@
                                class="form-control"
                                placeholder="Barkod okutun veya girin"
                                autofocus>
-                        
+
                         <button type="button" class="btn btn-outline-dark" onclick="kameraAcSatis()">
                             <i class="fas fa-camera"></i>
                         </button>
@@ -67,7 +67,7 @@
                     <h5><i class="fas fa-tag me-2"></i>Diğer Ürün Ekle</h5>
                     <div class="input-group">
                         <span class="input-group-text">Fiyat (₺)</span>
-                        <input type="text" id="digerUrunFiyat" class="form-control" placeholder="Fiyat girin" >
+                        <input type="text" id="digerUrunFiyat" class="form-control" placeholder="Fiyat girin">
                         <button class="btn btn-secondary" onclick="digerUrunEkle()"><i class="fas fa-plus me-2"></i>Ekle</button>
                     </div>
                 </div>
@@ -109,54 +109,59 @@
                     </div>
                 </div>
 
-                <div class="action-buttons d-flex gap-2 flex-wrap mb-3">
+                <div class="payment-section">
+                    <h5 class="mb-3">
+                        <i class="fas fa-plus me-2 "></i>İşlemler
+                    </h5>
 
-                    <button class="btn btn-danger btn d-flex align-items-center px-3 py-2 shadow-sm" onclick="temizle()">
-                        <i class="fas fa-trash-alt me-2"></i>Temizle
-                    </button>
+                    <div class="action-buttons d-flex gap-2 flex-wrap mb-3">
 
-                    @*<button type="button" class="btn btn-secondary btn d-flex align-items-center px-3 py-2 shadow-sm" onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
-                        <i class="fas fa-clock me-2"></i>İşlem Beklet
-                    </button>*@
+                        <button class="btn btn-danger btn d-flex align-items-center px-3 py-2 shadow-sm" onclick="temizle()">
+                            <i class="fas fa-trash-alt me-2"></i>Temizle
+                        </button>
 
-                    <button type="button" class="btn btn-success btn d-flex align-items-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
-                        <i class="fas fa-plus me-2"></i>Ürün İşlem
-                    </button>
+                        @*<button type="button" class="btn btn-secondary btn d-flex align-items-center px-3 py-2 shadow-sm" onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
+                <i class="fas fa-clock me-2"></i>İşlem Beklet
+            </button>*@
 
-                    <a href="/Admin/Index" class="btn btn-warning btn d-flex align-items-center justify-content-center px-3 py-2 shadow-sm" title="Admin Ekranı">
-                        <i class="fas fa-toolbox"></i>
-                    </a>
+                        <button type="button" class="btn btn-success btn d-flex align-items-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
+                            <i class="fas fa-plus me-2"></i>Ürün İşlem
+                        </button>
 
-                    <button type="button" class="btn btn-info btn d-flex align-items-center justify-content-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#makbuzModal" title="Son İşlemin Makbuzunu Yazdır">
-                        🧾
-                    </button>
+                        <a href="/Admin/Index" class="btn btn-warning btn d-flex align-items-center justify-content-center px-3 py-2 shadow-sm" title="Admin Ekranı">
+                            <i class="fas fa-toolbox"></i>
+                        </a>
 
+                        <button type="button" class="btn btn-info btn d-flex align-items-center justify-content-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#makbuzModal" title="Son İşlemin Makbuzunu Yazdır">
+                            🧾
+                        </button>
 
-
-                </div>
-
-
-
-
-
-                <div class="quick-products">
-                    <h5><i class="fas fa-bolt me-2"></i>Hızlı Ürünler</h5>
-                    <div class="d-flex flex-wrap">
-                        @foreach (var item in Model.HizliUrunler)
-                        {
-                            <button class="btn btn-danger btn-quick-product"
-                                    onclick="hizliUrunEkle('@item.Barkod')"
-                                    oncontextmenu="kaldirmakIcinSor(@item.ID); return false;">
-                                <div>@item.UrunAd</div>
-                                <div class="fw-bold">@item.UrunFiyat ₺</div>
-                            </button>
-                        }
 
 
                     </div>
+
+                </div>
+
+
+
+                    <div class="quick-products">
+                        <h5><i class="fas fa-bolt me-2"></i>Hızlı Ürünler</h5>
+                        <div class="d-flex flex-wrap">
+                            @foreach (var item in Model.HizliUrunler)
+                            {
+                                <button class="btn btn-danger btn-quick-product"
+                                        onclick="hizliUrunEkle('@item.Barkod')"
+                                        oncontextmenu="kaldirmakIcinSor(@item.ID); return false;">
+                                    <div>@item.UrunAd</div>
+                                    <div class="fw-bold">@item.UrunFiyat ₺</div>
+                                </button>
+                            }
+
+
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
 
 
@@ -350,6 +355,28 @@
 
 
     <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("toptanciTrigger").click();
+        });
+
+        window.addEventListener("DOMContentLoaded", function () {
+            fetch("/Home/ToptanciBildirimi")
+                .then(response => {
+                    if (!response.ok) {
+                        // Hata varsa sessizce yakala, ekrana yazdırma
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Burada hiç ekrana yazma, sessizce tamamlandı
+                })
+                .catch(error => {
+                    // Hata olursa sadece konsola yaz
+                    console.error("Mail kontrol hatası:", error);
+                });
+        });
+
 
         const alisInput = document.getElementById("UrunAlisFiyati");
         const kdvInput = document.getElementById("KDVOran");
@@ -607,16 +634,16 @@
 
                         $('#urunListesi tbody').append(
                             `<tr data-barkod="${barkod}">
-                                                                                    <td>${res.urunAd}</td>
-                                                                                    <td class="fiyat">${res.fiyat}</td>
-                                                                                    <td class="adet">1</td>
-                                                                                    <td class="satirToplam">${toplamSatir}</td>
-                                                                                    <td>
-                                                                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                                                    </td>
-                                                                                </tr>`
+                                                                                        <td>${res.urunAd}</td>
+                                                                                        <td class="fiyat">${res.fiyat}</td>
+                                                                                        <td class="adet">1</td>
+                                                                                        <td class="satirToplam">${toplamSatir}</td>
+                                                                                        <td>
+                                                                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                                        </td>
+                                                                                    </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -766,7 +793,7 @@
                             timer: 2000,
                             timerProgressBar: true,
                             confirmButtonText: 'Tamam',
-                        willClose: () => {
+                            willClose: () => {
                                 location.reload();
                             }
                         });
@@ -781,7 +808,7 @@
                         timerProgressBar: true,
                         showConfirmButton: false,
                         willClose: () => {
-                            location.reload(); 
+                            location.reload();
                         }
                     });
 
@@ -800,7 +827,7 @@
             const input = document.getElementById('digerUrunFiyat');
             input.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter') {
-                    e.preventDefault(); 
+                    e.preventDefault();
                     digerUrunEkle();
                 }
             });
@@ -828,16 +855,16 @@
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-                                                                        <td>${urunAdi}</td>
-                                                                        <td class="fiyat">${fiyat.toFixed(2)}</td>
-                                                                        <td class="adet">1</td>
-                                                                        <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                                                                        <td>
-                                                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                                        </td>
-                                                                    </tr>`
+                                                                            <td>${urunAdi}</td>
+                                                                            <td class="fiyat">${fiyat.toFixed(2)}</td>
+                                                                            <td class="adet">1</td>
+                                                                            <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                                                                            <td>
+                                                                                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                            </td>
+                                                                        </tr>`
             );
 
             updateGenelToplam();
