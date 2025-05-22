@@ -86,7 +86,95 @@ namespace LordMarket.Controllers
         }
 
 
+        [Authorize]
+        public ActionResult Toptancilar()
+        {
+            var Toptancilar = db.Kullanicilar.Where(x => x.Role == "toptanci").ToList();
+            return View(Toptancilar);
+        }
 
-        
+        [Authorize]
+        [HttpGet]
+        public ActionResult YeniToptanci()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult YeniToptanci(Kullanicilar Kullanici)
+        {
+            if (ModelState.IsValid)
+            {
+                Kullanici.Status = true;
+                Kullanici.Role = "toptanci";
+                
+                Kullanici.SonGuncellenmeTarihi = DateTime.Now.ToString();
+                db.Kullanicilar.Add(Kullanici);
+                db.SaveChanges();
+                return RedirectToAction("Toptancilar");
+            }
+
+            return View(Kullanici);
+        }
+
+        [Authorize]
+        public ActionResult ToptanciSil(int id)
+        {
+            var Kullanici = db.Kullanicilar.Find(id);
+            if (Kullanici != null)
+            {
+                Kullanici.Status = false;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Toptancilar");
+        }
+
+        [Authorize]
+        public ActionResult ToptanciKaldir(int id)
+        {
+            var toptanci = db.Kullanicilar.Find(id);
+            if (toptanci != null)
+            {
+                db.Kullanicilar.Remove(toptanci);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Toptancilar");
+        }
+
+        [Authorize]
+        public ActionResult ToptanciGetir(int id)
+        {
+            var Kullanici = db.Kullanicilar.Find(id);
+            if (Kullanici == null) return HttpNotFound();
+
+            return View(Kullanici);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult ToptanciGuncelle(Kullanicilar y)
+        {
+            if (ModelState.IsValid)
+            {
+                var Kullanici = db.Kullanicilar.Find(y.ID);
+                if (Kullanici == null) return HttpNotFound();
+
+                Kullanici.Username = y.Username;
+                Kullanici.Password = y.Password;
+                Kullanici.Image = y.Image;
+                Kullanici.SonGuncellenmeTarihi = DateTime.Now.ToString();
+                Kullanici.Status = y.Status;
+
+                db.SaveChanges();
+                return RedirectToAction("Toptancilar");
+            }
+
+            return View("ToptanciGetir", y);
+        }
+
+
+
+
     }
 }
