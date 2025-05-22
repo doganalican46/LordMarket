@@ -267,13 +267,10 @@
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Urun\Urunler.cshtml" />
-    <Content Include="Views\Urun\YeniUrun.cshtml" />
     <Content Include="Views\Urun\UrunGetir.cshtml" />
     <Content Include="Views\Musteri\Musteriler.cshtml" />
-    <Content Include="Views\Musteri\YeniMusteri.cshtml" />
     <Content Include="Views\Musteri\MusteriGetir.cshtml" />
     <Content Include="Views\GelirGider\GelirGider.cshtml" />
-    <Content Include="Views\GelirGider\YeniGelirGider.cshtml" />
     <Content Include="Views\GelirGider\GelirGiderGetir.cshtml" />
     <Content Include="Views\Urun\HizliUrunler.cshtml" />
     <Content Include="Views\Urun\EtiketOlustur.cshtml" />

@@ -164,6 +164,7 @@ namespace LordMarket.Controllers
         [Authorize]
         public ActionResult RaporPaneli(DateTime? baslangicTarihi, DateTime? bitisTarihi)
         {
+            if (Session["Role"] == null || Session["Role"].ToString() != "admin") { return RedirectToAction("Login", "Home"); }
             UpdateSatisToplamTutar();
 
             if (!baslangicTarihi.HasValue || !bitisTarihi.HasValue)

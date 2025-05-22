@@ -22,7 +22,6 @@ namespace LordMarket.Controllers
             public List<SatisIslem> SatisIslem { get; set; }
             public List<Urunler> Urunler { get; set; }
             public List<Urunler> HizliUrunler { get; set; }
-
             public SatisIslem SonSatis { get; set; }
             public string MusteriAdSoyad { get; set; }
         }
