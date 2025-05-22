@@ -15,7 +15,7 @@ namespace LordMarket.Models
     public partial class SatisIslem
     {
         public int ID { get; set; }
-        public Nullable<int> SatisNo { get; set; }
+        public Nullable<int> SatisNo { get; set; } //trg_SatisNo_Ayarla
         public Nullable<decimal> ToplamTutar { get; set; }
         public string OdemeTipi { get; set; }
         public Nullable<System.DateTime> Tarih { get; set; }

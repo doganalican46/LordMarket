@@ -388,7 +388,7 @@ namespace LordMarket.Controllers
                 // Saat kontrolü 09:00 - 12:00 arası
                 var now = DateTime.Now.TimeOfDay;
                 var baslangic = new TimeSpan(9, 0, 0);
-                var bitis = new TimeSpan(15, 0, 0);
+                var bitis = new TimeSpan(12, 0, 0);
 
                 if (now >= baslangic && now <= bitis)
                 {
@@ -399,7 +399,7 @@ namespace LordMarket.Controllers
                         mailSayisi = (int)System.Web.HttpContext.Current.Session["mailSayisi"];
                     }
 
-                    if (mailSayisi < 5)
+                    if (mailSayisi < 3)
                     {
                         try
                         {
@@ -451,7 +451,7 @@ namespace LordMarket.Controllers
                                 IsBodyHtml = true
                             };
 
-                            mailMessage.To.Add("alicanalican4141@gmail.com");
+                            mailMessage.To.Add("cengizack56@gmail.com");
                             smtpClient.Send(mailMessage);
 
                             // Mail sayısını arttır
