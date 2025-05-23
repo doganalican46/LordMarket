@@ -19,7 +19,7 @@
     </div>
 
 
-   
+
 
     <!-- Ana Kart -->
     <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
@@ -50,11 +50,9 @@
                 <table id="DataTable" class="table table-hover align-middle mb-0" style="min-width: 100%;">
                     <thead class="table-dark">
                         <tr>
-                            <th>Resim</th>
 
                             <th>Toptancı Adı</th>
                             <th width="100px" class="text-center">Günler</th>
-                            <th width="100px" class="text-center">Durum</th>
                             <th width="150px" class="text-center">İşlemler</th>
                         </tr>
                     </thead>
@@ -62,32 +60,17 @@
                         @foreach (var Kullanici in Model)
                         {
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center justify-content-center position-relative">
-                                        <img src="@(Kullanici.Image != null ? Kullanici.Image : "https://cdn-icons-png.flaticon.com/512/219/219983.png")"
-                                             alt="Ürün Resmi"
-                                             class="rounded-circle border"
-                                             style="width: 40px; height: 40px; object-fit: cover;">
 
-                                    </div>
-
-                                </td>
                                 <td class="fw-semibold">
                                     @Kullanici.Username
-                                    <a href="/Kullanici/ToptanciKaldir/@Kullanici.ID" class="btn btn-outline-danger btn-sm" onclick="return confirm('Toptancıyı silmek istediğinize emin misiniz?');" title="Kaldır">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+
                                 </td>
 
                                 <td class="text-center">
                                     @Kullanici.Password
                                 </td>
 
-                                <td class="text-center">
-                                    <span class="badge @(Kullanici.Status == true ? "bg-success" : "bg-danger")">
-                                        @(Kullanici.Status == true ? "Aktif" : "Pasif")
-                                    </span>
-                                </td>
+
 
                                 <td class="text-center">
                                     <div class="d-flex flex-wrap justify-content-center gap-1">
@@ -96,10 +79,10 @@
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
 
-                                        <a href="/Kullanici/ToptanciSil/@Kullanici.ID" class="btn btn-danger btn-sm" onclick="return confirm('Toptancıyı silmek istediğinize emin misiniz?');" title="Sil">
+                                        <a href="/Kullanici/ToptanciKaldir/@Kullanici.ID" class="btn btn-danger btn-sm" onclick="return confirm('Toptancıyı silmek istediğinize emin misiniz?');" title="Sil">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                        
+
                                     </div>
                                 </td>
                             </tr>
@@ -113,35 +96,85 @@
     </div>
 </div>
 
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="ToptanciEkleModal" tabindex="-1" aria-labelledby="ToptanciEkleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="ToptanciEkleModalLabel">Yeni Kullanici Ekle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+
+            <form action="/Kullanici/YeniToptanci" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label for="Username" class="form-label">Toptancı Adı</label>
+                        <input type="text" id="Username" name="Username" class="form-control" required placeholder="Toptancı Adı" />
+                    </div>
+
+                    <!-- Gün Checkbox'ları -->
+                    <div class="mb-3">
+                        <label class="form-label">Toptancının Geldiği Günler</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Pazartesi" id="gun1">
+                            <label class="form-check-label" for="gun1">Pazartesi</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Salı" id="gun2">
+                            <label class="form-check-label" for="gun2">Salı</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Çarşamba" id="gun3">
+                            <label class="form-check-label" for="gun3">Çarşamba</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Perşembe" id="gun4">
+                            <label class="form-check-label" for="gun4">Perşembe</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Cuma" id="gun5">
+                            <label class="form-check-label" for="gun5">Cuma</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Cumartesi" id="gun6">
+                            <label class="form-check-label" for="gun6">Cumartesi</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="Pazar" id="gun7">
+                            <label class="form-check-label" for="gun7">Pazar</label>
+                        </div>
+                    </div>
+
+                    <!-- Gizli alan: Seçilen günleri buraya yazacağız -->
+                    <input type="hidden" id="Password" name="Password" />
+
+
+
+
+
+
+                    <input type="hidden" name="Status" value="true" />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-success">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 @section Scripts {
     <script>
 
-        let selectedKullaniciId = 0;
-        function setKullaniciId(id) {
-            selectedKullaniciId = id;
-            document.getElementById("borcKullaniciId").value = id;
-            document.getElementById("veresiyeKullaniciId").value = id;
-        }
-
-        function submitBorcOdeForm() {
-            var id = $('#borcKullaniciId').val();
-            var tutar = $('#OdenenBorcTutar').val();
-            var not = $('#BorcNot').val();
-
-            $.post('/Kullanici/BorcOde', { id: id, OdenenBorcTutar: tutar, Not: not }, function () {
-                location.reload();
-            });
-        }
-
-        function submitVeresiyeForm() {
-            var id = $('#veresiyeKullaniciId').val();
-            var tutar = $('#VeresiyeTutar').val();
-            var not = $('#VeresiyeNot').val();
-
-            $.post('/Kullanici/VeresiyeEkle', { id: id, VeresiyeTutar: tutar, Not: not }, function () {
-                location.reload();
-            });
-        }
 
         // Excel Export
         document.getElementById('exportExcel').addEventListener('click', function () {
@@ -219,86 +252,6 @@
 
     </script>
 }
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="ToptanciEkleModal" tabindex="-1" aria-labelledby="ToptanciEkleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="ToptanciEkleModalLabel">Yeni Kullanici Ekle</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
-            </div>
-
-            <form action="/Kullanici/YeniToptanci" method="post" enctype="multipart/form-data">
-                <div class="modal-body">
-
-                    <div class="mb-3">
-                        <label for="Username" class="form-label">Toptancı Adı</label>
-                        <input type="text" id="Username" name="Username" class="form-control" required placeholder="Toptancı Adı" />
-                    </div>
-
-                    <!-- Gün Checkbox'ları -->
-                    <div class="mb-3">
-                        <label class="form-label">Toptancının Geldiği Günler</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Pazartesi" id="gun1">
-                            <label class="form-check-label" for="gun1">Pazartesi</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Salı" id="gun2">
-                            <label class="form-check-label" for="gun2">Salı</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Çarşamba" id="gun3">
-                            <label class="form-check-label" for="gun3">Çarşamba</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Perşembe" id="gun4">
-                            <label class="form-check-label" for="gun4">Perşembe</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Cuma" id="gun5">
-                            <label class="form-check-label" for="gun5">Cuma</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Cumartesi" id="gun6">
-                            <label class="form-check-label" for="gun6">Cumartesi</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="Pazar" id="gun7">
-                            <label class="form-check-label" for="gun7">Pazar</label>
-                        </div>
-                    </div>
-
-                    <!-- Gizli alan: Seçilen günleri buraya yazacağız -->
-                    <input type="hidden" id="Password" name="Password" />
-
-
-
-                    <div class="mb-3">
-                        <label for="Image" class="form-label">Profil Fotoğrafı</label>
-                        <input type="text" id="Image" name="Image" class="form-control"
-                               value="https://cdn-icons-png.flaticon.com/512/219/219983.png" />
-                    </div>
-
-
-                    <input type="hidden" name="Status" value="true" />
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" class="btn btn-success">Kaydet</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-
-
 
 <script>
     document.querySelector("form").addEventListener("submit", function (e) {

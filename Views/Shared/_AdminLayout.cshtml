@@ -33,7 +33,7 @@
                         <i class="fas fa-user-circle me-1"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="/Admin/UserProfile"><i class="fas fa-cog me-2"></i>Ayarlar</a></li>
+                        <li><a class="dropdown-item" href="/Admin/UserProfile"><i class="fas fa-user me-2"></i>Profil</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap</a></li>
                     </ul>
@@ -47,38 +47,36 @@
             <nav class="sb-sidenav accordion sb-sidenav-dark bg-dark">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
+
+                        <!-- GENEL -->
                         <div class="sb-sidenav-menu-heading">Genel</div>
                         <a class="nav-link" href="/Admin/Index">
                             <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
                             Ana Sayfa
                         </a>
-
                         <a class="nav-link" href="/Home/Index">
-                            <div class="sb-nav-link-icon"><i class="fas fa-cart-shopping"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-cash-register"></i></div>
                             Satış Yap
                         </a>
 
+                        <!-- FİNANS -->
                         <div class="sb-sidenav-menu-heading">Finans</div>
-
                         <a class="nav-link" href="/GelirGider/GelirGider">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-arrow-up-right-dots"></i></div>
                             Gelir-Gider
                         </a>
-                        <a class="nav-link" href="/GelirGider/RaporPaneli">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Raporlar
-                        </a>
                         <a class="nav-link" href="/GelirGider/SatisGecmis">
-                            <div class="sb-nav-link-icon"><i class="bi bi-cash"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-clock-rotate-left"></i></div>
                             Satış Geçmişi
                         </a>
-                        <a class="nav-link" href="/Kullanici/Toptancilar">
-                            <div class="sb-nav-link-icon"><i class="fas fa-cart-shopping"></i></div>
-                            Toptancı Günleri
+                        <a class="nav-link" href="/GelirGider/RaporPaneli">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-lines"></i></div>
+                            Raporlar
                         </a>
 
 
-                        <div class="sb-sidenav-menu-heading">Yönetim</div>
+                        <!-- ÜRÜN YÖNETİMİ -->
+                        <div class="sb-sidenav-menu-heading">Ürün Yönetimi</div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseUrunler" aria-expanded="false" aria-controls="collapseUrunler">
                             <div class="sb-nav-link-icon"><i class="fas fa-box-open"></i></div>
                             Ürünler
@@ -90,37 +88,44 @@
                                 <a class="nav-link" href="/Urun/HizliUrunler">Hızlı Ürünler</a>
                             </nav>
                         </div>
-
-                        <a class="nav-link" href="/Musteri/Musteriler">
-                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Müşteriler
-                        </a>
-                        <a class="nav-link" href="/Kullanici/Kullanicilar">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user-tie"></i></div>
-                            Kullanıcılar
-                        </a>
                         <a class="nav-link" href="/Urun/EtiketOlustur">
                             <div class="sb-nav-link-icon"><i class="fas fa-tags"></i></div>
                             Etiketler
                         </a>
 
-                        <a class="nav-link" href="/Admin/UserProfile">
-                            <div class="sb-nav-link-icon"><i class="fas fa-gear"></i></div>
-                            Ayarlar
+                        <!-- KULLANICI YÖNETİMİ -->
+                        <div class="sb-sidenav-menu-heading">Kullanıcılar</div>
+                        <a class="nav-link" href="/Musteri/Musteriler">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Müşteriler
+                        </a>
+                        <a class="nav-link" href="/Kullanici/Kullanicilar">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-cog"></i></div>
+                            Kullanıcılar
+                        </a>
+                        <a class="nav-link" href="/Kullanici/Toptancilar">
+                            <div class="sb-nav-link-icon"><i class="fas fa-truck-loading"></i></div>
+                            Toptancılar
                         </a>
 
-
+                        <!-- AYARLAR -->
+                        <div class="sb-sidenav-menu-heading">Sistem</div>
+                        <a class="nav-link" href="/Admin/UserProfile">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                            Profil
+                        </a>
 
                     </div>
                 </div>
 
-
+                <!-- GİRİŞ YAPAN BİLGİSİ -->
                 <div class="sb-sidenav-footer bg-dark">
                     <div class="small text-white-50">Giriş Yapan:</div>
                     <span class="text-white">@Session["Username"]</span>
                 </div>
             </nav>
         </div>
+
 
         <div id="layoutSidenav_content">
             <main class="py-4">
