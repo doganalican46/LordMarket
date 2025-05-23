@@ -111,11 +111,18 @@
             var id = $('#borcMusteriId').val();
             var tutar = $('#OdenenBorcTutar').val();
             var not = $('#BorcNot').val();
+            var odemeTipi = $('#OdemeTipi').val();
 
-            $.post('/Musteri/BorcOde', { id: id, OdenenBorcTutar: tutar, Not: not }, function () {
+            $.post('/Musteri/BorcOde', {
+                id: id,
+                OdenenBorcTutar: tutar,
+                Not: not,
+                OdemeTipi: odemeTipi
+            }, function () {
                 location.reload();
             });
         }
+
 
         function submitVeresiyeForm() {
             var id = $('#veresiyeMusteriId').val();
@@ -232,7 +239,7 @@
 
                     <div class="mb-3">
                         <label for="ToplamBorc" class="form-label">Toplam Borç</label>
-                        <input type="text"  id="ToplamBorc" name="ToplamBorc" class="form-control" required placeholder="0.00" value="0" />
+                        <input type="text" id="ToplamBorc" name="ToplamBorc" class="form-control" required placeholder="0.00" value="0" />
                     </div>
 
                     <input type="hidden" name="Status" value="true" />
@@ -261,8 +268,17 @@
                 <input type="hidden" id="borcMusteriId" />
                 <div class="form-group">
                     <label>Ödenen Borç Tutarı</label>
-                    <input type="text" id="OdenenBorcTutar" class="form-control"  required />
+                    <input type="text" id="OdenenBorcTutar" class="form-control" required />
                 </div>
+
+                <div class="form-group mt-2">
+                    <label>Ödeme Tipi</label>
+                    <select id="OdemeTipi" class="form-control">
+                        <option value="Nakit">Nakit</option>
+                        <option value="Kart">Kart</option>
+                    </select>
+                </div>
+
                 <div class="form-group mt-2">
                     <label>Kısa Not (İsteğe Bağlı)</label>
                     <textarea id="BorcNot" class="form-control" rows="2" placeholder="Açıklama..."></textarea>
@@ -278,6 +294,7 @@
 
 
 
+
 <div class="modal fade" id="veresiyeModal" tabindex="-1" aria-labelledby="veresiyeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -289,7 +306,7 @@
                 <input type="hidden" id="veresiyeMusteriId" />
                 <div class="form-group">
                     <label>Veresiye Tutarı</label>
-                    <input type="text" id="VeresiyeTutar" class="form-control"  required />
+                    <input type="text" id="VeresiyeTutar" class="form-control" required />
                 </div>
                 <div class="form-group mt-2">
                     <label>Kısa Not (İsteğe Bağlı)</label>

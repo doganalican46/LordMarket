@@ -90,19 +90,32 @@ namespace LordMarket.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult BorcOde(int id, decimal OdenenBorcTutar, string Not)
+        public ActionResult BorcOde(int id, decimal OdenenBorcTutar, string Not, string OdemeTipi)
         {
             var musteri = db.Musteriler.Find(id);
             if (musteri == null) return HttpNotFound();
 
             musteri.ToplamBorc -= OdenenBorcTutar;
 
-            string bilgi = $"Borç Ödemesi: {DateTime.Now:yyyy-MM-dd HH:mm} - {OdenenBorcTutar} ₺ Not: {Not} ||";
+            string bilgi = $"Borç Ödemesi: {DateTime.Now:yyyy-MM-dd HH:mm} - {OdenenBorcTutar} ₺ Not: {Not} Ödeme Tipi: {OdemeTipi} ||";
             musteri.BosAlan += bilgi;
+
+            // Yeni SatisIslem kaydı
+            var islem = new SatisIslem
+            {
+                MusteriID = id,
+                ToplamTutar = OdenenBorcTutar,
+                OdemeTipi = OdemeTipi,
+                Tarih = DateTime.Now,
+                UrunListesi = $"Ürün: Veresiye borcu ödendi - Adet: 1 - Tutar: {OdenenBorcTutar} ₺",
+                Status = true
+            };
+            db.SatisIslem.Add(islem);
 
             db.SaveChanges();
             return RedirectToAction("Musteriler");
         }
+
 
         [Authorize]
         [HttpPost]
