@@ -8,12 +8,12 @@
     <!-- Başlık ve Breadcrumb -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-0"><i class="fas fa-users me-2 text-dark"></i>Musteri Yönetimi</h1>
+            <h1 class="h3 mb-0"><i class="fas fa-users me-2 text-dark"></i>Müşteri Yönetimi</h1>
         </div>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 bg-transparent p-0">
                 <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
-                <li class="breadcrumb-item active">Musteri</li>
+                <li class="breadcrumb-item active">Müşteriler</li>
             </ol>
         </nav>
     </div>
@@ -23,7 +23,7 @@
         <!-- Kart Başlık -->
         <div class="card-header bg-white border-bottom py-3">
             <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-semibold">Musteri Listesi</h5>
+                <h5 class="mb-0 fw-semibold">Müşteri Listesi</h5>
                 <div class="d-flex gap-2">
                     <div class="btn-group">
                         <button id="exportExcel" class="btn btn-success btn-sm me-2" title="Excel'e Aktar">
@@ -33,7 +33,7 @@
                             <i class="fas fa-file-pdf me-1"></i> PDF
                         </button>
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#MusteriEkleModal">
-                            Yeni Musteri Ekle
+                            Yeni Müşteri Ekle
                         </button>
                     </div>
 
@@ -44,40 +44,38 @@
         <!-- Tablo -->
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table id="DataTable" class="table table-hover align-middle mb-0" style="min-width: 100%;">
-                    <thead class="table-dark">
+                <table id="DataTable" class="table table-hover table-striped table-bordered align-middle mb-0" style="min-width: 100%;">
+                    <thead class="table-dark text-center">
                         <tr>
-                            <th>Musteri Adı</th>
-                            <th width="100px" class="text-center">Toplam Borç</th>
-                            <th width="100px" class="text-center">Durum</th>
-                            <th width="150px" class="text-center">İşlemler</th>
+                            <th>Müşteri Adı</th>
+                            <th width="120">Toplam Borç</th>
+                            <th width="100">Durum</th>
+                            <th width="200">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var Musteri in Model)
                         {
                             <tr>
-                                <td class="fw-semibold">@Musteri.MusteriAdSoyad </td>
-                                    
+                                <td class="fw-semibold ps-3">@Musteri.MusteriAdSoyad</td>
 
-                                <td class="text-center">
+                                <td class="text-center text-danger fw-bold">
                                     @(Musteri.ToplamBorc.HasValue ? Musteri.ToplamBorc.Value.ToString("C2") : "₺0,00")
                                 </td>
 
                                 <td class="text-center">
-                                    <span class="badge @(Musteri.Status == true ? "bg-success" : "bg-danger")">
+                                    <span class="badge rounded-pill @(Musteri.Status == true ? "bg-success" : "bg-secondary")">
                                         @(Musteri.Status == true ? "Aktif" : "Pasif")
                                     </span>
                                 </td>
 
-                                <td class="text-center">
-                                    <div class="d-flex flex-wrap justify-content-center gap-1">
-
+                                <td>
+                                    <div class="d-flex justify-content-center flex-wrap gap-2">
                                         <a href="/Musteri/MusteriGetir/@Musteri.ID" class="btn btn-warning btn-sm" title="Güncelle">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
 
-                                        <a href="/Musteri/MusteriSil/@Musteri.ID" class="btn btn-danger btn-sm" onclick="return confirm('Musteriyi silmek istediğinize emin misiniz?');" title="Sil">
+                                        <a href="/Musteri/MusteriSil/@Musteri.ID" class="btn btn-danger btn-sm" onclick="return confirm('Müşteriyi silmek istediğinize emin misiniz?');" title="Sil">
                                             <i class="bi bi-trash"></i>
                                         </a>
 
@@ -88,14 +86,11 @@
                                         <button type="button" class="btn btn-info btn-sm text-white" data-bs-toggle="modal" title="Veresiye Ekle" data-bs-target="#veresiyeModal" onclick="setMusteriId(@Musteri.ID)">
                                             <i class="bi bi-journal-plus"></i>
                                         </button>
-
                                     </div>
                                 </td>
                             </tr>
                         }
                     </tbody>
-
-
                 </table>
             </div>
         </div>
