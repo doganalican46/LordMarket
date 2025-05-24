@@ -183,13 +183,14 @@ namespace LordMarket.Controllers
                 db.SatisIslem.Add(yeniSatis);
                 db.SaveChanges();
 
-                return Json(new { success = true });
+                return Json(new { success = true, beklemede = OdemeTipi == "Beklemede" });
             }
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Hata oluştu: " + ex.Message });
             }
         }
+
 
 
 
@@ -250,7 +251,6 @@ namespace LordMarket.Controllers
             db.SaveChanges();
         }
 
-        [Authorize]
         [HttpPost]
         public ActionResult YeniUrun(Urunler urun)
         {
@@ -480,6 +480,91 @@ namespace LordMarket.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+
+
+        [HttpPost]
+        public JsonResult SatisIslemBeklet(string urunListesi)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(urunListesi))
+                {
+                    return Json(new { success = false, message = "Ürün listesi boş olamaz." });
+                }
+
+                SatisIslem bekleyenSatis = new SatisIslem
+                {
+                    UrunListesi = urunListesi,
+                    OdemeTipi = "beklemede",
+                    Tarih = DateTime.Now,
+                    Status = true
+                };
+
+                db.SatisIslem.Add(bekleyenSatis);
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Hata: " + ex.Message });
+            }
+        }
+
+
+        [HttpPost]
+        public JsonResult BeklemedeSatisGetir()
+        {
+            var bekleyen = db.SatisIslem
+                             .Where(x => x.OdemeTipi == "Beklemede" && x.Status==true)
+                             .OrderByDescending(x => x.Tarih)
+                             .FirstOrDefault();
+
+            if (bekleyen == null)
+            {
+                return Json(new { success = false, message = "Beklemede işlem bulunamadı." });
+            }
+
+            // Status'u false yap
+            bekleyen.Status = false;
+            db.SaveChanges();
+
+            return Json(new { success = true, urunListesi = bekleyen.UrunListesi });
+        }
+
+
+
+        [HttpGet]
+        public JsonResult BeklemedeIslemVarMi()
+        {
+            var onDakikaOnce = DateTime.Now.AddMinutes(-10);
+
+            var varMi = db.SatisIslem
+                          .Any(x => x.OdemeTipi == "Beklemede" && x.Status == true && x.Tarih >= onDakikaOnce);
+
+            if (!varMi)
+            {
+                var bekleyenIslemler = db.SatisIslem
+                                         .Where(x => x.OdemeTipi == "Beklemede" && x.Status == true)
+                                         .ToList();
+
+                foreach (var islem in bekleyenIslemler)
+                {
+                    islem.Status = false;
+                }
+
+                db.SaveChanges();
+            }
+
+            return Json(new { varMi = varMi }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+
+
 
 
 

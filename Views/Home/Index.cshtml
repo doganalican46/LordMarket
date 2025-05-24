@@ -120,9 +120,10 @@
                             <i class="fas fa-trash-alt me-2"></i>Temizle
                         </button>
 
-                        <button type="button" class="btn btn-secondary btn d-flex align-items-center px-3 py-2 shadow-sm" onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
+                        <button id="bekletBtn" type="button" class="btn btn-secondary d-flex align-items-center px-3 py-2 shadow-sm" onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
                             <i class="fas fa-clock me-2"></i>İşlem Beklet
                         </button>
+
 
                         <button type="button" class="btn btn-success btn d-flex align-items-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
                             <i class="fas fa-plus me-2"></i>Ürün İşlem
@@ -355,6 +356,36 @@
 
 
     <script>
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Home/BeklemedeIslemVarMi',
+                type: 'GET',
+                success: function (res) {
+                    if (res.varMi) {
+                        // Son 5 dakika içinde beklemede işlem var
+                        $('#bekletBtn')
+                            .removeClass('btn-secondary')
+                            .addClass('btn-warning')
+                            .html('<i class="fas fa-hourglass-half me-2"></i>Bekleyen İşlemi Getir')
+                            .attr('onclick', 'bekleyenIslemiGetir()')
+                            .attr('title', 'Bekleyen işlemi getir');
+                    } else {
+                        // Yoksa normal beklet butonu
+                        $('#bekletBtn')
+                            .removeClass('btn-warning')
+                            .addClass('btn-secondary')
+                            .html('<i class="fas fa-clock me-2"></i>İşlem Beklet')
+                            .attr('onclick', 'islemBeklet()')
+                            .attr('title', 'İşlemi daha sonra devam etmek üzere beklet');
+                    }
+                }
+            });
+        });
+
+
+
+
         window.addEventListener("DOMContentLoaded", function () {
             document.getElementById("toptanciTrigger").click();
         });
@@ -516,19 +547,118 @@
                     console.error("Hata:", error);
                 });
         });
-
         function islemBeklet() {
-            Swal.fire({
-                icon: 'info',
-                title: 'Bilgi',
-                text: 'Bu fonksiyon şu anda aktif değildir.',
-                confirmButtonText: 'Tamam'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#barkodInput').val("").focus();
+            let urunlerText = '';
+            let urunSatirlari = $('#urunListesi tbody tr');
+
+            if (urunSatirlari.length === 0) {
+                Swal.fire({
+                    title: 'Ürün listesi boş!',
+                    text: 'Lütfen önce ürün ekleyin.',
+                    icon: 'warning',
+                    confirmButtonText: 'Tamam'
+                });
+                return;
+            }
+
+            urunSatirlari.each(function () {
+                let urunAd = $(this).find('td:eq(0)').text().trim();
+                let adet = $(this).find('.adet').text().trim();
+                let fiyat = $(this).find('.fiyat').text().trim();
+                urunlerText += `Ürün: ${urunAd} - Adet: ${adet} - Tutar: ${fiyat}\n`;
+            });
+
+            $.ajax({
+                url: '/Home/SatisYap',
+                type: 'POST',
+                data: {
+                    OdemeTipi: 'Beklemede',
+                    UrunListesi: urunlerText,
+                    MusteriID: null
+                },
+                success: function (res) {
+                    if (res.success) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'İşlem Bekletildi',
+                            text: 'Satış işlemi beklemeye alındı.',
+                            timer: 1100,
+                            showConfirmButton: false
+                        });
+
+                        temizle();  // Swal'dan sonra fonksiyonu çağır
+
+                        $('#bekletBtn')
+                            .removeClass('btn-secondary')
+                            .addClass('btn-warning')
+                            .html('<i class="fas fa-hourglass-half me-2"></i>Bekleyen İşlemi Getir')
+                            .attr('onclick', 'bekleyenIslemiGetir()');
+                    } else {
+                        Swal.fire('Hata', res.message, 'error');
+                    }
+                }
+
+            });
+        }
+
+        function bekleyenIslemiGetir() {
+            $.ajax({
+                url: '/Home/BeklemedeSatisGetir',
+                type: 'POST',
+                success: function (data) {
+                    if (data.success && data.urunListesi) {
+                        let satirlar = data.urunListesi.trim().split('\n');
+                        $('#urunListesi tbody').empty();
+                        satirlar.forEach(function (satir) {
+                            let parcala = satir.split('-');
+                            if (parcala.length === 3) {
+                                let urunAd = parcala[0].replace("Ürün:", "").trim();
+                                let adet = parseInt(parcala[1].replace("Adet:", "").trim());
+                                let fiyat = parseFloat(parcala[2].replace("Tutar:", "").trim());
+
+                                let toplam = (adet * fiyat).toFixed(2);
+
+                                let yeniSatir = `
+                            <tr data-barkod="${urunAd}"> <!-- İstersen gerçek barkodla değiştir -->
+                                <td>${urunAd}</td>
+                                <td class="fiyat">${fiyat}</td>
+                                <td class="adet">${adet}</td>
+                                <td class="satirToplam">${toplam}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>`;
+                                $('#urunListesi tbody').append(yeniSatir);
+                            }
+                        });
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'İşlem Yüklendi',
+                            text: 'Bekleyen işlem listeye eklendi.',
+                            timer: 1100, 
+                            showConfirmButton: false
+                        });
+
+                        $('#bekletBtn')
+                            .removeClass('btn-warning')
+                            .addClass('btn-secondary')
+                            .html('<i class="fas fa-clock me-2"></i>İşlem Beklet')
+                            .attr('onclick', 'islemBeklet()');
+
+                        updateGenelToplam(); // toplamları güncelle
+                    } else {
+                        Swal.fire('Uyarı', 'Beklemede işlem bulunamadı.', 'info');
+                    }
                 }
             });
         }
+
+
+
+
 
 
         function kaldirmakIcinSor(id) {

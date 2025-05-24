@@ -22,7 +22,7 @@
         <div class="col-xl-4 col-md-6">
             <div class="card bg-light text-dark h-100">
                 <div class="card-body">
-                    <strong> Günün Toplam Satış Tutarı:</strong><br />
+                    <strong> Günün Toplam Satış Tutarı: (Nakit+Kart+Veresiye)</strong><br />
                     <strong>@String.Format("{0:C}", ViewBag.GununToplamSatis ?? 0)</strong>
                     <hr />
                     <span class="fw-bold">Günün Gelirleri:</span><br />
@@ -115,8 +115,12 @@
                             <li class="list-group-item ">
                                 <strong>v.2.1</strong> - Tarih: 2025-05-23 | Müşteri borç ödendiğinde Nakit ve Kart şeklinde ödeme tipi seçilecek ve günlük işlemlere yansıyacak.
                             </li>
-                            <li class="list-group-item text-danger">
+                            <li class="list-group-item text">
                                 <strong>v.2.2</strong> - Tarih: 2025-05-23 | admin ekranı responsive düzenlemeler.  admin rapor sayfası güncellendi artık mobilde daha iyi gözüküyor. Gelir gider sayfası hatası giderildi. admin index responsive olmama hatası giderildi
+                            </li>
+                            <li class="list-group-item text-danger">
+                                <strong>v.2.3</strong> - Tarih: 2025-05-24 | satış yaparken ürün listesine eklenen ürünler en üste geliyor. 
+
                             </li>
 
 

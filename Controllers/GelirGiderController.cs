@@ -117,7 +117,7 @@ namespace LordMarket.Controllers
         public ActionResult SatisGecmis()
         {
             UpdateSatisToplamTutar();
-            var satislar = db.SatisIslem.ToList();
+            var satislar = db.SatisIslem.Where(x=>x.OdemeTipi!="beklemede" && x.Status==true).ToList();
             return View(satislar);
         }
 
