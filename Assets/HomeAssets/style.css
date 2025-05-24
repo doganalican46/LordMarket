@@ -1,4 +1,4 @@
-﻿
+﻿/* Base Styles */
 body {
     padding: 20px;
     background-color: #f8f9fa;
@@ -12,6 +12,7 @@ body {
     flex-direction: column;
 }
 
+/* Header Styles */
 .header {
     background-color: #003d60;
     color: white;
@@ -20,6 +21,7 @@ body {
     margin-bottom: 20px;
 }
 
+/* Main Content Layout */
 .main-content {
     display: flex;
     flex: 1;
@@ -40,7 +42,12 @@ body {
     flex-direction: column;
 }
 
-.barcode-section {
+/* Section Styles */
+.barcode-section,
+.product-table-container,
+.payment-section,
+.quick-products,
+.other-product-section {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
@@ -49,72 +56,10 @@ body {
 
 .product-table-container {
     flex: 1;
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     overflow-y: auto;
 }
 
-.payment-section {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
-
-.quick-products {
-    flex: 1;
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    overflow-y: auto;
-}
-
-.total-section {
-    background-color: #003d60;
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.btn-action {
-    flex: 1;
-    padding: 10px;
-    font-size: 1.1rem;
-}
-
-.btn-quick-product {
-    width: 120px;
-    height: 80px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 5px;
-    white-space: normal;
-}
-
-.odeme-btn {
-    flex: 1;
-}
-
-    .odeme-btn.active {
-        background-color: #007bff;
-        color: white;
-    }
-
+/* Table Styles */
 #urunListesi {
     width: 100%;
 }
@@ -126,29 +71,86 @@ body {
         color: white;
     }
 
+/* Payment Methods */
 .payment-methods {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
 }
 
-.customer-select {
-    margin-bottom: 15px;
+.odeme-btn.active {
+    background-color: #007bff;
+    color: white;
 }
 
-.other-product-section {
-    background-color: white;
-    padding: 20px;
+/* Total Section */
+.total-section {
+    background-color: #003d60;
+    color: white;
+    padding: 15px;
     border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
+/* Quick Products */
+.btn-quick-product {
+    width: 120px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    white-space: normal;
+}
+
+/* Numpad Styles */
+.numpad-box {
+    background-color: #f9f9f9;
+}
+
+.numpad-container {
+    width: 100%;
+}
+
+.numpad-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.numpad-key {
+    flex: 1;
+    margin: 3px;
+    padding: 15px 0;
+    font-size: 20px;
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    background-color: #e0e0e0;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+    .numpad-key:hover {
+        background-color: #ccc;
+    }
+
+/* Responsive Styles */
 @media (max-width: 768px) {
     body {
         height: auto !important;
         overflow: visible !important;
-        padding: 10px; /* istersen padding'i biraz küçültebilirsin */
+        padding: 10px;
     }
 
     .container-fluid {
@@ -193,7 +195,6 @@ body {
         height: 60px;
         margin: 5px 0;
         font-size: 0.9rem;
-        white-space: normal;
     }
 
     .action-buttons {
@@ -220,4 +221,95 @@ body {
 }
 
 
+/* Other Product Section */
+.other-product-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
 
+.other-product-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.price-display input {
+    font-size: 24px;
+    height: 60px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.numpad-add-container {
+    display: flex;
+    gap: 15px;
+}
+
+.numpad-box {
+    flex: 3;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.add-button-container {
+    flex: 1;
+    display: flex;
+}
+
+    .add-button-container .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        border-radius: 8px;
+    }
+
+/* Numpad Styles */
+.numpad-container {
+    width: 100%;
+}
+
+.numpad-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.numpad-key {
+    flex: 1;
+    margin: 0 4px;
+    padding: 15px 0;
+    font-size: 20px;
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    background-color: #e0e0e0;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .numpad-key:hover {
+        background-color: #d0d0d0;
+        transform: translateY(-2px);
+    }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .numpad-add-container {
+        flex-direction: column;
+    }
+
+    .add-button-container .btn {
+        height: 60px;
+        margin-top: 10px;
+    }
+
+    .price-display input {
+        font-size: 20px;
+        height: 50px;
+    }
+}
