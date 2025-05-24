@@ -17,57 +17,88 @@
         </nav>
     </div>
 
+    <div class="card text-white bg-dark mb-3" style="max-width: 100%;">
+        <div class="card-header">📜 Günlük Motivasyon</div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                <p id="dailyQuote" style="opacity: 20; transition: opacity 1s ease;">Kaynağı totomuz olan bir söz üretiliyor...</p>
+            </blockquote>
+        </div>
+    </div>
+
+
+
     <!-- Günlük, Toplam Gelir ve Gider Kartları -->
     <div class="row mt-4 g-3 mb-5">
         <div class="col-xl-4 col-md-6">
-            <div class="card bg-light text-dark h-100">
-                <div class="card-body">
-                    <strong> Günün Toplam Satış Tutarı: (Nakit+Kart+Veresiye)</strong><br />
-                    <strong>@String.Format("{0:C}", ViewBag.GununToplamSatis ?? 0)</strong>
-                    <hr />
-                    <span class="fw-bold">Günün Gelirleri:</span><br />
-                    <strong class="text-success">@String.Format("{0:C}", ViewBag.GununToplamGelir ?? 0)</strong><br />
-                    <span class="fw-bold">Günün Giderleri:</span><br />
-                    <strong class="text-danger">Kart: @String.Format("{0:C}", ViewBag.gununKartGiderleri ?? 0)</strong> <br />
-                    <strong class="text-danger">Nakit: @String.Format("{0:C}", ViewBag.gununNakitGiderleri ?? 0)</strong><br />
-                    <strong class="text-danger">Kasa: @String.Format("{0:C}", ViewBag.gununKasaGider ?? 0)</strong><br />
+            <div class="card shadow-lg border-0 rounded-4 bg-white text-dark h-100">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-3 fw-bold">
+                        <i class="bi bi-currency-dollar text-primary me-2"></i>Günün Satış Özeti
+                    </h5>
 
-                    <hr />
-                    <!-- Butonlar -->
-                    <a href="@Url.Action("GelirGider", "GelirGider")" class="btn btn-primary me-2">
-                        <i class="bi bi-cash-stack"></i> Gelir Gider
-                    </a>
-                    <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-secondary">
-                        <i class="bi bi-bar-chart-line"></i> Raporlar
-                    </a>
+                    <p class="mb-2">
+                        <span class="text-muted">Toplam Satış (Nakit + Kart + Veresiye):</span><br />
+                        <strong class="fs-5 text-success">@String.Format("{0:C}", ViewBag.GununToplamSatis ?? 0)</strong>
+                    </p>
+
+                    <hr class="my-3" />
+
+
+
+                    <div class="mb-2">
+                        <span class="fw-semibold text-muted">Günün Giderleri:</span><br />
+                        <span class="text-danger"><i class="bi bi-credit-card me-1"></i>Kart:</span>
+                        <strong class="text-danger">@String.Format("{0:C}", ViewBag.gununKartGiderleri ?? 0)</strong><br />
+                        <span class="text-danger"><i class="bi bi-cash me-1"></i>Nakit:</span>
+                        <strong class="text-danger">@String.Format("{0:C}", ViewBag.gununNakitGiderleri ?? 0)</strong><br />
+                        <span class="text-danger"><i class="bi bi-safe me-1"></i>Kasa:</span>
+                        <strong class="text-danger">@String.Format("{0:C}", ViewBag.gununKasaGider ?? 0)</strong>
+                    </div>
+
+                    <hr class="my-3" />
+
+                    <div class="d-flex justify-content-between gap-2">
+                        <a href="@Url.Action("GelirGider", "GelirGider")" class="btn btn-danger w-50">
+                            <i class="bi bi-cash-stack me-1"></i> Gelir Gider
+                        </a>
+                        <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-warning w-50">
+                            <i class="bi bi-bar-chart-line me-1"></i> Raporlar
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-4 col-md-6">
 
-            <div class="card mb-4" style="max-width: 400px; font-size: 0.9rem;">
-                <div class="card-header bg-dark text-white py-2 px-3" style="font-size: 1rem;">
-                    <strong>En Çok Satılan 5 Ürün</strong>
+        <div class="col-xl-4 col-md-6">
+            <div class="card shadow-sm rounded-4 h-100" style="font-size: 0.95rem; max-width: 400px;">
+                <div class="card-header bg-dark text-white py-3 px-4 rounded-top-4">
+                    <h5 class="mb-0 fw-bold">📈 En Çok Satılan 5 Ürün</h5>
                 </div>
                 <ul class="list-group list-group-flush">
                     @if (ViewBag.EnCokSatilanUrunler != null)
                     {
                         foreach (var urun in (List<KeyValuePair<string, int>>)ViewBag.EnCokSatilanUrunler)
                         {
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-1 px-2">
-                                @urun.Key
-                                <span class="badge bg-primary rounded-pill">@urun.Value adet</span>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-3">
+                                <span class="text-truncate" style="max-width: 70%;">
+                                    @urun.Key
+                                </span>
+                                <span class="badge text-bg-dark rounded-pill px-3 py-1 fs-6">
+                                    @urun.Value adet
+                                </span>
                             </li>
                         }
                     }
                     else
                     {
-                        <li class="list-group-item py-1 px-2">Veri bulunamadı.</li>
+                        <li class="list-group-item text-center text-muted py-3">Veri bulunamadı.</li>
                     }
                 </ul>
             </div>
         </div>
+
 
         <!-- Sürüm Notları / Yenilikler Alanı -->
         <div class="row mb-5 mt-5">
@@ -138,163 +169,238 @@
     </div>
 
 
-
-
-
-    @*<h2 class="mb-4">Tüm Zaman İstatistikleri</h2>
-
-    <div style="display: flex; gap: 20px; max-width: 800px; max-height: 300px;">
-        <canvas id="GelirGiderChart" style="flex: 1; max-width: 400px; height: 300px;"></canvas>
-        <canvas id="OdemeTurleriChart" style="flex: 1; max-width: 400px; height: 300px;"></canvas>
-    </div>
-
-
-    <script>
-    // Gelir-Gider Grafik
-    var gelirGiderCtx = document.getElementById('GelirGiderChart').getContext('2d');
-    var gelirGiderChart = new Chart(gelirGiderCtx, {
-        type: 'pie',
-        data: {
-            labels: ['Gelir', 'Gider'],
-            datasets: [{
-                label: 'Gelir ve Gider',
-                data: [
-                    @Html.Raw(ViewBag.ToplamGelir ?? 0),
-                    @Html.Raw(ViewBag.ToplamGider ?? 0)
-                ],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.7)',  // Mavi - Gelir
-                    'rgba(255, 99, 132, 0.7)'   // Kırmızı - Gider
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 12,
-                        font: { size: 12 }
-                    }
-                },
-                title: {
-                    display: true,
-                    text: 'Tüm Zamanların Gelir Gider Tablosu',
-                    font: { size: 14 }
-                }
-            }
-        }
-    });
-
-    // Ödeme Türleri Grafik
-    var odemeTurleriCtx = document.getElementById('OdemeTurleriChart').getContext('2d');
-    var odemeTurleriChart = new Chart(odemeTurleriCtx, {
-        type: 'pie',
-        data: {
-            labels: ['Nakit', 'Kart', 'Veresiye'],
-            datasets: [{
-                label: 'Ödemeler Toplamı',
-                data: [
-                    @Html.Raw(ViewBag.NakitToplam ?? 0),
-                    @Html.Raw(ViewBag.KartToplam ?? 0),
-                    @Html.Raw(ViewBag.VeresiyeToplam ?? 0)
-                ],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.7)',  // Mavi
-                    'rgba(255, 206, 86, 0.7)',  // Sarı
-                    'rgba(75, 192, 192, 0.7)'   // Turkuaz
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 12,
-                        font: { size: 12 }
-                    }
-                },
-                title: {
-                    display: true,
-                    text: 'Tüm Zamanların Ödeme Türlerine Göre Kazancı',
-                    font: { size: 14 }
-                }
-            }
-        }
-    });
-    </script>*@
-
     <!-- Ödeme Bilgi Kartları -->
-    <div class="row g-3 mt-4">
+    <div class="row g-4 mt-4">
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-primary text-white h-100">
-                <div class="card-body">
-                    <strong>Nakit Ödemeler Toplamı</strong>
-                    <h3 class="mt-2">@String.Format("{0:C}", ViewBag.NakitToplam ?? 0)</h3>
+            <div class="card h-100 text-white shadow rounded-4" style="background: linear-gradient(135deg, #0d6efd 0%, #3a8dff 100%);">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <strong class="fs-6 text-uppercase opacity-75">Nakit Ödemeler Toplamı</strong>
+                    <h3 class="mt-3 fw-bold">@String.Format("{0:C}", ViewBag.NakitToplam ?? 0)</h3>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="/GelirGider/RaporPaneli">Detayları Gör</a>
-                    <i class="fas fa-angle-right text-white"></i>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pb-3 pt-0">
+                    <a href="/GelirGider/RaporPaneli" class="btn btn-sm btn-light text-primary fw-semibold shadow-sm">
+                        Detayları Gör
+                        <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-warning text-white h-100">
-                <div class="card-body">
-                    <strong>Kart Ödemeler Toplamı</strong>
-                    <h3 class="mt-2">@String.Format("{0:C}", ViewBag.KartToplam ?? 0)</h3>
+            <div class="card h-100 text-white shadow rounded-4" style="background: linear-gradient(135deg, #ffc107 0%, #ffdb4d 100%);">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <strong class="fs-6 text-uppercase opacity-75">Kart Ödemeler Toplamı</strong>
+                    <h3 class="mt-3 fw-bold">@String.Format("{0:C}", ViewBag.KartToplam ?? 0)</h3>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="/GelirGider/RaporPaneli">Detayları Gör</a>
-                    <i class="fas fa-angle-right text-white"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-success text-white h-100">
-                <div class="card-body">
-                    <strong>Veresiye Ödemeler Toplamı</strong>
-                    <h3 class="mt-2">@String.Format("{0:C}", ViewBag.VeresiyeToplam ?? 0)</h3>
-                </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="/GelirGider/RaporPaneli">Detayları Gör</a>
-                    <i class="fas fa-angle-right text-white"></i>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pb-3 pt-0">
+                    <a href="/GelirGider/RaporPaneli" class="btn btn-sm btn-light text-warning fw-semibold shadow-sm">
+                        Detayları Gör
+                        <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="col-xl-3 col-md-6">
-            <div class="card bg-danger text-white h-100">
-                <div class="card-body">
-                    <strong>En Çok Veresiye Alan Müşteri</strong>
-                    <h5 class="mt-2">
+            <div class="card h-100 text-white shadow rounded-4" style="background: linear-gradient(135deg, #198754 0%, #55a06e 100%);">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <strong class="fs-6 text-uppercase opacity-75">Veresiye Ödemeler Toplamı</strong>
+                    <h3 class="mt-3 fw-bold">@String.Format("{0:C}", ViewBag.VeresiyeToplam ?? 0)</h3>
+                </div>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pb-3 pt-0">
+                    <a href="/GelirGider/RaporPaneli" class="btn btn-sm btn-light text-success fw-semibold shadow-sm">
+                        Detayları Gör
+                        <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100 text-white shadow rounded-4" style="background: linear-gradient(135deg, #dc3545 0%, #e57373 100%);">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <strong class="fs-6 text-uppercase opacity-75">En Çok Veresiye Alan Müşteri</strong>
+                    <h5 class="mt-3 fw-semibold">
                         @ViewBag.EnCokVeresiyeAlanMusteri <br />
-                        Toplam: @String.Format("{0:C}", ViewBag.EnCokVeresiyeAlanMusteriBorcu ?? 0)
+                        <small class="opacity-75">Toplam: @String.Format("{0:C}", ViewBag.EnCokVeresiyeAlanMusteriBorcu ?? 0)</small>
                     </h5>
                 </div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="/Musteri/MusteriGetir/@ViewBag.EnCokVeresiyeAlanMusteriID">Müşteri Detayları</a>
-                    <i class="fas fa-angle-right text-white"></i>
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center px-4 pb-3 pt-0">
+                    <a href="/Musteri/MusteriGetir/@ViewBag.EnCokVeresiyeAlanMusteriID" class="btn btn-sm btn-light text-danger fw-semibold shadow-sm">
+                        Müşteri Detayları
+                        <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
+
+
+<script>
+    // Sözler
+    const quotes = [
+        "Yapamazsın dediler, yaptım. Sonra yine yapamazsın dediler. Biraz dinlenip tekrar yaptım.",
+        "Çay var içersen, dert var çekersen.",
+        "Bugün hiçbir şey yapmadım ama yarın yapacak çok şeyim var.",
+        "Gülümse, yarın daha da kötü olabilir!",
+        "Hayat fena halde kahve gibidir. Ne kadar şeker eklersen ekle, acısı hep kalır.",
+        "Bir işi yapmanın iki yolu vardır: Benim yolum ve yanlış yol.",
+        "Hiçbir şey yapmamak bile bazen yapmaktan iyidir.",
+        "Matrix bir belgeseldi aslında…",
+        "Bir gün herkes 15 dakikalığına kahraman olacak.",
+        "Sabah erken kalkan yol alır, ama uykusuz kalır.",
+        "Düşünmeden konuşmak, nişan almadan ateş etmeye benzer.",
+        "Hayat kısa, kahve iç, kitap oku, bir de fatura öde.",
+        "“Yapamam” deme. Denemedin ki!",
+        "Bugün dünden daha yorgunum ama daha umutluyum.",
+        "Sonsuza kadar yaşamak isteyen ilk kişi, muhtemelen ertelemeyi çok seviyordur.",
+        "Dünya fani, sabah alarmı gerçek.",
+        "Trafikte sabırlı ol, hayat kısa.",
+        "Bir insan en çok kendini kandırır.",
+        "Ofise geldim, çalışıyor gibi yapıyorum. Her zamanki gibi.",
+        "Sınırlarını zorla, sonra kahveni koy ve dinlen.",
+        "Düşünmeden yaşamak kolay, hissetmeden çalışmak zor.",
+        "Bugün hava güzel, ama ben kod yazıyorum.",
+        "Eğer bugün gülemiyorsan, yarına bir espri sakla.",
+        "Zaman her şeyin ilacıdır. Ama bazı şeyler hala ağrıyor.",
+        "Yol uzun, motivasyon az, ama vazgeçmek yok.",
+        "Ya bir yol bul, ya bir kahve koy.",
+        "‘Yarın yaparım’ diyenler, bugünü boş geçirenlerdir.",
+        "Mükemmel değilim, ama kahvemi doğru yaparım.",
+        "Kendi filminde başrol olduğunu unutma!",
+        "Hayaller bedava, ama internet bağlantısı lazım.",
+        "Bazen sessizlik, en yüksek çığlıktır.",
+        "Kendine iyi davran. 7/24 seninlesin.",
+        "Zor günler geçer. Yeter ki geçmesini bekleyecek gücün olsun.",
+        "Yorgun değilim, sadece uykuya yatırım yapıyorum.",
+        "Bir gün her şey güzel olacak. Bugün değilse, çay koy.",
+        "Motivasyon mu? Maaş yatınca geliyorum.",
+        "Film repliği gibi yaşamak istiyorum: “I’m gonna make him an offer he can't refuse.”",
+        "Bazen her şeyden vazgeçmek istersin ama tost bile yapmadan buzdolabını kapatırsın.",
+        "Bilgisayarı kapatırken 'Kapatılıyor...' yazısı kadar huzur veren ne var ki?",
+        "İleri gitmek istiyorsan, önce yataktan çık.",
+        "Bugün de olmadı ama olsun, denedik.",
+        "Hayat bir kahkaha meselesidir, gülmeyi unutma.",
+        "‘Nasılsın?’ sorusu bile bir sınav bazen.",
+        "Yalnız değilsin, ama modem 2 çubuk çekiyor olabilir.",
+        "Sakın pes etme! Sadece biraz es ver.",
+        "Bazen başarısızlık, doğru kapıyı çalmadığın içindir.",
+        "Her şey yolunda gitmiyorsa, başka bir yol dene.",
+        "İşe geç kalmak, zamansız kalkmak değildir; zamansız yatmaktır.",
+        "Bugün enerjin düşükse sorun yok. Yarın şarj oluruz.",
+        "Kendine inandığında her şey mümkündür. İnternet olmasa bile!",
+        "Kahve makinesi bozulduysa, hayat da biraz yavaşlamış demektir.",
+
+        "Yapacaklar listesi uzadıkça, tembellik seviyesi artar.",
+
+        "Sabah alarmı kurmak, her gün kendinle savaşa girmektir.",
+
+        "‘Yarın yaparım’ dedikçe ‘bugün’ uzaktan gülüyor.",
+
+        "Wi-Fi sinyali güçlü değilse, moral de düşer.",
+
+        "Her başarısızlık, bir sonraki denemeye davettir; ya da sadece biraz mola.",
+
+        "E-postalara cevap vermemek, modern dünya protestosudur.",
+
+        "Spor salonuna gitmek için motivasyon ararken, koltuğun çektiğini fark ettin mi?",
+
+        "Yemek yapmayı bilmek, pizza siparişi vermemek değildir."
+        ,
+        "Düşünmek güzeldir, ama bazen sadece ‘kapat ve devam et’ gerekir."
+        ,
+        "Çalışırken aklım hep tatilde; tatildeyken aklım işte.",
+
+        "Yalnızlık iyidir, ama Wi-Fi'siz olmaz.",
+
+        "Hayallerinin peşinden koş, ama önüne bakmayı unutma!",
+
+        "Bazen en büyük kahramanlık, sabah yataktan kalkmaktır.",
+
+        "Telefonun şarjı biterse, dünya da durur gibi olur.",
+
+        "Yemek yapmayı öğrenmek, yangın çıkarmamakla başlar.",
+
+        "Sosyal medya molası, gerçek hayattan kaçış biletidir.",
+
+        "Uyku düzeni kurmak, yetişkin olmanın gizli formülüdür.",
+
+        "Kendine iyi davran, çünkü seninle geçireceğin tek ömür bu.",
+
+        "Bir işi yapmamak için 1000 mazeret bulabilirsin, ama bitirince huzur da 1000 kat olur.",
+
+        "Gülmek, en iyi egzersizdir; üstelik kas yapmaz.",
+
+        "Bazı insanlar ‘çok çalışmak lazım’ der; ben ‘çok uyumak lazım’ derim.",
+
+        "Toplantıların en uzun kısmı ‘başlayalım mı?’ kısmıdır.",
+
+        "Yemek sonrası uyku, vücudun teşekkür mektubudur.",
+
+        "Tembellik, yaratıcılığın kardeşidir.",
+
+        "İşten sonra ‘biraz dinlenmek’ bazen bütün geceye yayılır.",
+
+        "Sabah kahvesi içmeden insan değilim, robotum.",
+
+        "Hayat kısa, uyku uzun; tercih senin.",
+
+        "Evden çalışmak, pijamayla başarı kazanmak demektir.",
+
+        "Günün en zor anı, ‘şimdi kalk’ diyen beyninle savaştır.",
+
+        "Kendi kendine konuşmak, çoğu zaman en iyi terapi yöntemidir.",
+
+        "Başarı, sabah alarmına ilk kez basmamakla başlar.",
+
+        "Motivasyon bazen sadece ‘yine de dene’ demektir.",
+
+        "Bazen kaybetmek, yeni bir yol bulmaktır."
+        ,
+        "Akıllı telefon, hayatımızın uzantısı değil, bir parçası.",
+
+        "Sıkıcı anlarda en iyi dost, internet hızıdır.",
+
+        "Geceleri uyuyamamak, sabah kahvesinin ana sebebidir.",
+
+        "Bir işin zor kısmı, başlamaktır; sonra zaten ‘bitmek’ ister.",
+
+
+        "Telefonu sessize al, hayatın sesini dinle.",
+
+        "Unutma, şarjı biten telefon gibi sen de mola ver.",
+
+        "Hata yapmak insanlıktır, hatadan öğrenmek süper güç.",
+
+        "Bazen ‘yavaş gitmek’ en hızlı yoldur.",
+
+        "Çalışmak önemli, ama ‘ara vermek’ daha da.",
+
+        "Evde yalnızken konuştuğun şeyler, en gerçek sohbetlerdir.",
+
+        "E-posta kutusundaki ‘okunmamış’ mesajlar, hayatın gizli sırlarıdır.",
+
+        "Başarı, denemekten vazgeçmemektir, ya da en azından kahve molası vermektir.",
+
+        "Kendini fazla ciddiye alma, hayat da seni almaz zaten.",
+
+        "Plan yapmak iyidir ama bazen anı yaşamak şarttır.",
+
+        "En güzel anlar, kahkaha patlatırken yakalanır.",
+    ];
+
+    // Sayfa yüklendiğinde işlem yap
+    document.addEventListener("DOMContentLoaded", function () {
+        const quoteEl = document.getElementById("dailyQuote");
+
+        // 2 saniye beklet
+        setTimeout(() => {
+            const index = Math.floor(Math.random() * quotes.length);
+            quoteEl.textContent = quotes[index];
+            quoteEl.style.opacity = "1"; // Fade-in efekti
+        }, 2500);
+    });
+</script>
+
