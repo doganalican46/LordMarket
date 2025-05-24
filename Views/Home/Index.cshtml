@@ -120,9 +120,9 @@
                             <i class="fas fa-trash-alt me-2"></i>Temizle
                         </button>
 
-                        @*<button type="button" class="btn btn-secondary btn d-flex align-items-center px-3 py-2 shadow-sm" onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
-                <i class="fas fa-clock me-2"></i>İşlem Beklet
-            </button>*@
+                        <button type="button" class="btn btn-secondary btn d-flex align-items-center px-3 py-2 shadow-sm" onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
+                            <i class="fas fa-clock me-2"></i>İşlem Beklet
+                        </button>
 
                         <button type="button" class="btn btn-success btn d-flex align-items-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
                             <i class="fas fa-plus me-2"></i>Ürün İşlem
@@ -632,7 +632,7 @@
                     if (res.success) {
                         let toplamSatir = res.fiyat;
 
-                        $('#urunListesi tbody').append(
+                        $('#urunListesi tbody').prepend(
                             `<tr data-barkod="${barkod}">
                                                                                         <td>${res.urunAd}</td>
                                                                                         <td class="fiyat">${res.fiyat}</td>
