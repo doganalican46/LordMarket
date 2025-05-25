@@ -40,7 +40,7 @@
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table id="DataTable" class="table table-striped table-hover align-middle mb-0" style="min-width: 100%;">
-                    <thead class="table-dark">
+                    <thead class="tablestyle">
                         <tr>
                             <th>Tür</th>
                             <th>Açıklama</th>
@@ -60,14 +60,19 @@
                                 <td>@item.Notlar</td>
                                 <td class="text-center @turClass">@item.Tutar ₺</td>
                                 <td class="text-center">@item.Tarih</td>
-                                
+
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
                                         <a href="/GelirGider/GelirGiderGetir/@item.ID" class="btn btn-warning btn-sm" title="Düzenle">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                       
-                                        <a href="/GelirGider/GelirGiderKaldir/@item.ID" class="btn btn-sm btn-danger" onclick="return confirm('Bu gelir/gideri tamamen silmek istediğinizden emin misiniz?');" title="Tamamen Kaldır">
+
+                                        <a href="javascript:void(0);"
+                                           class="btn btn-sm btn-danger"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#gelirGiderSilModal"
+                                           data-id="@item.ID"
+                                           title="Tamamen Kaldır">
                                             <i class="fas fa-trash-alt"></i>
                                         </a>
                                     </div>
@@ -103,7 +108,7 @@
 
                         </select>
                     </div>
-                    
+
 
                     <div class="mb-3">
                         <label for="Notlar" class="form-label fw-semibold">Açıklama:</label>
@@ -111,7 +116,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="Tutar" class="form-label fw-semibold">Tutar (₺):</label>
-                        <input type="text"  id="Tutar" name="Tutar" class="form-control" required placeholder="Örn: 150" />
+                        <input type="text" id="Tutar" name="Tutar" class="form-control" required placeholder="Örn: 150" />
                     </div>
                     <input type="hidden" name="Status" value="true" />
                 </div>
@@ -128,10 +133,43 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="gelirGiderSilModal" tabindex="-1" aria-labelledby="gelirGiderSilModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="gelirGiderSilModalLabel">Gelir/Gider Sil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+
+            <div class="modal-body">
+                Bu gelir/gideri <strong>tamamen silmek</strong> istediğinize emin misiniz? Bu işlem geri alınamaz!
+            </div>
+
+            <div class="modal-footer">
+                <a id="modalSilLink" href="#" class="btn btn-danger">Evet, Sil</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
     <script>
 
-        
+
+    const gelirGiderSilModal = document.getElementById('gelirGiderSilModal');
+    gelirGiderSilModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const link = document.getElementById('modalSilLink');
+        link.href = `/GelirGider/GelirGiderKaldir/${id}`;
+    });
+
+
         // Excel Export
         document.getElementById('exportExcel').addEventListener('click', function () {
             const table = document.getElementById('DataTable');

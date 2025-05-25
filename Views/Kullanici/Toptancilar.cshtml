@@ -8,7 +8,7 @@
     <!-- Başlık ve Breadcrumb -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-0"><i class="fas fa-users me-2 text-dark"></i>Toptancı Yönetimi</h1>
+            <h1 class="h3 mb-0"><i class="fas fa-truck me-2 text-dark"></i>Toptancı Yönetimi</h1>
         </div>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 bg-transparent p-0">
@@ -18,81 +18,79 @@
         </nav>
     </div>
 
-
-
-
-    <!-- Ana Kart -->
-    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
-        <!-- Kart Başlık -->
-        <div class="card-header bg-white border-bottom py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-semibold">Toptancı Listesi</h5>
-                <div class="d-flex gap-2">
-                    <div class="btn-group">
-                        <button id="exportExcel" class="btn btn-success btn-sm me-2" title="Excel'e Aktar">
+    <!-- Filtreleme ve Arama -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search"></i></span>
+                        <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Toptancı ara...">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-end gap-2">
+                        <button id="exportExcel" class="btn btn-success" title="Excel'e Aktar">
                             <i class="fas fa-file-excel me-1"></i> Excel
                         </button>
-                        <button id="exportPDF" class="btn btn-danger btn-sm me-2" title="PDF Oluştur">
+                        <button id="exportPDF" class="btn btn-danger" title="PDF Oluştur">
                             <i class="fas fa-file-pdf me-1"></i> PDF
                         </button>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ToptanciEkleModal">
-                            Yeni Toptancı Ekle
+                        <button type="button" class="btn tablestyle" data-bs-toggle="modal" data-bs-target="#ToptanciEkleModal">
+                            <i class="fas fa-plus me-1"></i> Yeni Toptancı
                         </button>
                     </div>
-
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Tablo -->
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table id="DataTable" class="table table-hover align-middle mb-0" style="min-width: 100%;">
-                    <thead class="table-dark">
-                        <tr>
+    <!-- Toptancı Kartları -->
+    <div class="row g-4">
+        @foreach (var Toptanci in Model)
+        {
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0 fw-semibold text-truncate">@Toptanci.Username</h5>
+                        <span class="badge bg-primary rounded-pill">
+                            <i class="fas fa-truck me-1"></i> Toptancı
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center mb-3">
+                            <div class="bg-light rounded-circle p-4">
+                                <i class="fas fa-store-alt text-primary fs-3"></i>
+                            </div>
+                        </div>
 
-                            <th>Toptancı Adı</th>
-                            <th width="100px" class="text-center">Günler</th>
-                            <th width="150px" class="text-center">İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var Kullanici in Model)
-                        {
-                            <tr>
-
-                                <td class="fw-semibold">
-                                    @Kullanici.Username
-
-                                </td>
-
-                                <td class="text-center">
-                                    @Kullanici.Password
-                                </td>
-
-
-
-                                <td class="text-center">
-                                    <div class="d-flex flex-wrap justify-content-center gap-1">
-
-                                        <a href="/Kullanici/ToptanciGetir/@Kullanici.ID" class="btn btn-warning btn-sm" title="Güncelle">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
-
-                                        <a href="/Kullanici/ToptanciKaldir/@Kullanici.ID" class="btn btn-danger btn-sm" onclick="return confirm('Toptancıyı silmek istediğinize emin misiniz?');" title="Sil">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-
-
-                </table>
+                        <div class="mb-3">
+                            <h6 class="text-muted mb-2">Geldiği Günler:</h6>
+                            <div class="d-flex flex-wrap gap-1">
+                                @{
+                                    var gunler = Toptanci.Password?.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                                    foreach (var gun in gunler)
+                                    {
+                                        <span class="badge bg-info">@gun</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top-0 pt-0">
+                        <div class="d-flex justify-content-between flex-wrap gap-2">
+                            <a href="/Kullanici/ToptanciGetir/@Toptanci.ID" class="btn btn-sm btn-warning flex-grow-1" title="Düzenle">
+                                <i class="fas fa-edit me-1"></i> Düzenle
+                            </a>
+                            <a href="/Kullanici/ToptanciKaldir/@Toptanci.ID" class="btn btn-sm btn-danger flex-grow-1"
+                               onclick="return confirm('Toptancıyı silmek istediğinize emin misiniz?');" title="Sil">
+                                <i class="fas fa-trash me-1"></i> Sil
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        }
     </div>
 </div>
 
@@ -104,7 +102,7 @@
 <div class="modal fade" id="ToptanciEkleModal" tabindex="-1" aria-labelledby="ToptanciEkleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-dark text-white">
+            <div class="modal-header tablestyle text-white">
                 <h5 class="modal-title" id="ToptanciEkleModalLabel">Yeni Kullanici Ekle</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
             </div>
@@ -163,7 +161,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" class="btn btn-success">Kaydet</button>
+                    <button type="submit" class="btn tablestyle">Kaydet</button>
                 </div>
             </form>
         </div>
@@ -241,11 +239,11 @@
         // Arama fonksiyonu
         document.getElementById('searchInput').addEventListener('input', function () {
             const searchTerm = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#DataTable tbody tr');
+            const cards = document.querySelectorAll('.col-xl-3.col-lg-4.col-md-6.col-sm-12');
 
-            rows.forEach(row => {
-                const rowText = row.textContent.toLowerCase();
-                row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+            cards.forEach(card => {
+                const cardText = card.textContent.toLowerCase();
+                card.style.display = cardText.includes(searchTerm) ? '' : 'none';
             });
         });
 

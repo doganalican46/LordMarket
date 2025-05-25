@@ -31,7 +31,7 @@
             <input id="bitisTarihi" type="date" name="bitisTarihi" value="@(((DateTime?)ViewBag.Bitis)?.ToString("yyyy-MM-dd"))" class="form-control" />
         </div>
         <div class="col-12 col-md-auto">
-            <button type="submit" class="btn btn-primary w-100">Filtrele</button>
+            <button type="submit" class="btn tablestyle w-100">Filtrele</button>
         </div>
         <div class="col-12 col-md-auto">
             <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-secondary w-100">Sıfırla</a>
@@ -49,7 +49,7 @@
 
                 <ul class="list-group shadow">
                     <!-- SATIŞLARDAN GELENLER -->
-                    <li class="list-group-item active fw-bold text-center bg-dark"><i class="bi bi-basket me-2"></i>Satışlardan Gelenler</li>
+                    <li class="list-group-item active fw-bold text-center "style="background-color: #003d60; color:white;"><i class="bi bi-basket me-2"></i>Satışlardan Gelenler</li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-cash me-2 text-success"></i>Satış - Nakit</span>
                         <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NakitToplam ?? 0)</span>
@@ -64,7 +64,7 @@
                     </li>
 
                     <!-- GİDERLER -->
-                    <li class="list-group-item active fw-bold text-center mt-2 bg-dark"><i class="bi bi-cart-x me-2"></i>Giderler</li>
+                    <li class="list-group-item active fw-bold text-center mt-2 " style="background-color: #003d60; color:white;"><i class="bi bi-cart-x me-2"></i>Giderler</li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-cash me-2 text-danger"></i>Nakit Gider</span>
                         <span class="badge bg-danger rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamNakitGider ?? 0)</span>
@@ -83,7 +83,7 @@
                     </li>
 
                     <!-- GENEL DURUM -->
-                    <li class="list-group-item active fw-bold text-center mt-2 bg-dark"><i class="bi bi-bar-chart me-2"></i>Günlük Finansal Durum</li>
+                    <li class="list-group-item active fw-bold text-center mt-2 " style="background-color: #003d60; color:white;"><i class="bi bi-bar-chart me-2"></i>Günlük Finansal Durum</li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-piggy-bank me-2 text-success"></i>Toplam Gelir</span>
                         <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamGelir ?? 0)</span>
@@ -98,7 +98,7 @@
                     </li>
 
                     <!-- TAHMİNİ -->
-                    <li class="list-group-item active fw-bold text-center mt-2 bg-dark"><i class="bi bi-calendar2-day me-2"></i>Tahmini & Günlük Bilgiler</li>
+                    <li class="list-group-item active fw-bold text-center mt-2 "style="background-color: #003d60; color:white;"><i class="bi bi-calendar2-day me-2"></i>Tahmini & Günlük Bilgiler</li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-wallet2 me-2 text-info"></i>Kasada Olması Gereken</span>
                         <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KasadaOlmasiGereken ?? 0)</span>

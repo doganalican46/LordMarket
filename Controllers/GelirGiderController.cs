@@ -338,7 +338,7 @@ namespace LordMarket.Controllers
                 db.SatisIslem.Remove(satis);
                 db.SaveChanges();
             }
-            return RedirectToAction("RaporPaneli");
+            return RedirectToAction("SatisGecmis");
         }
 
 

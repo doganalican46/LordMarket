@@ -20,7 +20,7 @@
     <div class="card shadow-sm">
         <div class="table-responsive p-3">
             <table id="raporDataTable" class="table table-bordered table-striped table-hover align-middle">
-                <thead class="table-dark">
+                <thead class="tablestyle">
                     <tr>
                         <th>Satış No</th>
                         <th class="text-center">Toplam Tutar</th>
@@ -37,9 +37,32 @@
                                 <a href="/GelirGider/SatisIslemGetir/@SatisIslem.ID" class="btn btn-light btn-sm ms-2" title="Detay">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <a href="/GelirGider/SatisIslemSil/@SatisIslem.ID" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bu işlemi tamamen silmek istediğinizden emin misiniz?');" title="Sil">
-                                    <i class="fas fa-trash-alt"></i>
+                                <a href="#"
+                                   class="btn btn-danger btn-sm ms-2"
+                                   title="Sil"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#silModal-@SatisIslem.ID">
+                                    <i class="bi bi-trash"></i>
                                 </a>
+                                <!-- Silme onay modali -->
+                                <div class="modal fade" id="silModal-@SatisIslem.ID" tabindex="-1" aria-labelledby="silModalLabel-@SatisIslem.ID" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="silModalLabel-@SatisIslem.ID">Silme Onayı</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Bu kaydı silmek istediğinize emin misiniz?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                                                <a href="/GelirGider/SatisIslemSil/@SatisIslem.ID" class="btn btn-danger">Evet, Sil</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </td>
                             <td class="text-center">@SatisIslem.ToplamTutar ₺</td>
                             <td class="text-center">@SatisIslem.Tarih</td>
@@ -96,7 +119,12 @@
                 ]
             });
         });
+
     </script>
-   
+
 
 </div>
+
+
+
+

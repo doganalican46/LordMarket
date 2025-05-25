@@ -47,7 +47,7 @@
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table id="DataTable" class="table table-hover align-middle mb-0" style="min-width: 100%;">
-                    <thead class="table-light">
+                    <thead class="tablestyle">
                         <tr>
                             <th width="60px" class="text-center">Barkod</th>
                             <th width="80px">Resim</th>
@@ -84,10 +84,33 @@
                                         <a href="/Urun/UrunGetir/@urun.ID" class="btn btn-sm btn-warning" title="Düzenle">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                       
-                                        <a href="/Urun/HizliUrunYap/@urun.ID" class="btn btn-sm @(urun.HizliUrunMu ==true ? "btn-info" : "btn-info")" onclick="return confirm('Bu ürünün hızlı ürün durumunu güncellemek istiyor musunuz?');" title="Hızlı Ürün">
+
+                                        <a href="#"
+                                           class="btn btn-sm @(urun.HizliUrunMu == true ? "btn-info" : "btn-info")"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#hizliUrunModal-@urun.ID"
+                                           title="Hızlı Ürün">
                                             <i class="fas fa-bolt"></i>
                                         </a>
+
+                                        <!-- Hızlı Ürün Güncelle Modal -->
+                                        <div class="modal fade" id="hizliUrunModal-@urun.ID" tabindex="-1" aria-labelledby="hizliUrunLabel-@urun.ID" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-info text-white">
+                                                        <h5 class="modal-title" id="hizliUrunLabel-@urun.ID">Hızlı Ürün Durumu</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Bu ürünün hızlı ürün durumunu güncellemek istiyor musunuz?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                                                        <a href="/Urun/HizliUrunYap/@urun.ID" class="btn btn-info text-white">Evet, Güncelle</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </td>

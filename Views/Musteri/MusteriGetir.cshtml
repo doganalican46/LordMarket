@@ -1,94 +1,206 @@
 ﻿@model LordMarket.Models.Musteriler
 @{
-    ViewBag.Title = "Musteri Güncelle";
+    ViewBag.Title = "Müşteri Güncelle";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<div class="card shadow-sm border-light rounded" style="max-width: 700px; margin: 20px auto;">
-    <div class="card-header bg-dark text-white text-center">
-        <h3><b>Müşteri Güncelle</b></h3>
+
+<div class="container-fluid px-4">
+    <!-- Başlık ve Breadcrumb -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0"><i class="fas fa-user-edit me-2 text-dark"></i>Müşteri Güncelle</h1>
+        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="/Musteri/Musteriler">Müşteriler</a></li>
+                <li class="breadcrumb-item active">Güncelle</li>
+            </ol>
+        </nav>
     </div>
 
-    <div class="card-body">
-
-        <!-- İşlem Temizleme Butonu Ayrı Formda -->
-        <div class="text-end mb-3">
-            
-            <form action="/Musteri/MusteriTemizle" method="post" onsubmit="return confirm('Müşteriye ait tüm borçları silmek istediğinize emin misiniz?');" style="display:inline;">
-                <input type="hidden" name="ID" value="@Model.ID" />
-                <button type="submit" class="btn btn-outline-danger btn-sm">Temizle</button>
-            </form>
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="card-header bg-white border-bottom py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-semibold">@Model.MusteriAdSoyad</h5>
+                <div>
+                    <form action="/Musteri/MusteriTemizle" method="post" onsubmit="return confirm('Müşteriye ait tüm borçları silmek istediğinize emin misiniz?');" class="d-inline">
+                        <input type="hidden" name="ID" value="@Model.ID" />
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#temizleModal">
+                            <i class="fas fa-broom me-1"></i> Borçları Temizle
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
+        <div class="card-body">
+            @using (Html.BeginForm("MusteriGuncelle", "Musteri", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+            {
+                @Html.HiddenFor(k => k.ID)
 
-        <!-- Güncelleme Formu -->
-        @using (Html.BeginForm("MusteriGuncelle", "Musteri", FormMethod.Post, new { @class = "form-group" }))
-        {
-            @Html.HiddenFor(k => k.ID)
+                <div class="row g-3">
+                    <!-- Müşteri Bilgileri -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Müşteri Adı</label>
+                            @Html.TextBoxFor(k => k.MusteriAdSoyad, new { @class = "form-control", required = "required", placeholder = "Müşteri Adı" })
+                            <div class="invalid-feedback">Lütfen müşteri adını giriniz.</div>
+                        </div>
 
-            <div class="mb-3">
-                <label>Müşteri Adı:</label>
-                @Html.TextBoxFor(k => k.MusteriAdSoyad, new { @class = "form-control", required = "required", placeholder = "Müşteri Adı" })
-            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Toplam Borç</label>
+                            <div class="input-group">
+                                <span class="input-group-text">₺</span>
+                                @Html.TextBoxFor(k => k.ToplamBorc, new { @class = "form-control", required = "required", placeholder = "0.00" })
+                            </div>
+                            <div class="invalid-feedback">Lütfen borç miktarını giriniz.</div>
+                        </div>
 
-            <div class="mb-3">
-                <label>Alınan Ürünler:</label>
-                <div class="form-control" style="min-height: 150px; overflow-y: auto; white-space: pre-line;" readonly>
-                    @{
-                        if (!string.IsNullOrEmpty(Model.Notlar))
-                        {
-                            var urunler = Model.Notlar.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                            foreach (var urun in urunler.Reverse()) // En son alınan ürün en üstte görünsün diye
+                        <div class="mb-3">
+                            <label class="form-label">Durum</label>
+                            @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
                             {
-                                <div>@urun.Trim()</div>
-                            }
-                        }
-                        else
-                        {
-                            <span class="text-muted">Henüz ürün alınmamış.</span>
-                        }
-                    }
+                                new SelectListItem { Text = "Aktif", Value = "true" },
+                                new SelectListItem { Text = "Pasif", Value = "false" }
+                            }, new { @class = "form-select", required = "required" })
+                        </div>
+                    </div>
+
+                    <!-- Müşteri İstatistikleri -->
+                    <div class="col-md-6">
+                        <div class="card bg-light mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Toplam Borç:</span>
+                                    <span class="fw-bold text-danger">@(Model.ToplamBorc.HasValue ? Model.ToplamBorc.Value.ToString("C2") : "₺0,00")</span>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted">Durum:</span>
+                                    <span class="badge @(Model.Status == true ? "bg-success" : "bg-secondary")">
+                                        @(Model.Status == true ? "Aktif" : "Pasif")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-
-            <div class="mb-3">
-                <label>Toplam Borç:</label>
-                @Html.TextBoxFor(k => k.ToplamBorc, new { @class = "form-control", required = "required", placeholder = "Toplam Borç" })
-            </div>
-
-            <div class="mb-3">
-                <label>Yapılan İşlemler:</label>
-                <div class="form-control" style="min-height: 150px; overflow-y: auto; white-space: pre-line;" readonly>
-                    @{
-                        if (!string.IsNullOrEmpty(Model.BosAlan))
-                        {
-                            var islemler = Model.BosAlan.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
-                            foreach (var islem in islemler.Reverse())
+                <!-- Alınan Ürünler -->
+                <div class="mb-4">
+                    <label class="form-label">Alınan Ürünler</label>
+                    <div class="card">
+                        <div class="card-body" style="max-height: 200px; overflow-y: auto;">
+                            @if (!string.IsNullOrEmpty(Model.Notlar))
                             {
-                                <div>@islem.Trim()</div>
+                                var urunler = Model.Notlar.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                                foreach (var urun in urunler.Reverse())
+                                {
+                                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                        <span>@urun.Trim()</span>
+                                    </div>
+                                }
                             }
-                        }
-                        else
-                        {
-                            <span class="text-muted">Herhangi bir işlem yapılmamış.</span>
-                        }
-                    }
+                            else
+                            {
+                                <div class="text-center text-muted py-3">
+                                    <i class="fas fa-box-open fa-2x mb-2"></i>
+                                    <p>Henüz ürün alınmamış</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Yapılan İşlemler -->
+                <div class="mb-4">
+                    <label class="form-label">Yapılan İşlemler</label>
+                    <div class="card">
+                        <div class="card-body" style="max-height: 200px; overflow-y: auto;">
+                            @if (!string.IsNullOrEmpty(Model.BosAlan))
+                            {
+                                var islemler = Model.BosAlan.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
+                                foreach (var islem in islemler.Reverse())
+                                {
+                                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                        <span>@islem.Trim()</span>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="text-center text-muted py-3">
+                                    <i class="fas fa-history fa-2x mb-2"></i>
+                                    <p>Herhangi bir işlem yapılmamış</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Butonlar -->
+                <div class="d-flex justify-content-between">
+                    <a href="/Musteri/Musteriler/" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> İptal
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i> Güncelle
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Form validation
+        (function () {
+            'use strict'
+
+            var forms = document.querySelectorAll('.needs-validation')
+
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+}
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="temizleModal" tabindex="-1" aria-labelledby="temizleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="temizleModalLabel">Borçları Temizle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
             </div>
 
-            <div class="mb-3">
-                <label>Status:</label>
-                @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
-                {
-                    new SelectListItem { Text = "Aktif", Value = "true" },
-                    new SelectListItem { Text = "Pasif", Value = "false" }
-                }, new { @class = "form-select", required = "required" })
+            <div class="modal-body">
+                Müşteriye ait <strong>tüm borçları</strong> silmek istediğinize emin misiniz? Bu işlem geri alınamaz!
             </div>
 
-            <div class="text-center">
-                <a href="/Musteri/Musteriler/" class="btn btn-danger btn-sm">İptal</a>
-                <button type="submit" class="btn btn-success btn-sm">Güncelle</button>
+            <div class="modal-footer">
+                <form action="/Musteri/MusteriTemizle" method="post" class="d-inline">
+                    <input type="hidden" name="ID" value="@Model.ID" />
+                    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
             </div>
-        }
+
+        </div>
     </div>
 </div>
