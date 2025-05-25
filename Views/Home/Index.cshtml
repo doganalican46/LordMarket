@@ -47,6 +47,7 @@
             .numpad-key:hover {
                 background-color: #ccc;
             }
+
     </style>
 
 </head>
@@ -80,16 +81,20 @@
                     <h5 class="mb-3"><i class="fas fa-money-bill-wave me-2 text-success"></i>Ödeme Seçenekleri</h5>
 
                     <div class="payment-methods d-flex flex-wrap gap-3">
-                        <button type="button" class="btn btn-success odeme-btn btn-lg flex-fill active" data-tip="Nakit">
-                            <i class="fas fa-money-bill me-2"></i>Nakit
+                        <button type="button" class="btn btn-success odeme-btn btn-lg flex-fill rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-2 fw-semibold"
+                                data-tip="Nakit">
+                            <i class="fas fa-money-bill"></i>Nakit
                         </button>
-                        <button type="button" class="btn btn-info odeme-btn btn-lg flex-fill" data-tip="Kart">
-                            <i class="fas fa-credit-card me-2"></i>Kart
+                        <button type="button" class="btn btn-info odeme-btn btn-lg flex-fill rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-2 fw-semibold"
+                                data-tip="Kart">
+                            <i class="fas fa-credit-card"></i>Kart
                         </button>
-                        <button type="button" class="btn btn-warning odeme-btn btn-lg flex-fill" data-tip="Veresiye">
-                            <i class="fas fa-hand-holding-usd me-2"></i>Veresiye
+                        <button type="button" class="btn btn-warning odeme-btn btn-lg flex-fill rounded-pill shadow-sm d-flex align-items-center justify-content-center gap-2 fw-semibold text-dark"
+                                data-tip="Veresiye">
+                            <i class="fas fa-hand-holding-usd"></i>Veresiye
                         </button>
                     </div>
+
 
                     <input type="hidden" id="odemeTipi" value="Nakit">
 
@@ -120,29 +125,65 @@
                         <tbody></tbody>
                     </table>
                 </div>
+                <input type="hidden" id="UrunListesiHidden" name="UrunListesi" />
 
                 <!-- Actions Section -->
                 <div class="payment-section">
                     <h5 class="mb-3"><i class="fas fa-plus me-2"></i>İşlemler</h5>
 
                     <div class="action-buttons d-flex gap-2 flex-wrap mb-3">
-                        <button class="btn btn-danger btn d-flex align-items-center px-3 py-2 shadow-sm" onclick="temizle()">
-                            <i class="fas fa-trash-alt me-2"></i>Temizle
+
+                        <!-- Temizle -->
+                        <button class="btn btn-danger d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold"
+                                onclick="temizle()">
+                            <i class="fas fa-trash-alt"></i>
+                            <span>Temizle</span>
                         </button>
-                        <button id="bekletBtn" type="button" class="btn btn-secondary d-flex align-items-center px-3 py-2 shadow-sm" onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
-                            <i class="fas fa-clock me-2"></i>İşlem Beklet
+
+                        <!-- İşlem Beklet -->
+                        <button id="bekletBtn" type="button"
+                                class="btn btn-secondary d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold"
+                                onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
+                            <i class="fas fa-clock"></i>
+                            <span>İşlem Beklet</span>
                         </button>
-                        <button type="button" class="btn btn-success btn d-flex align-items-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#urunEkleModal">
-                            <i class="fas fa-plus me-2"></i>Ürün İşlem
+
+                        <!-- Ürün İşlem -->
+                        <button type="button"
+                                class="btn btn-success d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold"
+                                data-bs-toggle="modal" data-bs-target="#urunEkleModal">
+                            <i class="fas fa-plus"></i>
+                            <span>Ürün İşlem</span>
                         </button>
-                        <a href="/Admin/Index" class="btn btn-warning btn d-flex align-items-center justify-content-center px-3 py-2 shadow-sm" title="Admin Ekranı">
+
+                        <!-- İskonto -->
+                        <button type="button" id="iskontoBtn"
+                                class="btn btn-warning d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-dark"
+                                data-bs-toggle="modal" data-bs-target="#iskontoModal">
+                            <i class="fas fa-percent"></i>
+                            <span>İskonto</span>
+                        </button>
+
+                        <!-- Admin -->
+                        <a href="/Admin/Index"
+                           class="btn btn-warning d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-dark"
+                           title="Admin Ekranı">
                             <i class="fas fa-toolbox"></i>
+                            
                         </a>
-                        <button type="button" class="btn btn-info btn d-flex align-items-center justify-content-center px-3 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#makbuzModal" title="Son İşlemin Makbuzunu Yazdır">
+
+                        <!-- Makbuz -->
+                        <button type="button"
+                                class="btn btn-info d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
+                                data-bs-toggle="modal" data-bs-target="#makbuzModal"
+                                title="Son İşlemin Makbuzunu Yazdır">
                             🧾
+                            
                         </button>
+
                     </div>
                 </div>
+
             </div>
 
             <!-- Right Panel -->
@@ -338,7 +379,7 @@
     <div class="modal fade" id="urunEkleModal" tabindex="-1" aria-labelledby="urunEkleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content shadow">
-                <div class="modal-header bg-dark text-white">
+                <div class="modal-header text-white" style="background-color: #003d60; color:white;">
                     <h5 class="modal-title" id="urunEkleModalLabel">Yeni Ürün Ekle/Güncelle</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
@@ -402,13 +443,35 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Kaydet</button>
+                        <button type="submit" class="btn "style="background-color: #003d60; color:white;">Kaydet</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+
+    <!-- İskonto Modal -->
+    <div class="modal fade" id="iskontoModal" tabindex="-1" aria-labelledby="iskontoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header  text-white" style="background-color: #003d60;">
+                    <h5 class="modal-title" id="iskontoModalLabel">İskonto Uygula</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="iskontoOrani" class="form-label">İskonto Oranı (%)</label>
+                    <input type="number" class="form-control" id="iskontoOrani" placeholder="Örneğin: 10">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn" style="background-color: #003d60; color:white;" onclick="applyDiscount()">Uygula</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <script>
@@ -418,731 +481,738 @@
 
 
 
-    $(document).ready(function () {
-    $.ajax({
-    url: '/Home/BeklemedeIslemVarMi',
-    type: 'GET',
-    success: function (res) {
-    if (res.varMi) {
-    // Son 5 dakika içinde beklemede işlem var
-    $('#bekletBtn')
-    .removeClass('btn-secondary')
-    .addClass('btn-warning')
-    .html('<i class="fas fa-hourglass-half me-2"></i>Bekleyen İşlemi Getir')
-    .attr('onclick', 'bekleyenIslemiGetir()')
-    .attr('title', 'Bekleyen işlemi getir');
-    } else {
-    // Yoksa normal beklet butonu
-    $('#bekletBtn')
-    .removeClass('btn-warning')
-    .addClass('btn-secondary')
-    .html('<i class="fas fa-clock me-2"></i>İşlem Beklet')
-    .attr('onclick', 'islemBeklet()')
-    .attr('title', 'İşlemi daha sonra devam etmek üzere beklet');
-    }
-    }
-    });
-    });
-
-
-
-
-    window.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("toptanciTrigger").click();
-    });
-
-    window.addEventListener("DOMContentLoaded", function () {
-    fetch("/Home/ToptanciBildirimi")
-    .then(response => {
-    if (!response.ok) {
-    // Hata varsa sessizce yakala, ekrana yazdırma
-    throw new Error("Network response was not ok");
-    }
-    return response.json();
-    })
-    .then(data => {
-    // Burada hiç ekrana yazma, sessizce tamamlandı
-    })
-    .catch(error => {
-    // Hata olursa sadece konsola yaz
-    console.error("Mail kontrol hatası:", error);
-    });
-    });
-
-
-    const alisInput = document.getElementById("UrunAlisFiyati");
-    const kdvInput = document.getElementById("KDVOran");
-    const fiyatInput = document.getElementById("UrunFiyat");
-
-    function hesaplaFiyat() {
-    let alis = parseFloat(alisInput.value) || 0;
-    let kdv = parseFloat(kdvInput.value) || 0;
-    let hesaplanan = alis + (alis * kdv / 100);
-    fiyatInput.value = hesaplanan.toFixed(2);
-    }
-
-    alisInput.addEventListener("input", hesaplaFiyat);
-    kdvInput.addEventListener("input", hesaplaFiyat);
-
-    let html5QrCode;
-
-
-    function kameraAc() {
-    document.getElementById("kameraAlaniyeniurun").style.display = "block";
-
-    html5QrCode = new Html5Qrcode("reader");
-
-    Html5Qrcode.getCameras().then(devices => {
-    if (devices && devices.length) {
-    // Arka kamera olup olmadığını kontrol et
-    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
-    let kameraId = backCamera ? backCamera.id : devices[0].id;
-
-    html5QrCode.start(
-    kameraId,
-    {
-    fps: 10,
-    qrbox: { width: 250, height: 250 }
-    },
-    decodedText => {
-    document.getElementById("barkodInputyeniurun").value = decodedText;
-    kamerayiKapat();
-    },
-    errorMessage => {
-    // Hataları sessizce geç
-    }
-    );
-    }
-    }).catch(err => {
-    alert("Kamera erişim hatası: " + err);
-    });
-    }
-
-    function kamerayiKapat() {
-    if (html5QrCode) {
-    html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    document.getElementById("kameraAlaniyeniurun").style.display = "none";
-    });
-    }
-    }
-
-
-
-
-
-
-    function kameraAcSatis() {
-    document.getElementById("kameraAlani").style.display = "block";
-
-    html5QrCode = new Html5Qrcode("reader");
-
-    Html5Qrcode.getCameras().then(devices => {
-    if (devices && devices.length) {
-    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
-    let kameraId = backCamera ? backCamera.id : devices[0].id;
-
-    html5QrCode.start(
-    kameraId,
-    {
-    fps: 10,
-    qrbox: { width: 250, height: 250 }
-    },
-    decodedText => {
-    document.getElementById("barkodInput").value = decodedText;
-    kamerayiKapatSatis();
-    barkodAra();
-    },
-    errorMessage => {
-    // Hataları sessizce geç
-    }
-    );
-    }
-    }).catch(err => {
-    alert("Kamera erişim hatası: " + err);
-    });
-    }
-
-    window.onload = function () {
-    $('#barkodInput').val("").focus();
-    };
-
-
-
-    function kamerayiKapatSatis() {
-    if (html5QrCode) {
-    html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    document.getElementById("kameraAlani").style.display = "none";
-    });
-    }
-    }
-
-    document.getElementById("barkodInputyeniurun").addEventListener("change", function () {
-    const barkod = this.value;
-
-    if (barkod.trim() === "") return;
-
-    fetch(`/Home/BarkodAraYeniUrun?barkod=${encodeURIComponent(barkod)}`)
-    .then(response => {
-    if (!response.ok) throw new Error("Sunucu hatası");
-    return response.json();
-    })
-    .then(data => {
-    if (data) {
-    document.querySelector('input[name="UrunAd"]').value = data.UrunAd || "";
-    document.querySelector('input[name="UrunKategori"]').value = data.UrunKategori || "";
-    document.querySelector('input[name="UrunAlisFiyati"]').value = data.UrunAlisFiyati || "";
-    document.querySelector('input[name="KDVOran"]').value = data.KDVOran || "";
-    document.querySelector('input[name="UrunFiyat"]').value = data.UrunFiyat || "";
-    document.querySelector('input[name="UrunResmi"]').value = data.UrunResmi || "";
-
-    if (data.HizliUrunMu === true) {
-    document.getElementById("HizliUrunMu").checked = true;
-    } else {
-    document.getElementById("HizliUrunMu").checked = false;
-    }
-    }
-    })
-    .catch(error => {
-    console.error("Hata:", error);
-    });
-    });
-    function islemBeklet() {
-    let urunlerText = '';
-    let urunSatirlari = $('#urunListesi tbody tr');
-
-    if (urunSatirlari.length === 0) {
-    Swal.fire({
-    title: 'Ürün listesi boş!',
-    text: 'Lütfen önce ürün ekleyin.',
-    icon: 'warning',
-    confirmButtonText: 'Tamam'
-    });
-    return;
-    }
-
-    urunSatirlari.each(function () {
-    let urunAd = $(this).find('td:eq(0)').text().trim();
-    let adet = $(this).find('.adet').text().trim();
-    let fiyat = $(this).find('.fiyat').text().trim();
-    urunlerText += `Ürün: ${urunAd} - Adet: ${adet} - Tutar: ${fiyat}\n`;
-    });
-
-    $.ajax({
-    url: '/Home/SatisYap',
-    type: 'POST',
-    data: {
-    OdemeTipi: 'Beklemede',
-    UrunListesi: urunlerText,
-    MusteriID: null
-    },
-    success: function (res) {
-    if (res.success) {
-    Swal.fire({
-    icon: 'info',
-    title: 'İşlem Bekletildi',
-    text: 'Satış işlemi beklemeye alındı.',
-    timer: 1100,
-    showConfirmButton: false
-    });
-
-    temizle();  // Swal'dan sonra fonksiyonu çağır
-
-    $('#bekletBtn')
-    .removeClass('btn-secondary')
-    .addClass('btn-warning')
-    .html('<i class="fas fa-hourglass-half me-2"></i>Bekleyen İşlemi Getir')
-    .attr('onclick', 'bekleyenIslemiGetir()');
-    } else {
-    Swal.fire('Hata', res.message, 'error');
-    }
-    }
-
-    });
-    }
-
-    function bekleyenIslemiGetir() {
-    $.ajax({
-    url: '/Home/BeklemedeSatisGetir',
-    type: 'POST',
-    success: function (data) {
-    if (data.success && data.urunListesi) {
-    let satirlar = data.urunListesi.trim().split('\n');
-    $('#urunListesi tbody').empty();
-    satirlar.forEach(function (satir) {
-    let parcala = satir.split('-');
-    if (parcala.length === 3) {
-    let urunAd = parcala[0].replace("Ürün:", "").trim();
-    let adet = parseInt(parcala[1].replace("Adet:", "").trim());
-    let fiyat = parseFloat(parcala[2].replace("Tutar:", "").trim());
-
-    let toplam = (adet * fiyat).toFixed(2);
-
-    let yeniSatir = `
-    <tr data-barkod="${urunAd}">
-        <!-- İstersen gerçek barkodla değiştir -->
-        <td>${urunAd}</td>
-        <td class="fiyat">${fiyat}</td>
-        <td class="adet">${adet}</td>
-        <td class="satirToplam">${toplam}</td>
-        <td>
-            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-        </td>
-    </tr>`;
-    $('#urunListesi tbody').append(yeniSatir);
-    }
-    });
-
-    Swal.fire({
-    icon: 'success',
-    title: 'İşlem Yüklendi',
-    text: 'Bekleyen işlem listeye eklendi.',
-    timer: 1100,
-    showConfirmButton: false
-    });
-
-    $('#bekletBtn')
-    .removeClass('btn-warning')
-    .addClass('btn-secondary')
-    .html('<i class="fas fa-clock me-2"></i>İşlem Beklet')
-    .attr('onclick', 'islemBeklet()');
-
-    updateGenelToplam(); // toplamları güncelle
-    } else {
-    Swal.fire('Uyarı', 'Beklemede işlem bulunamadı.', 'info');
-    }
-    }
-    });
-    }
-
-
-
-
-
-
-    function kaldirmakIcinSor(id) {
-    Swal.fire({
-    title: 'Emin misiniz?',
-    text: "Bu ürünü hızlı ürünlerden kaldırmak istiyor musunuz?",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Evet, kaldır!',
-    cancelButtonText: 'Vazgeç',
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6'
-    }).then((result) => {
-    if (result.isConfirmed) {
-    // AJAX ile hızlı üründen kaldır
-    $.ajax({
-    url: '/Home/HizliUrunKaldir', // bu route senin controllerda olacak
-    type: 'POST',
-    data: { id: id },
-    success: function () {
-    Swal.fire({
-    icon: 'success',
-    title: 'Kaldırıldı!',
-    text: 'Ürün hızlı ürünlerden kaldırıldı.',
-    timer: 1500,
-    showConfirmButton: false
-    }).then(() => {
-    location.reload(); // ekranı yenile
-    });
-    },
-    error: function () {
-    Swal.fire({
-    icon: 'error',
-    title: 'Hata!',
-    text: 'Ürün kaldırılamadı.',
-    });
-    }
-    });
-    }
-    });
-    }
-
-
-    $(document).ready(function () {
-    if (localStorage.getItem('fisYazdirClicked') === 'true') {
-    localStorage.removeItem('fisYazdirClicked'); // işaret kaldır
-    // Otomatik olarak makbuz modal butonuna tıkla
-    $('button[data-bs-target="#makbuzModal"]').trigger('click');
-    }
-    });
-
-    var toplam = 0;
-    let digerUrunSayac = 0;
-
-    function temizle() {
-    $('#urunListesi tbody').empty();
-    toplam = 0;
-    $('#toplamFiyat').text("0.00 ₺");
-    $('#barkodInput').val('').focus();
-    $('#odemeTipi').val('Nakit');
-    $('.odeme-btn').removeClass('active');
-    $('.odeme-btn[data-tip="Nakit"]').addClass('active');
-    $('#musteriSelect').val('');
-    $('#customerSelectContainer').hide();
-    $('#barkodInput').val('').focus();
-    }
-
-    function updateGenelToplam() {
-    let toplamYeni = 0;
-    $('#urunListesi tbody tr').each(function () {
-    let satirToplam = parseFloat($(this).find('.satirToplam').text());
-    toplamYeni += satirToplam;
-    });
-    toplam = toplamYeni;
-    $('#toplamFiyat').text(toplam.toFixed(2) + ' ₺');
-    }
-
-    function barkodAra() {
-    var barkod = $('#barkodInput').val();
-    if (barkod.trim() === "") return;
-
-    let mevcutSatir = $(`#urunListesi tbody tr[data-barkod='${barkod}']`);
-    if (mevcutSatir.length > 0) {
-    let adetCell = mevcutSatir.find('.adet');
-    let yeniAdet = parseInt(adetCell.text()) + 1;
-    adetCell.text(yeniAdet);
-
-    let fiyat = parseFloat(mevcutSatir.find('.fiyat').text());
-    mevcutSatir.find('.satirToplam').text((yeniAdet * fiyat).toFixed(2));
-
-    updateGenelToplam();
-    $('#barkodInput').val("").focus();
-    return;
-    }
-
-    $.ajax({
-    url: '/Home/BarkodAra',
-    type: 'POST',
-    data: { barkod: barkod },
-    success: function (res) {
-    if (res.success) {
-    let toplamSatir = res.fiyat;
-
-    $('#urunListesi tbody').prepend(
-    `<tr data-barkod="${barkod}">
-        <td>${res.urunAd}</td>
-        <td class="fiyat">${res.fiyat}</td>
-        <td class="adet">1</td>
-        <td class="satirToplam">${toplamSatir}</td>
-        <td>
-            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-        </td>
-    </tr>`
-    );
-    updateGenelToplam();
-    $('#barkodInput').val("").focus();
-    } else {
-    Swal.fire({
-    title: 'Ürün bulunamadı',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Tamam',
-    cancelButtonText: 'Ürün Ekle',
-    reverseButtons: true
-    }).then((result) => {
-    if (result.dismiss === Swal.DismissReason.cancel) {
-    // Barkod değerini ürün ekleme modalındaki input'a ata
-    $('#barkodInputyeniurun').val(barkod);
-
-    // Modalı aç
-    var myModal = new bootstrap.Modal(document.getElementById('urunEkleModal'));
-    myModal.show();
-    }
-    });
-
-    $('#barkodInput').val("").focus();
-    }
-
-    },
-    error: function () {
-    Swal.fire({
-    title: 'Bir hata oluştu',
-    text: 'Lütfen tekrar deneyin.',
-    icon: 'error',
-    confirmButtonText: 'Tamam'
-    }).then((result) => {
-    if (result.isConfirmed) {
-    location.reload();
-    }
-    });
-    }
-    });
-    }
-
-    function adetDegistir(btn, degisim) {
-    let satir = $(btn).closest('tr');
-    let adetCell = satir.find('.adet');
-    let adet = parseInt(adetCell.text());
-
-    adet += degisim;
-    if (adet < 1) return;
-
-    adetCell.text(adet);
-
-    let fiyat = parseFloat(satir.find('.fiyat').text());
-    satir.find('.satirToplam').text((adet * fiyat).toFixed(2));
-    $('#barkodInput').val('').focus();
-    updateGenelToplam();
-    }
-
-    function sil(btn) {
-    $(btn).closest('tr').remove();
-    $('#barkodInput').val('').focus();
-    updateGenelToplam();
-    }
-
-    $('#barkodInput').keypress(function (e) {
-    if (e.which == 13) {
-    barkodAra();
-    e.preventDefault();
-    }
-    });
-
-    function satisYap() {
-    let odemeTipi = $('#odemeTipi').val();
-    let musteriID = odemeTipi === 'Veresiye' ? $('#musteriSelect').val() : null;
-
-    let urunlerText = '';
-    let urunSatirlari = $('#urunListesi tbody tr');
-
-    if (urunSatirlari.length === 0) {
-    Swal.fire({
-    title: 'Ürün listesi boş!',
-    text: 'Lütfen önce ürün ekleyin.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Tamam',
-    cancelButtonText: 'Ürün Ekle',
-    reverseButtons: true
-    }).then((result) => {
-    if (result.dismiss === Swal.DismissReason.cancel) {
-    var modal = new bootstrap.Modal(document.getElementById('urunEkleModal'));
-    modal.show();
-    } else {
-    $('#barkodInput').focus();
-    location.reload();
-    }
-    });
-    return;
-    }
-
-    if (odemeTipi === 'Veresiye' && (!musteriID || musteriID === "")) {
-    Swal.fire({
-    title: 'Uyarı',
-    text: 'Veresiye satış için müşteri seçmelisiniz.',
-    icon: 'info',
-    confirmButtonText: 'Tamam'
-    }).then(() => {
-    $('#barkodInput').focus();
-
-    });
-    return;
-    }
-
-    urunSatirlari.each(function () {
-    let urunAd = $(this).find('td:eq(0)').text().trim();
-    let adet = $(this).find('.adet').text().trim();
-    let fiyat = $(this).find('.fiyat').text().trim();
-    urunlerText += `Ürün: ${urunAd} - Adet: ${adet} - Tutar: ${fiyat}\n`;
-    });
-
-    $.ajax({
-    url: '/Home/SatisYap',
-    type: 'POST',
-    data: {
-    OdemeTipi: odemeTipi,
-    UrunListesi: urunlerText,
-    MusteriID: musteriID
-    },
-    success: function (res) {
-    if (res.success) {
-    Swal.fire({
-    icon: 'success',
-    title: 'Satış Tamamlandı!',
-    text: 'Satış işlemi başarıyla gerçekleştirildi.',
-    timer: 1100,
-    timerProgressBar: true,
-    showConfirmButton: false,
-    willClose: () => {
-    temizle();
-    location.reload();
-
-    }
-    });
-    } else {
-    Swal.fire({
-    title: 'Hata',
-    text: 'Hata: ' + res.message,
-    icon: 'error',
-    timer: 1100,
-    timerProgressBar: true,
-    confirmButtonText: 'Tamam',
-    willClose: () => {
-    location.reload();
-    }
-    });
-    }
-    },
-    error: function (xhr, status, error) {
-    Swal.fire({
-    icon: 'error',
-    title: 'Sistemsel Hata',
-    text: 'Satış işlemi sırasında sistemsel bir hata oluştu.',
-    timer: 1100,
-    timerProgressBar: true,
-    showConfirmButton: false,
-    willClose: () => {
-    location.reload();
-    }
-    });
-
-    console.error("Hata Detayı:", xhr.responseText, status, error);
-    }
-    });
-    }
-
-
-    function hizliUrunEkle(barkod) {
-    $('#barkodInput').val(barkod);
-    barkodAra();
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-    const input = document.getElementById('digerUrunFiyat');
-    input.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-    e.preventDefault();
-    digerUrunEkle();
-    }
-    });
-    });
-
-    function digerUrunEkle() {
-    let fiyatInput = $('#digerUrunFiyat');
-    let fiyat = parseFloat(fiyatInput.val());
-
-    if (isNaN(fiyat) || fiyat <= 0) {
-    Swal.fire({
-    title: 'Geçersiz Fiyat',
-    text: 'Lütfen geçerli bir fiyat girin.',
-    icon: 'warning',
-    confirmButtonText: 'Tamam'
-    });
-    fiyatInput.value = "";
-    fiyatInput.focus();
-    return;
-    }
-
-    digerUrunSayac++;
-    let barkodDegeri = `digerUrun${digerUrunSayac}`;
-    let urunAdi = digerUrunSayac === 1 ? "Diğer Ürün" : `Diğer Ürün ${digerUrunSayac}`;
-
-    $('#urunListesi tbody').append(
-    `<tr data-barkod="${barkodDegeri}">
-        <td>${urunAdi}</td>
-        <td class="fiyat">${fiyat.toFixed(2)}</td>
-        <td class="adet">1</td>
-        <td class="satirToplam">${fiyat.toFixed(2)}</td>
-        <td>
-            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-        </td>
-    </tr>`
-    );
-
-    updateGenelToplam();
-    fiyatInput.val("");
-    barkodInput.focus();
-    }
-
-    $('.odeme-btn').click(function () {
-    $('.odeme-btn').removeClass('active');
-    $(this).addClass('active');
-
-    let secilenTip = $(this).data('tip');
-    $('#odemeTipi').val(secilenTip);
-
-    if (secilenTip === 'Veresiye') {
-    $('#customerSelectContainer').show();
-    } else {
-    $('#customerSelectContainer').hide();
-    $('#musteriSelect').val('');
-    }
-    });
-
-    $(document).ready(function () {
-    $('#barkodInput').focus();
-    });
-
-    $(document).ready(function () {
-    $(".odeme-btn").click(function () {
-    $(".odeme-btn").removeClass("active");
-    $(this).addClass("active");
-
-    var tip = $(this).data("tip");
-    $("#odemeTipi").val(tip);
-
-    if (tip === "Veresiye") {
-    $("#customerSelectContainer").slideDown();
-    } else {
-    $("#customerSelectContainer").slideUp();
-    }
-
-    if (tip === "Veresiye") {
-    if ($("#musteriSelect").val()) {
-    satisYap();
-    } else {
-    $("#musteriSelect").off("change").on("change", function () {
-    if ($(this).val()) {
-    satisYap();
-    }
-    });
-    }
-    } else {
-    satisYap();
-    }
-    });
-    });
-    function printDiv(divId) {
-    var printContents = document.getElementById(divId).innerHTML;
-    var originalContents = document.body.innerHTML;
-
-    document.body.innerHTML = '<div style="width: 58mm; margin: 0 auto; font-family: \'Courier New\', monospace; font-size: 11px; font-weight: bold; box-sizing: border-box;">' + printContents + '</div>';
-
-    window.print();
-
-    document.body.innerHTML = originalContents;
-    location.reload();
-    }
-
-    const urunEkleModal = document.getElementById('urunEkleModal');
-    urunEkleModal.addEventListener('hidden.bs.modal', function () {
-    // Formu sıfırla
-    const form = urunEkleModal.querySelector('form');
-    form.reset();
-
-    // Kamera alanını da gizle (aktifse)
-    document.getElementById("kameraAlani").style.display = "none";
-
-    // QR kod okuyucu temizliği
-    if (html5QrCode) {
-    html5QrCode.stop().then(() => {
-    html5QrCode.clear();
-    }).catch(() => { });
-    }
-    location.reload(); // ekranı yenile
-
-
-    });
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Home/BeklemedeIslemVarMi',
+                type: 'GET',
+                success: function (res) {
+                    if (res.varMi) {
+                        // Son 5 dakika içinde beklemede işlem var
+                        $('#bekletBtn')
+                            .removeClass('btn-secondary')
+                            .addClass('btn-warning')
+                            .html('<i class="fas fa-hourglass-half me-2"></i>Bekleyen İşlemi Getir')
+                            .attr('onclick', 'bekleyenIslemiGetir()')
+                            .attr('title', 'Bekleyen işlemi getir');
+                    } else {
+                        // Yoksa normal beklet butonu
+                        $('#bekletBtn')
+                            .removeClass('btn-warning')
+                            .addClass('btn-secondary')
+                            .html('<i class="fas fa-clock me-2"></i>İşlem Beklet')
+                            .attr('onclick', 'islemBeklet()')
+                            .attr('title', 'İşlemi daha sonra devam etmek üzere beklet');
+                    }
+                }
+            });
+        });
+
+
+
+
+        window.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("toptanciTrigger").click();
+        });
+
+        window.addEventListener("DOMContentLoaded", function () {
+            fetch("/Home/ToptanciBildirimi")
+                .then(response => {
+                    if (!response.ok) {
+                        // Hata varsa sessizce yakala, ekrana yazdırma
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Burada hiç ekrana yazma, sessizce tamamlandı
+                })
+                .catch(error => {
+                    // Hata olursa sadece konsola yaz
+                    console.error("Mail kontrol hatası:", error);
+                });
+        });
+
+
+        const alisInput = document.getElementById("UrunAlisFiyati");
+        const kdvInput = document.getElementById("KDVOran");
+        const fiyatInput = document.getElementById("UrunFiyat");
+
+        function hesaplaFiyat() {
+            let alis = parseFloat(alisInput.value) || 0;
+            let kdv = parseFloat(kdvInput.value) || 0;
+            let hesaplanan = alis + (alis * kdv / 100);
+            fiyatInput.value = hesaplanan.toFixed(2);
+        }
+
+        alisInput.addEventListener("input", hesaplaFiyat);
+        kdvInput.addEventListener("input", hesaplaFiyat);
+
+        let html5QrCode;
+
+
+        function kameraAc() {
+            document.getElementById("kameraAlaniyeniurun").style.display = "block";
+
+            html5QrCode = new Html5Qrcode("reader");
+
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    // Arka kamera olup olmadığını kontrol et
+                    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
+                    let kameraId = backCamera ? backCamera.id : devices[0].id;
+
+                    html5QrCode.start(
+                        kameraId,
+                        {
+                            fps: 10,
+                            qrbox: { width: 250, height: 250 }
+                        },
+                        decodedText => {
+                            document.getElementById("barkodInputyeniurun").value = decodedText;
+                            kamerayiKapat();
+                        },
+                        errorMessage => {
+                            // Hataları sessizce geç
+                        }
+                    );
+                }
+            }).catch(err => {
+                alert("Kamera erişim hatası: " + err);
+            });
+        }
+
+        function kamerayiKapat() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    document.getElementById("kameraAlaniyeniurun").style.display = "none";
+                });
+            }
+        }
+
+
+
+
+
+
+        function kameraAcSatis() {
+            document.getElementById("kameraAlani").style.display = "block";
+
+            html5QrCode = new Html5Qrcode("reader");
+
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length) {
+                    let backCamera = devices.find(device => device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("environment"));
+                    let kameraId = backCamera ? backCamera.id : devices[0].id;
+
+                    html5QrCode.start(
+                        kameraId,
+                        {
+                            fps: 10,
+                            qrbox: { width: 250, height: 250 }
+                        },
+                        decodedText => {
+                            document.getElementById("barkodInput").value = decodedText;
+                            kamerayiKapatSatis();
+                            barkodAra();
+                        },
+                        errorMessage => {
+                            // Hataları sessizce geç
+                        }
+                    );
+                }
+            }).catch(err => {
+                alert("Kamera erişim hatası: " + err);
+            });
+        }
+
+        window.onload = function () {
+            $('#barkodInput').val("").focus();
+        };
+
+
+
+        function kamerayiKapatSatis() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    document.getElementById("kameraAlani").style.display = "none";
+                });
+            }
+        }
+
+        document.getElementById("barkodInputyeniurun").addEventListener("change", function () {
+            const barkod = this.value;
+
+            if (barkod.trim() === "") return;
+
+            fetch(`/Home/BarkodAraYeniUrun?barkod=${encodeURIComponent(barkod)}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Sunucu hatası");
+                    return response.json();
+                })
+                .then(data => {
+                    if (data) {
+                        document.querySelector('input[name="UrunAd"]').value = data.UrunAd || "";
+                        document.querySelector('input[name="UrunKategori"]').value = data.UrunKategori || "";
+                        document.querySelector('input[name="UrunAlisFiyati"]').value = data.UrunAlisFiyati || "";
+                        document.querySelector('input[name="KDVOran"]').value = data.KDVOran || "";
+                        document.querySelector('input[name="UrunFiyat"]').value = data.UrunFiyat || "";
+                        document.querySelector('input[name="UrunResmi"]').value = data.UrunResmi || "";
+
+                        if (data.HizliUrunMu === true) {
+                            document.getElementById("HizliUrunMu").checked = true;
+                        } else {
+                            document.getElementById("HizliUrunMu").checked = false;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Hata:", error);
+                });
+        });
+        function islemBeklet() {
+            let urunlerText = '';
+            let urunSatirlari = $('#urunListesi tbody tr');
+
+            if (urunSatirlari.length === 0) {
+                Swal.fire({
+                    title: 'Ürün listesi boş!',
+                    text: 'Lütfen önce ürün ekleyin.',
+                    icon: 'warning',
+                    confirmButtonText: 'Tamam'
+                });
+                return;
+            }
+
+            urunSatirlari.each(function () {
+                let urunAd = $(this).find('td:eq(0)').text().trim();
+                let adet = $(this).find('.adet').text().trim();
+                let fiyat = $(this).find('.fiyat').text().trim();
+                urunlerText += `Ürün: ${urunAd} - Adet: ${adet} - Tutar: ${fiyat}\n`;
+            });
+
+            $.ajax({
+                url: '/Home/SatisYap',
+                type: 'POST',
+                data: {
+                    OdemeTipi: 'Beklemede',
+                    UrunListesi: urunlerText,
+                    MusteriID: null
+                },
+                success: function (res) {
+                    if (res.success) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'İşlem Bekletildi',
+                            text: 'Satış işlemi beklemeye alındı.',
+                            timer: 600,
+                            showConfirmButton: false
+                        });
+
+                        temizle();  // Swal'dan sonra fonksiyonu çağır
+
+                        $('#bekletBtn')
+                            .removeClass('btn-secondary')
+                            .addClass('btn-warning')
+                            .html('<i class="fas fa-hourglass-half me-2"></i>Bekleyen İşlemi Getir')
+                            .attr('onclick', 'bekleyenIslemiGetir()');
+                    } else {
+                        Swal.fire('Hata', res.message, 'error');
+                    }
+                }
+
+            });
+        }
+
+        function bekleyenIslemiGetir() {
+            $.ajax({
+                url: '/Home/BeklemedeSatisGetir',
+                type: 'POST',
+                success: function (data) {
+                    if (data.success && data.urunListesi) {
+                        let satirlar = data.urunListesi.trim().split('\n');
+                        $('#urunListesi tbody').empty();
+                        satirlar.forEach(function (satir) {
+                            let parcala = satir.split('-');
+                            if (parcala.length === 3) {
+                                let urunAd = parcala[0].replace("Ürün:", "").trim();
+                                let adet = parseInt(parcala[1].replace("Adet:", "").trim());
+                                let fiyat = parseFloat(parcala[2].replace("Tutar:", "").trim());
+
+                                let toplam = (adet * fiyat).toFixed(2);
+
+                                let yeniSatir = `
+        <tr data-barkod="${urunAd}">
+            <!-- İstersen gerçek barkodla değiştir -->
+            <td>${urunAd}</td>
+            <td class="fiyat">${fiyat}</td>
+            <td class="adet">${adet}</td>
+            <td class="satirToplam">${toplam}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>`;
+                                $('#urunListesi tbody').append(yeniSatir);
+                            }
+                        });
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'İşlem Yüklendi',
+                            text: 'Bekleyen işlem listeye eklendi.',
+                            timer: 600,
+                            showConfirmButton: false
+                        });
+
+                        $('#bekletBtn')
+                            .removeClass('btn-warning')
+                            .addClass('btn-secondary')
+                            .html('<i class="fas fa-clock me-2"></i>İşlem Beklet')
+                            .attr('onclick', 'islemBeklet()');
+
+                        updateGenelToplam(); // toplamları güncelle
+                    } else {
+                        Swal.fire('Uyarı', 'Beklemede işlem bulunamadı.', 'info');
+                    }
+                }
+            });
+        }
+
+
+
+
+
+
+        function kaldirmakIcinSor(id) {
+            Swal.fire({
+                title: 'Emin misiniz?',
+                text: "Bu ürünü hızlı ürünlerden kaldırmak istiyor musunuz?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Evet, kaldır!',
+                cancelButtonText: 'Vazgeç',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // AJAX ile hızlı üründen kaldır
+                    $.ajax({
+                        url: '/Home/HizliUrunKaldir', // bu route senin controllerda olacak
+                        type: 'POST',
+                        data: { id: id },
+                        success: function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Kaldırıldı!',
+                                text: 'Ürün hızlı ürünlerden kaldırıldı.',
+                                timer: 600,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload(); // ekranı yenile
+                            });
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata!',
+                                text: 'Ürün kaldırılamadı.',
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+
+        $(document).ready(function () {
+            if (localStorage.getItem('fisYazdirClicked') === 'true') {
+                localStorage.removeItem('fisYazdirClicked'); // işaret kaldır
+                // Otomatik olarak makbuz modal butonuna tıkla
+                $('button[data-bs-target="#makbuzModal"]').trigger('click');
+            }
+        });
+
+        var toplam = 0;
+        let digerUrunSayac = 0;
+
+        function temizle() {
+            $('#urunListesi tbody').empty();
+            toplam = 0;
+            $('#toplamFiyat').text("0.00 ₺");
+            $('#barkodInput').val('').focus();
+            $('#odemeTipi').val('Nakit');
+            $('.odeme-btn');
+            $('.odeme-btn[data-tip="Nakit"]');
+            $('#musteriSelect').val('');
+            $('#customerSelectContainer').hide();
+            $('#barkodInput').val('').focus();
+        }
+
+        function updateGenelToplam() {
+            let toplamYeni = 0;
+            $('#urunListesi tbody tr').each(function () {
+                let satir = $(this);
+                if (!satir.hasClass('iskonto-satiri')) {
+                    let satirToplam = parseFloat(satir.find('.satirToplam').text());
+                    if (!isNaN(satirToplam)) {
+                        toplamYeni += satirToplam;
+                    }
+                }
+            });
+
+            $('#toplamFiyat').text(toplamYeni.toFixed(2) + ' ₺');
+        }
+
+
+
+        function barkodAra() {
+            var barkod = $('#barkodInput').val();
+            if (barkod.trim() === "") return;
+
+            let mevcutSatir = $(`#urunListesi tbody tr[data-barkod='${barkod}']`);
+            if (mevcutSatir.length > 0) {
+                let adetCell = mevcutSatir.find('.adet');
+                let yeniAdet = parseInt(adetCell.text()) + 1;
+                adetCell.text(yeniAdet);
+
+                let fiyat = parseFloat(mevcutSatir.find('.fiyat').text());
+                mevcutSatir.find('.satirToplam').text((yeniAdet * fiyat).toFixed(2));
+
+                updateGenelToplam();
+                $('#barkodInput').val("").focus();
+                return;
+            }
+
+            $.ajax({
+                url: '/Home/BarkodAra',
+                type: 'POST',
+                data: { barkod: barkod },
+                success: function (res) {
+                    if (res.success) {
+                        let toplamSatir = res.fiyat;
+
+                        $('#urunListesi tbody').prepend(
+                            `<tr data-barkod="${barkod}">
+            <td>${res.urunAd}</td>
+            <td class="fiyat">${res.fiyat}</td>
+            <td class="adet">1</td>
+            <td class="satirToplam">${toplamSatir}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>`
+                        );
+                        updateGenelToplam();
+                        $('#barkodInput').val("").focus();
+                    } else {
+                        Swal.fire({
+                            title: 'Ürün bulunamadı',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Tamam',
+                            cancelButtonText: 'Ürün Ekle',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.cancel) {
+                                // Barkod değerini ürün ekleme modalındaki input'a ata
+                                $('#barkodInputyeniurun').val(barkod);
+
+                                // Modalı aç
+                                var myModal = new bootstrap.Modal(document.getElementById('urunEkleModal'));
+                                myModal.show();
+                            }
+                        });
+
+                        $('#barkodInput').val("").focus();
+                    }
+
+                },
+                error: function () {
+                    Swal.fire({
+                        title: 'Bir hata oluştu',
+                        text: 'Lütfen tekrar deneyin.',
+                        icon: 'error',
+                        confirmButtonText: 'Tamam'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                }
+            });
+        }
+
+        function adetDegistir(btn, degisim) {
+            let satir = $(btn).closest('tr');
+            let adetCell = satir.find('.adet');
+            let adet = parseInt(adetCell.text());
+
+            adet += degisim;
+            if (adet < 1) return;
+
+            adetCell.text(adet);
+
+            let fiyat = parseFloat(satir.find('.fiyat').text());
+            satir.find('.satirToplam').text((adet * fiyat).toFixed(2));
+            $('#barkodInput').val('').focus();
+            updateGenelToplam();
+        }
+
+        function sil(btn) {
+            $(btn).closest('tr').remove();
+            $('#barkodInput').val('').focus();
+            updateGenelToplam();
+        }
+
+        $('#barkodInput').keypress(function (e) {
+            if (e.which == 13) {
+                barkodAra();
+                e.preventDefault();
+            }
+        });
+
+        function satisYap() {
+            let odemeTipi = $('#odemeTipi').val();
+            let musteriID = odemeTipi === 'Veresiye' ? $('#musteriSelect').val() : null;
+
+            let urunlerText = '';
+            let urunSatirlari = $('#urunListesi tbody tr');
+
+            if (urunSatirlari.length === 0) {
+                Swal.fire({
+                    title: 'Ürün listesi boş!',
+                    text: 'Lütfen önce ürün ekleyin.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Tamam',
+                    cancelButtonText: 'Ürün Ekle',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        var modal = new bootstrap.Modal(document.getElementById('urunEkleModal'));
+                        modal.show();
+                    } else {
+                        $('#barkodInput').focus();
+                        location.reload();
+                    }
+                });
+                return;
+            }
+
+            if (odemeTipi === 'Veresiye' && (!musteriID || musteriID === "")) {
+                Swal.fire({
+                    title: 'Uyarı',
+                    text: 'Veresiye satış için müşteri seçmelisiniz.',
+                    icon: 'info',
+                    confirmButtonText: 'Tamam'
+                }).then(() => {
+                    $('#barkodInput').focus();
+
+                });
+                return;
+            }
+
+            urunSatirlari.each(function () {
+                let urunAd = $(this).find('td:eq(0)').text().trim();
+                let adet = $(this).find('.adet').text().trim();
+                let fiyat = $(this).find('.fiyat').text().trim();
+                urunlerText += `Ürün: ${urunAd} - Adet: ${adet} - Tutar: ${fiyat}\n`;
+            });
+
+            $.ajax({
+                url: '/Home/SatisYap',
+                type: 'POST',
+                data: {
+                    OdemeTipi: odemeTipi,
+                    UrunListesi: urunlerText,
+                    MusteriID: musteriID
+                },
+                success: function (res) {
+                    if (res.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Satış Tamamlandı!',
+                            text: 'Satış işlemi başarıyla gerçekleştirildi.',
+                            timer: 600,
+                            timerProgressBar: true,
+                            showConfirmButton: false,
+                            willClose: () => {
+                                temizle();
+                                location.reload();
+
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Hata',
+                            text: 'Hata: ' + res.message,
+                            icon: 'error',
+                            timer: 600,
+                            timerProgressBar: true,
+                            confirmButtonText: 'Tamam',
+                            willClose: () => {
+                                location.reload();
+                            }
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Sistemsel Hata',
+                        text: 'Satış işlemi sırasında sistemsel bir hata oluştu.',
+                        timer: 600,
+                        timerProgressBar: true,
+                        showConfirmButton: false,
+                        willClose: () => {
+                            location.reload();
+                        }
+                    });
+
+                    console.error("Hata Detayı:", xhr.responseText, status, error);
+                }
+            });
+        }
+
+
+        function hizliUrunEkle(barkod) {
+            $('#barkodInput').val(barkod);
+            barkodAra();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('digerUrunFiyat');
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    digerUrunEkle();
+                }
+            });
+        });
+
+        function digerUrunEkle() {
+            let fiyatInput = $('#digerUrunFiyat');
+            let fiyat = parseFloat(fiyatInput.val());
+
+            if (isNaN(fiyat) || fiyat <= 0) {
+                Swal.fire({
+                    title: 'Geçersiz Fiyat',
+                    text: 'Lütfen geçerli bir fiyat girin.',
+                    icon: 'warning',
+                    confirmButtonText: 'Tamam'
+                });
+                fiyatInput.value = "";
+                fiyatInput.focus();
+                return;
+            }
+
+            digerUrunSayac++;
+            let barkodDegeri = `digerUrun${digerUrunSayac}`;
+            let urunAdi = digerUrunSayac === 1 ? "Diğer Ürün" : `Diğer Ürün ${digerUrunSayac}`;
+
+            $('#urunListesi tbody').append(
+                `<tr data-barkod="${barkodDegeri}">
+            <td>${urunAdi}</td>
+            <td class="fiyat">${fiyat.toFixed(2)}</td>
+            <td class="adet">1</td>
+            <td class="satirToplam">${fiyat.toFixed(2)}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>`
+            );
+
+            updateGenelToplam();
+            fiyatInput.val("");
+            barkodInput.focus();
+        }
+
+        $('.odeme-btn').click(function () {
+            $('.odeme-btn');
+            $(this);
+
+            let secilenTip = $(this).data('tip');
+            $('#odemeTipi').val(secilenTip);
+
+            if (secilenTip === 'Veresiye') {
+                $('#customerSelectContainer').show();
+            } else {
+                $('#customerSelectContainer').hide();
+                $('#musteriSelect').val('');
+            }
+        });
+
+        $(document).ready(function () {
+            $('#barkodInput').focus();
+        });
+
+        $(document).ready(function () {
+            $(".odeme-btn").click(function () {
+                $(".odeme-btn");
+                $(this);
+
+                var tip = $(this).data("tip");
+                $("#odemeTipi").val(tip);
+
+                if (tip === "Veresiye") {
+                    $("#customerSelectContainer").slideDown();
+                } else {
+                    $("#customerSelectContainer").slideUp();
+                }
+
+                if (tip === "Veresiye") {
+                    if ($("#musteriSelect").val()) {
+                        satisYap();
+                    } else {
+                        $("#musteriSelect").off("change").on("change", function () {
+                            if ($(this).val()) {
+                                satisYap();
+                            }
+                        });
+                    }
+                } else {
+                    satisYap();
+                }
+            });
+        });
+        function printDiv(divId) {
+            var printContents = document.getElementById(divId).innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = '<div style="width: 58mm; margin: 0 auto; font-family: \'Courier New\', monospace; font-size: 11px; font-weight: bold; box-sizing: border-box;">' + printContents + '</div>';
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+            location.reload();
+        }
+
+        const urunEkleModal = document.getElementById('urunEkleModal');
+        urunEkleModal.addEventListener('hidden.bs.modal', function () {
+            // Formu sıfırla
+            const form = urunEkleModal.querySelector('form');
+            form.reset();
+
+            // Kamera alanını da gizle (aktifse)
+            document.getElementById("kameraAlani").style.display = "none";
+
+            // QR kod okuyucu temizliği
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                }).catch(() => { });
+            }
+            location.reload(); // ekranı yenile
+
+
+        });
 
 
         function numpadClick(char) {
@@ -1154,6 +1224,121 @@
             let input = document.getElementById("digerUrunFiyat");
             input.value = input.value.slice(0, -1);
         }
+
+
+        let iskontoUygulandi = false;
+        let oncekiToplam = 0;
+        let uygulananIskonto = 0;
+
+        function applyDiscount() {
+            let iskonto = parseFloat($('#iskontoOrani').val());
+
+            if (isNaN(iskonto) || iskonto < 0 || iskonto > 100) {
+                Swal.fire({
+                    title: 'Geçersiz Oran',
+                    text: 'Lütfen 0 ile 100 arasında bir iskonto oranı giriniz.',
+                    icon: 'warning',
+                    confirmButtonText: 'Tamam'
+                });
+                return;
+            }
+
+            // Global oncekiToplam'ı güncelle
+            oncekiToplam = 0;
+            $('#urunListesi tbody tr').each(function () {
+                let satirToplam = parseFloat($(this).find('.satirToplam').text());
+                if (!isNaN(satirToplam) && !$(this).hasClass('iskonto-satiri')) {
+                    oncekiToplam += satirToplam;
+                }
+            });
+
+            let indirimMiktari = oncekiToplam * (iskonto / 100);
+            let yeniToplam = oncekiToplam - indirimMiktari;
+
+            // Eğer iskonto zaten uygulandıysa önce eski iskonto satırını kaldır
+            if (iskontoUygulandi) {
+                $('.iskonto-satiri').remove();
+            }
+
+            // İskonto satırını ekle
+            $('#urunListesi tbody').append(`
+        <tr class="iskonto-satiri" style="background-color: #e9fbe9;">
+            <td colspan="3"><strong>İskonto (%${iskonto})</strong></td>
+            <td class="satirToplam">-${indirimMiktari.toFixed(2)}</td>
+            <td></td>
+        </tr>
+    `);
+
+            $('#toplamFiyat').text(yeniToplam.toFixed(2) + ' ₺');
+
+            // Ürün listesini derle
+            let urunListesiMetni = '';
+            $('#urunListesi tbody tr').each(function () {
+                let urunAdi = $(this).find('td:eq(0)').text().trim();
+                let fiyat = $(this).find('td:eq(1)').text().trim();
+                let adet = $(this).find('td:eq(2)').text().trim();
+                let toplam = $(this).find('td:eq(3)').text().trim();
+
+                if (!urunAdi || !toplam) return;
+
+                urunListesiMetni += `Ürün: ${urunAdi} - Adet: ${adet} - Tutar: ${toplam} `;
+            });
+
+            if ($('#UrunListesiHidden').length === 0) {
+                $('body').append('<input type="hidden" id="UrunListesiHidden" name="UrunListesi" />');
+            }
+            $('#UrunListesiHidden').val(urunListesiMetni.trim());
+
+            // Durumu güncelle
+            iskontoUygulandi = true;
+            uygulananIskonto = iskonto;
+
+            // Buton güncelle (önce eski eventleri kaldır)
+            $('#iskontoBtn').html('<i class="fas fa-times me-2"></i>İskontoyu İptal Et');
+            $('#iskontoBtn').off('click').on('click', iptalEt);
+            $('#iskontoBtn').removeAttr('data-bs-toggle data-bs-target');
+
+            $('#iskontoModal').modal('hide');
+
+            
+        }
+
+
+
+
+
+        function iptalEt() {
+            // İskonto satırını sil
+            $('.iskonto-satiri').remove();
+
+            // Durum sıfırla
+            iskontoUygulandi = false;
+            uygulananIskonto = 0;
+
+            // Toplamı güncelle
+            updateGenelToplam();
+
+            // Buton metni ve işlevini güncelle
+            $('#iskontoBtn').html('<i class="fas fa-percent me-2"></i>İskonto Uygula');
+            $('#iskontoBtn').off('click'); // Önce varsa eski click eventlerini kaldır
+            $('#iskontoBtn').prop('data-bs-toggle', 'modal');
+            $('#iskontoBtn').prop('data-bs-target', '#iskontoModal');
+            $('#iskontoBtn').on('click', function () {
+                $('#iskontoModal').modal('show');
+            });
+
+            // Swal alert
+            Swal.fire({
+                title: 'İskonto Kaldırıldı',
+                text: 'Uygulanan indirim iptal edildi.',
+                icon: 'info',
+                timer: 600,
+                showConfirmButton: false
+            });
+        }
+
+
+
 
     </script>
 

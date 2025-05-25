@@ -313,3 +313,20 @@ body {
         height: 50px;
     }
 }
+
+.action-buttons .btn {
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    min-width: 150px;
+    justify-content: center;
+}
+
+    .action-buttons .btn:hover {
+        transform: scale(1.03);
+        filter: brightness(1.05);
+    }
+
+    .action-buttons .btn i,
+    .action-buttons .btn span {
+        pointer-events: none;
+    }

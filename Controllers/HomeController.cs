@@ -130,27 +130,37 @@ namespace LordMarket.Controllers
                 yeniNot.AppendLine($"[Tarih: {tarih}]");
                 string[] urunSatirlari = UrunListesi.Split('\n');
 
-                foreach (var satir in urunSatirlari)
+                // Urun listesinde iskonto var mı diye kontrol et
+                bool iskontoVar = urunSatirlari.Any(satir => satir.Contains("İskonto"));
+
+                if (iskontoVar)
                 {
-                    if (!string.IsNullOrWhiteSpace(satir))
+                    toplam = 0; // İskonto varsa toplam sıfır olur
+                }
+                else
+                {
+                    foreach (var satir in urunSatirlari)
                     {
-                        string[] parcalar = satir.Split('-');
-                        if (parcalar.Length == 3)
+                        if (!string.IsNullOrWhiteSpace(satir))
                         {
-                            string urunAd = parcalar[0].Replace("Ürün:", "").Trim();
-                            string adetStr = parcalar[1].Replace("Adet:", "").Trim();
-                            string fiyatStr = parcalar[2].Replace("Tutar:", "").Replace("₺", "").Trim();
-
-                            bool adetOk = int.TryParse(adetStr, out int adet);
-                            bool fiyatOk = decimal.TryParse(fiyatStr, System.Globalization.NumberStyles.Any,
-                                System.Globalization.CultureInfo.InvariantCulture, out decimal birimFiyat);
-
-                            if (adetOk && fiyatOk)
+                            string[] parcalar = satir.Split('-');
+                            if (parcalar.Length == 3)
                             {
-                                decimal satirToplam = adet * birimFiyat;
-                                toplam += satirToplam;
+                                string urunAd = parcalar[0].Replace("Ürün:", "").Trim();
+                                string adetStr = parcalar[1].Replace("Adet:", "").Trim();
+                                string fiyatStr = parcalar[2].Replace("Tutar:", "").Replace("₺", "").Trim();
 
-                                yeniNot.AppendLine($"Ürün: {urunAd} | Adet: {adet} | Birim: {birimFiyat}₺ | Toplam: {satirToplam}₺");
+                                bool adetOk = int.TryParse(adetStr, out int adet);
+                                bool fiyatOk = decimal.TryParse(fiyatStr, System.Globalization.NumberStyles.Any,
+                                    System.Globalization.CultureInfo.InvariantCulture, out decimal birimFiyat);
+
+                                if (adetOk && fiyatOk)
+                                {
+                                    decimal satirToplam = adet * birimFiyat;
+                                    toplam += satirToplam;
+
+                                    yeniNot.AppendLine($"Ürün: {urunAd} | Adet: {adet} | Birim: {birimFiyat}₺ | Toplam: {satirToplam}₺");
+                                }
                             }
                         }
                     }
@@ -196,11 +206,12 @@ namespace LordMarket.Controllers
 
 
 
+
         private void UpdateSatisToplamTutar()
         {
             var satislar = db.SatisIslem
-                            .Where(s => s.Status == true && (!s.ToplamTutar.HasValue || s.ToplamTutar == 0))
-                            .ToList();
+                .Where((s => s.Status == true && (!s.ToplamTutar.HasValue || s.ToplamTutar == 0)))
+                .ToList();
 
             foreach (var satis in satislar)
             {
@@ -208,41 +219,57 @@ namespace LordMarket.Controllers
                     continue;
 
                 decimal toplam = 0;
+                decimal iskontoOrani = 0; // yüzde cinsinden, örn: 10 için 10
 
-                // Ürün listesini parçala
-                // Örnek: "Kristal Bardak - 1 Adet - 1.5₺ Maraş Otu - 1 Adet - 7₺ Benimo - 1 Adet - 28₺"
-                // Ürünler arası boşluklarla ayrılmış ama ürünler kendi içinde " - " ile ayrılmış.
-                // En sağdaki fiyat kısmını alacağız.
+                var urunSatirlari = satis.UrunListesi
+                    .Split(new[] { "Ürün:" }, StringSplitOptions.RemoveEmptyEntries);
 
-                var urunler = satis.UrunListesi.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-
-                // Daha sağlam çözüm için " - " ile ayırıp fiyatı almak gerek.
-                // Bu nedenle her ürünün "İsim - adet - fiyat₺" şeklinde ayrılması gerekiyor.
-                // Bunu ayırmak için, UrunListesi stringini "₺" işaretine göre split edip her ürün fiyatını alabiliriz.
-
-                // Alternatif olarak ürünleri '₺' işaretinden bölüp işlem yapalım:
-
-                var urunParcalari = satis.UrunListesi.Split(new char[] { '₺' }, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var parca in urunParcalari)
+                foreach (var satir in urunSatirlari)
                 {
-                    // Her parça örn: "Kristal Bardak - 1 Adet - 1.5"
-                    // Son - ile ayrılan fiyat kısmını alalım.
-
-                    var kismi = parca.Trim();
-
-                    // Son '-' işaretinden sonra fiyat olmalı
-                    int sonTireIndex = kismi.LastIndexOf('-');
-                    if (sonTireIndex < 0)
-                        continue;
-
-                    string fiyatStr = kismi.Substring(sonTireIndex + 1).Trim();
-
-                    // Fiyatı decimal'e çevirmeye çalış
-                    if (decimal.TryParse(fiyatStr.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal fiyat))
+                    if (satir.Contains("İskonto"))
                     {
-                        toplam += fiyat;
+                        // Satırdan %10 gibi ifadeyi yakalayalım
+                        var yüzdeIndex = satir.IndexOf('%');
+                        if (yüzdeIndex > 0)
+                        {
+                            // % işaretinden önceki iki haneli oranı alma mantığı
+                            // Satırın başında " İskonto (%10) - ..." var
+                            // Parantez içini almak için önce '(' ve ')' indekslerini bul
+                            int parantezAcIndex = satir.IndexOf('(');
+                            int parantezKapaIndex = satir.IndexOf(')');
+                            if (parantezAcIndex >= 0 && parantezKapaIndex > parantezAcIndex)
+                            {
+                                string oranStr = satir.Substring(parantezAcIndex + 1, parantezKapaIndex - parantezAcIndex - 1);
+                                // oranStr = "%10"
+                                oranStr = oranStr.Replace("%", "").Trim();
+                                if (decimal.TryParse(oranStr, out decimal oran))
+                                {
+                                    iskontoOrani = oran;
+                                }
+                            }
+                        }
                     }
+                    else
+                    {
+                        // İskonto olmayan satırlardaki tutarları topla
+                        var tutarIndex = satir.IndexOf("Tutar:");
+                        if (tutarIndex == -1)
+                            continue;
+
+                        var tutarStr = satir.Substring(tutarIndex + "Tutar:".Length).Trim();
+
+                        if (decimal.TryParse(tutarStr.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal tutar))
+                        {
+                            toplam += tutar;
+                        }
+                    }
+                }
+
+                // İskonto varsa toplamdan düş
+                if (iskontoOrani > 0)
+                {
+                    var indirimMiktari = toplam * (iskontoOrani / 100);
+                    toplam -= indirimMiktari;
                 }
 
                 satis.ToplamTutar = toplam;
@@ -250,6 +277,8 @@ namespace LordMarket.Controllers
 
             db.SaveChanges();
         }
+
+
 
         [HttpPost]
         public ActionResult YeniUrun(Urunler urun)
