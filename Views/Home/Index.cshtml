@@ -157,19 +157,22 @@
                         </button>
 
                         <!-- İskonto -->
+                        <!-- İskonto -->
                         <button type="button" id="iskontoBtn"
-                                class="btn btn-warning d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-dark"
+                                class="btn d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
+                                style="background-color: #003d60;"
                                 data-bs-toggle="modal" data-bs-target="#iskontoModal">
                             <i class="fas fa-percent"></i>
                             <span>İskonto</span>
                         </button>
+
 
                         <!-- Admin -->
                         <a href="/Admin/Index"
                            class="btn btn-warning d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-dark"
                            title="Admin Ekranı">
                             <i class="fas fa-toolbox"></i>
-                            
+
                         </a>
 
                         <!-- Makbuz -->
@@ -178,7 +181,7 @@
                                 data-bs-toggle="modal" data-bs-target="#makbuzModal"
                                 title="Son İşlemin Makbuzunu Yazdır">
                             🧾
-                            
+
                         </button>
 
                     </div>
@@ -859,7 +862,9 @@
             $('.odeme-btn[data-tip="Nakit"]');
             $('#musteriSelect').val('');
             $('#customerSelectContainer').hide();
+            $('#iskontoBtn').html('<i class="fas fa-percent me-2"></i>İskonto');
             $('#barkodInput').val('').focus();
+
         }
 
         function updateGenelToplam() {
@@ -1090,6 +1095,19 @@
             });
         }
 
+        $('#iskontoModal, #makbuzModal').on('hidden.bs.modal', function () {
+            $('#iskontoModal').modal('hide');
+            $('#makbuzModal').modal('hide');
+
+            setTimeout(function () {
+                const input = $('#barkodInput');
+                input.val('');
+                input[0].scrollIntoView({ behavior: "smooth", block: "center" });
+                input.focus();
+            }, 100);
+        });
+
+        
 
         function hizliUrunEkle(barkod) {
             $('#barkodInput').val(barkod);
@@ -1254,6 +1272,36 @@
                 return;
             }
 
+            // Ürün listesi boşsa uyarı verip çık
+            let urunSatirSayisi = $('#urunListesi tbody tr').not('.iskonto-satiri').length;
+            if (urunSatirSayisi === 0) {
+                let uyarı = $('<div>')
+                    .text('Ürün listesi boş. İskonto uygulanamaz.')
+                    .css({
+                        position: 'fixed',
+                        top: '20px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        backgroundColor: '#ffdddd',
+                        color: '#a94442',
+                        border: '1px solid #a94442',
+                        padding: '10px 20px',
+                        borderRadius: '8px',
+                        zIndex: 9999,
+                        fontWeight: 'bold',
+                    })
+                    .appendTo('body');
+
+                setTimeout(function () {
+                    uyarı.fadeOut(300, function () {
+                        $(this).remove();
+                    });
+                }, 600); // 0.6 saniye sonra kaybolur
+
+                return;
+            }
+
+
             // Global oncekiToplam'ı güncelle
             oncekiToplam = 0;
             $('#urunListesi tbody tr').each(function () {
@@ -1281,6 +1329,7 @@
     `);
 
             $('#toplamFiyat').text(yeniToplam.toFixed(2) + ' ₺');
+            $('#barkodInput').val('').focus();
 
             // Ürün listesini derle
             let urunListesiMetni = '';
@@ -1310,6 +1359,20 @@
             $('#iskontoBtn').removeAttr('data-bs-toggle data-bs-target');
 
             $('#iskontoModal').modal('hide');
+            // Modal tamamen kapandıktan sonra focus ver
+            $('#iskontoModal').on('hidden.bs.modal', function () {
+                setTimeout(function () {
+                    $('#barkodInput').val('').focus();
+                }, 100); // Modal tamamen kapandıktan 100ms sonra focus
+            });
+
+            $('#iskontoModal').modal('hide');
+            setTimeout(function () {
+                const input = $('#barkodInput');
+                input.val('');
+                input[0].scrollIntoView({ behavior: "smooth", block: "center" });
+                input.focus();
+            }, 100);
 
             
         }
@@ -1330,13 +1393,16 @@
             updateGenelToplam();
 
             // Buton metni ve işlevini güncelle
-            $('#iskontoBtn').html('<i class="fas fa-percent me-2"></i>İskonto Uygula');
+            $('#iskontoBtn').html('<i class="fas fa-percent me-2"></i>İskonto');
             $('#iskontoBtn').off('click'); // Önce varsa eski click eventlerini kaldır
             $('#iskontoBtn').prop('data-bs-toggle', 'modal');
             $('#iskontoBtn').prop('data-bs-target', '#iskontoModal');
             $('#iskontoBtn').on('click', function () {
                 $('#iskontoModal').modal('show');
             });
+
+            $('#barkodInput').val('').focus();
+
 
             // Swal alert
             Swal.fire({
@@ -1346,6 +1412,9 @@
                 timer: 600,
                 showConfirmButton: false
             });
+
+            $('#barkodInput').val('').focus();
+
         }
 
 
