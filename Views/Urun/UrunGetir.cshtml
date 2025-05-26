@@ -4,95 +4,118 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        
+            <h1 class="h3 mb-0"><i class="fas fa-boxes me-2 text-dark"></i>Ürün Yönetimi</h1>
+        
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent p-0">
+                <li class="breadcrumb-item">
+                    <a href="/Admin/Index" class="text-decoration-none text-dark">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li class="breadcrumb-item ">
+                    <a href="/Urun/Urunler" class="text-decoration-none text-dark">
+                        Ürün Listesi
+                    </a>
 
-
-<div class="card shadow-sm border-light rounded" style="max-width: 600px; margin: 20px auto;">
-    <div class="card-header tablestyle text-white text-center">
-        <h3><b>Ürün Güncelle</b></h3>
+                </li>
+                <li class="breadcrumb-item active">Ürün Güncelle</li>
+            </ol>
+        </nav>
     </div>
 
-    @using (Html.BeginForm("UrunGuncelle", "Urun", FormMethod.Post))
-    {
-        <div class="card-body">
-            @Html.HiddenFor(k => k.ID)
-
-            <div class="mb-3">
-                <label for="Barkod" class="form-label">Barkod:</label>
-                <div class="input-group">
-                    @Html.TextBoxFor(k => k.Barkod, new { @class = "form-control", id = "Barkod", required = "required", placeholder = "Barkod" })
-                    <button type="button" class="btn btn-warning" onclick="kameraIleTara()" title="Kamera ile Tara">📷</button>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <div id="qr-reader" style="width: 100%; max-width: 400px; display: none;"></div>
-            </div>
-
-
-
-            <div class="mb-3">
-                <label>Ürün Adı:</label>
-                @Html.TextBoxFor(k => k.UrunAd, new { @class = "form-control", id = "UrunAd", required = "required", placeholder = "Ürün Adı" })
-            </div>
-
-            <div class="mb-3">
-                <label>Ürün Kategorisi:</label>
-                @Html.TextBoxFor(k => k.UrunKategori, new { @class = "form-control", id = "UrunKategori", placeholder = "Ürün Kategorisi" })
-            </div>
-
-            <div class="mb-3">
-                <label>Ürün Alış Fiyatı:</label>
-                @Html.TextBoxFor(k => k.UrunAlisFiyati, new { @class = "form-control", id = "UrunAlisFiyati", placeholder = "UrunAlisFiyati", step = "0.01", type = "number" })
-            </div>
-
-            <div class="mb-3">
-                <label>KDV Oranı (%):</label>
-                @Html.TextBoxFor(k => k.KDVOran, new { @class = "form-control", id = "KDVOran", required = "required", placeholder = "KDV Oranı", value = Model?.KDVOran?.ToString() == "0" ? "18" : Model?.KDVOran?.ToString(), step = "0.01", type = "number" })
-            </div>
-
-            <div class="mb-3">
-                <label>Hesaplanan Ürün Fiyatı:</label>
-                @Html.TextBoxFor(k => k.UrunFiyat, new { @class = "form-control", id = "UrunFiyat", required = "required", placeholder = "Ürün Fiyatı", step = "0.01", type = "number" })
-            </div>
-
-
-
-
-
-            <div class="mb-3">
-                <label for="UrunResmi" class="form-label">Ürün Resmi:</label>
-                @Html.TextBoxFor(k => k.UrunResmi, new { @class = "form-control", id = "UrunResmi", placeholder = "Ürün resmi girin", oninput = "previewImage()" })
-                <div class="mt-2 text-center">
-                    <img id="preview" class="rounded border" style="max-width: 300px; max-height: 200px; display: none;" />
-                </div>
-            </div>
-
-            <div class="col-md-6 mt-4 d-flex align-items-center">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="HizliUrunMu" value="true" id="HizliUrunMu" @(Model.HizliUrunMu == true ? "checked" : "") />
-                    <label class="form-check-label" for="HizliUrunMu">Hızlı Ürün mü?</label>
-                </div>
-                <input type="hidden" name="HizliUrunMu" value="false" />
-            </div>
-
-
-
-
-            <div class="mb-3">
-                <label for="status" class="form-label">Status:</label>
-                @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
-                {
-                    new SelectListItem { Text = "Aktif", Value = "true" },
-                    new SelectListItem { Text = "Pasif", Value = "false" }
-                }, new { @class = "form-select", id = "status", required = "required" })
-            </div>
+    <div class="card shadow-sm border-light rounded" style="max-width: 600px; margin: 20px auto;">
+        <div class="card-header tablestyle text-white text-center">
+            <h3><b>Ürün Güncelle</b></h3>
         </div>
 
-        <div class="card-footer text-center">
-            <a href="/Urun/Urunler/" class="btn btn-danger btn-sm">İptal</a>
-            <button type="submit" class="btn tablestyle btn-sm">Güncelle</button>
-        </div>
-    }
+        @using (Html.BeginForm("UrunGuncelle", "Urun", FormMethod.Post))
+        {
+            <div class="card-body">
+                @Html.HiddenFor(k => k.ID)
+
+                <div class="mb-3">
+                    <label for="Barkod" class="form-label">Barkod:</label>
+                    <div class="input-group">
+                        @Html.TextBoxFor(k => k.Barkod, new { @class = "form-control", id = "Barkod", required = "required", placeholder = "Barkod" })
+                        <button type="button" class="btn btn-warning" onclick="kameraIleTara()" title="Kamera ile Tara">📷</button>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div id="qr-reader" style="width: 100%; max-width: 400px; display: none;"></div>
+                </div>
+
+
+
+                <div class="mb-3">
+                    <label>Ürün Adı:</label>
+                    @Html.TextBoxFor(k => k.UrunAd, new { @class = "form-control", id = "UrunAd", required = "required", placeholder = "Ürün Adı" })
+                </div>
+
+                <div class="mb-3">
+                    <label>Ürün Kategorisi:</label>
+                    @Html.TextBoxFor(k => k.UrunKategori, new { @class = "form-control", id = "UrunKategori", placeholder = "Ürün Kategorisi" })
+                </div>
+
+                <div class="mb-3">
+                    <label>Ürün Alış Fiyatı:</label>
+                    @Html.TextBoxFor(k => k.UrunAlisFiyati, new { @class = "form-control", id = "UrunAlisFiyati", placeholder = "UrunAlisFiyati", step = "0.01", type = "number" })
+                </div>
+
+                <div class="mb-3">
+                    <label>KDV Oranı (%):</label>
+                    @Html.TextBoxFor(k => k.KDVOran, new { @class = "form-control", id = "KDVOran", required = "required", placeholder = "KDV Oranı", value = Model?.KDVOran?.ToString() == "0" ? "18" : Model?.KDVOran?.ToString(), step = "0.01", type = "number" })
+                </div>
+
+                <div class="mb-3">
+                    <label>Hesaplanan Ürün Fiyatı:</label>
+                    @Html.TextBoxFor(k => k.UrunFiyat, new { @class = "form-control", id = "UrunFiyat", required = "required", placeholder = "Ürün Fiyatı", step = "0.01", type = "number" })
+                </div>
+
+
+
+
+
+                <div class="mb-3">
+                    <label for="UrunResmi" class="form-label">Ürün Resmi:</label>
+                    @Html.TextBoxFor(k => k.UrunResmi, new { @class = "form-control", id = "UrunResmi", placeholder = "Ürün resmi girin", oninput = "previewImage()" })
+                    <div class="mt-2 text-center">
+                        <img id="preview" class="rounded border" style="max-width: 300px; max-height: 200px; display: none;" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 mt-4 d-flex align-items-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="HizliUrunMu" value="true" id="HizliUrunMu" @(Model.HizliUrunMu == true ? "checked" : "") />
+                        <label class="form-check-label" for="HizliUrunMu">Hızlı Ürün mü?</label>
+                    </div>
+                    <input type="hidden" name="HizliUrunMu" value="false" />
+                </div>
+
+
+
+
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status:</label>
+                    @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Aktif", Value = "true" },
+                        new SelectListItem { Text = "Pasif", Value = "false" }
+                    }, new { @class = "form-select", id = "status", required = "required" })
+                </div>
+            </div>
+
+            <div class="card-footer text-center">
+                <a href="/Urun/Urunler/" class="btn btn-danger btn-sm">İptal</a>
+                <button type="submit" class="btn tablestyle btn-sm">Güncelle</button>
+            </div>
+        }
+    </div>
+
 </div>
 
 <script>

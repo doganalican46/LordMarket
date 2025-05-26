@@ -1,5 +1,4 @@
-﻿﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -10,96 +9,221 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #003d60;
+            --primary-light: #006494;
+            --accent-color: #f8f9fa;
+        }
+
         body {
-            background: url('https://www.transparenttextures.com/patterns/food.png');
-            background-color: #fff8f0;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
         }
 
         .login-container {
-            max-width: 400px;
+            max-width: 450px;
+            width: 100%;
             margin: auto;
-            padding: 30px;
         }
 
         .login-card {
             background: #ffffff;
-            border-radius: 1rem;
-            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 61, 96, 0.1);
             overflow: hidden;
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
         }
 
         .login-header {
-            background: linear-gradient(135deg, #ff8c00, #ffb347);
+            background: var(--primary-color);
             color: white;
-            padding: 1.8rem;
+            padding: 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-            .login-header h2 {
-                font-size: 1.75rem;
-            }
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            transform: rotate(30deg);
+        }
 
-            .login-header i {
-                font-size: 1.5rem;
-                margin-right: 0.5rem;
-            }
+        .login-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .login-header i {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-weight: 300;
+            margin-bottom: 0;
+            position: relative;
+        }
 
         .login-body {
-            padding: 2rem;
+            padding: 2.5rem;
         }
 
         .form-control {
-            border-radius: 0.5rem;
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(0, 61, 96, 0.1);
         }
 
         .input-group-text {
-            background: #fff3e6;
-            border: 1px solid #ffcba4;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-left: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .input-group:focus-within .input-group-text {
+            border-color: var(--primary-color);
         }
 
         .btn-login {
-            background: #ffa726;
+            background: var(--primary-color);
             color: white;
-            font-weight: 600;
+            font-weight: 500;
             border: none;
-            transition: 0.3s;
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
         }
 
-            .btn-login:hover {
-                background: #fb8c00;
-            }
+        .btn-login:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 61, 96, 0.2);
+        }
 
-        .btn-warning {
-            margin-top: 0.5rem;
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            margin-top: 1rem;
             width: 100%;
+            border-radius: 8px;
+            padding: 10px;
+            background: #f8f9fa;
+            color: var(--primary-color);
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            color: var(--primary-light);
         }
 
         .form-check-label {
             color: #6b7280;
+            font-weight: 400;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
         .alert {
             font-size: 0.9rem;
+            border-radius: 8px;
         }
 
         a.link-primary {
+            color: var(--primary-color);
             text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
         }
 
-            a.link-primary:hover {
-                text-decoration: underline;
-            }
+        a.link-primary:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
+        .floating-label {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .floating-label label {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            color: #6b7280;
+            transition: all 0.3s;
+            pointer-events: none;
+            background: white;
+            padding: 0 5px;
+        }
+
+        .floating-label input:focus + label,
+        .floating-label input:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 10px;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+        }
+
+        .password-toggle {
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.3s;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        
     </style>
 </head>
 <body>
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container">
         <div class="login-container">
             <div class="login-card">
                 <div class="login-header">
-                    <h2><i class="fas fa-shopping-basket"></i> Lord Büfe & Market</h2>
-                    <p class="mb-0">Giriş Paneli</p>
+                    <h2><i class="fas fa-store-alt"></i> Lord Büfe & Market</h2>
+                    <p>Hesabınıza giriş yapın</p>
                 </div>
 
                 <div class="login-body">
@@ -109,32 +233,37 @@
                     <!-- Success Message -->
                     <div id="successAlert" class="alert alert-success d-none text-center fw-bold"></div>
 
-                    @using (Html.BeginForm("Login", "Home", FormMethod.Post))
-                    {
-                        <div class="mb-3">
-                            <label for="Username" class="form-label">Kullanıcı Adı veya E-Mail</label>
-                            <input type="text" class="form-control" id="Username" name="Username" placeholder="Kullanıcı adı veya e-mail" required>
+                    <form action="/Home/Login" method="post">
+                        <div class="mb-4 floating-label">
+                            <input type="text" class="form-control" id="Username" name="Username" placeholder=" " required>
+                            <label for="Username">Kullanıcı Adı veya E-Mail</label>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="Password" class="form-label">Şifre</label>
+                        <div class="mb-4 floating-label">
                             <div class="input-group">
-                                <input type="password" class="form-control" id="password" name="Password" placeholder="Şifreniz" required>
-                                <span class="input-group-text" onclick="togglePassword()" style="cursor:pointer;">
+                                <input type="password" class="form-control" id="password" name="Password" placeholder=" " required>
+                                <label for="password">Şifre</label>
+                                <span class="input-group-text password-toggle" onclick="togglePassword()">
                                     <i class="fas fa-eye" id="eyeIcon"></i>
                                 </span>
                             </div>
                         </div>
 
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <div class="mb-4 form-check d-flex align-items-center">
+                            <input type="checkbox" class="form-check-input me-2" id="rememberMe">
                             <label class="form-check-label" for="rememberMe">Beni Hatırla</label>
                         </div>
 
-                        <button type="submit" class="btn btn-login w-100"><i class="fas fa-sign-in-alt me-2"></i>Giriş Yap</button>
-                    }
+                        <button type="submit" class="btn btn-login w-100 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                        </button>
 
-                    <a href="/Home/Index" class="btn btn-warning mt-3"><i class="fas fa-arrow-left me-1"></i> Satış Ekranına Dön</a>
+                        
+                    </form>
+
+                    <a href="/Home/Index" class="btn btn-secondary mt-4">
+                        <i class="fas fa-arrow-left me-2"></i> Satış Ekranına Dön
+                    </a>
                 </div>
             </div>
         </div>
@@ -191,6 +320,18 @@
             if (errorMessage) {
                 showAlert("error", decodeURIComponent(errorMessage));
             }
+
+            // Add animation to form elements
+            const formElements = document.querySelectorAll('.form-control, .btn');
+            formElements.forEach((el, index) => {
+                el.style.opacity = 0;
+                el.style.transform = "translateY(20px)";
+                el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                setTimeout(() => {
+                    el.style.opacity = 1;
+                    el.style.transform = "translateY(0)";
+                }, 100 + (index * 100));
+            });
         };
     </script>
 </body>
