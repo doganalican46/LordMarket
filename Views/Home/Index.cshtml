@@ -711,6 +711,7 @@
                         });
 
                         temizle();  // Swal'dan sonra fonksiyonu çağır
+                        location.reload(); 
 
                         $('#bekletBtn')
                             .removeClass('btn-secondary')
@@ -758,14 +759,23 @@
                                 $('#urunListesi tbody').append(yeniSatir);
                             }
                         });
+                        $('#barkodInput').val('').focus();
+
 
                         Swal.fire({
                             icon: 'success',
                             title: 'İşlem Yüklendi',
                             text: 'Bekleyen işlem listeye eklendi.',
                             timer: 600,
-                            showConfirmButton: false
+                            showConfirmButton: false,
+                            willClose: () => {
+                                $('#barkodInput').val('').focus();
+                            }
+                        }).then(() => {
+                            // Swal kapanınca çalışır
+                            $('#barkodInput').val('').focus();
                         });
+
 
                         $('#bekletBtn')
                             .removeClass('btn-warning')
@@ -774,6 +784,7 @@
                             .attr('onclick', 'islemBeklet()');
 
                         updateGenelToplam(); // toplamları güncelle
+                        $('#barkodInput').val('').focus();
                     } else {
                         Swal.fire('Uyarı', 'Beklemede işlem bulunamadı.', 'info');
                     }
