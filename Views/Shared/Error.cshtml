@@ -1,4 +1,4 @@
-﻿﻿@{
+﻿@{
     ViewBag.Title = "Error - Alley Software";
     Layout = null;
 }
@@ -16,68 +16,159 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
 
     <style>
+        :root {
+            --primary-color: #003d60;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ff6b35;
+        }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: black;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 61, 96, 0.05) 0%, rgba(255,255,255,0) 90%);
         }
 
         .error-container {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.3);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 61, 96, 0.1);
             text-align: center;
-            max-width: 500px;
+            max-width: 600px;
+            width: 100%;
             position: relative;
+            border-top: 5px solid var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .error-container:hover {
+            transform: translateY(-5px);
         }
 
         .error-icon {
-            font-size: 60px;
-            color: #dc3545;
-            margin-bottom: 15px;
+            font-size: 80px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .brand-logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 28px;
         }
 
         .error-message {
             font-size: 18px;
-            margin-top: 15px;
-            color: #333;
+            margin: 20px 0;
+            color: #555;
+            line-height: 1.6;
+            padding: 15px;
+            background-color: rgba(0, 61, 96, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
         }
 
-        .btn-back {
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
             margin-top: 20px;
+            transition: all 0.3s ease;
         }
 
-        .close-icon {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 24px;
-            color: #dc3545;
-            cursor: pointer;
+        .btn-primary:hover {
+            background-color: #002b44;
+            border-color: #002b44;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 61, 96, 0.2);
+        }
+
+        .error-details {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .contact-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+        @@media (max-width: 576px) {
+            .error-container {
+                padding: 25px;
+            }
+
+            .error-icon {
+                font-size: 60px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .error-message {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="error-container">
-
+        <a class="brand-logo" href="/Home/Index">
+            <i class="fas fa-store-alt"></i> <span>LordTekel</span>
+        </a>
 
         <div class="error-icon">
-            <i class="fas fa-times-circle"></i> 
+            <i class="fas fa-exclamation-triangle"></i>
         </div>
 
-        <a class="navbar-brand" href="/User/Index">
-            <i class="fas fa-code"></i> <strong>LordTekel</strong>
+        <h1>İşlem Sırasında Bir Hata Oluştu</h1>
+
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+            <i class="fas fa-home me-2"></i> Ana Sayfaya Dön
         </a>
 
-        <h1 class="text-danger">Bir Hata Oluştu</h1>
-        <p class="error-message">@Model</p>
-        <a href="@Url.Action("Index", "Home")" class="btn btn-danger btn-back">
-            <i class="fas fa-home"></i> Ana Sayfaya Dön
-        </a>
+        <div class="error-details mt-4">
+            Sorun devam ederse <a href="https://www.doganalican46.dev/#contact" target="_blank" class="contact-link">destek ekibimizle</a> iletişime geçin.
+        </div>
     </div>
 
     <!-- Bootstrap & FontAwesome JS -->

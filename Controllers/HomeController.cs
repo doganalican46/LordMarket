@@ -26,8 +26,10 @@ namespace LordMarket.Controllers
             public string MusteriAdSoyad { get; set; }
         }
 
-
-
+        public ActionResult Error()
+        {
+            return View(); 
+        }
 
 
         public ActionResult Index()
