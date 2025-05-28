@@ -47,7 +47,6 @@
             .numpad-key:hover {
                 background-color: #ccc;
             }
-
     </style>
 
 </head>
@@ -446,7 +445,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn "style="background-color: #003d60; color:white;">Kaydet</button>
+                        <button type="submit" class="btn " style="background-color: #003d60; color:white;">Kaydet</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
                     </div>
                 </form>
@@ -476,11 +475,88 @@
     </div>
 
 
+    <!-- Uyarı modalı -->
+    <div id="reloadModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+background-color: rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background-color:white; padding:20px; border-radius:10px; text-align:center;">
+            <p>10 saniye sonra sayfa yenilenecek. Devam etmek istiyor musunuz?</p>
+            <button onclick="cancelReload()">İptal</button>
+        </div>
+    </div>
 
     <script>
+        let reloadTimer;
+        let warningTimer;
+
+        window.addEventListener('load', function () {
+            console.log("Sayfa yüklendi");
+            warningTimer = setTimeout(showReloadWarning, 600000); // 10 dakika
+        });
+
+        function showReloadWarning() {
+            console.log("SweetAlert gösteriliyor");
+
+            // SweetAlert uyarısı
+            Swal.fire({
+                title: 'Sayfa Yenilenecek!',
+                text: '10 saniye içinde sayfa otomatik olarak yenilenecek. İptal etmek ister misiniz?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Bekle',
+                cancelButtonText: 'İptal',
+                timer: 10000,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    // Zamanlayıcı başlat
+                    reloadTimer = setTimeout(() => {
+                        console.log("Sayfa yenileniyor");
+                        location.reload();
+
+                    }, 8000);
+
+                },
+
+                preConfirm: () => {
+                    clearTimeout(reloadTimer); // Kullanıcı 'Bekle' derse bile sayfa yenilenmesin
+                    console.log("Yenileme kullanıcı tarafından ertelendi.");
+                    $('#barkodInput').val('').focus();
+                    warningTimer = setTimeout(showReloadWarning, 600000);
+                },
+                willClose: () => {
+                    // Eğer kullanıcı iptal ederse de temizle
+                    clearTimeout(reloadTimer);
+                    console.log("Yenileme iptal edildi.");
+                    $('#barkodInput').val('').focus();
+                    warningTimer = setTimeout(showReloadWarning, 600000);
+                }
+            });
+        }
+
+        function cancelReload() {
+            console.log("Yenileme iptal edildi");
+            clearTimeout(reloadTimer);
+            document.getElementById('reloadModal').style.display = 'none';
+            $('#barkodInput').val('').focus();
+
+            // Swal ile bildirim
+            Swal.fire({
+                icon: 'info',
+                title: 'Yenileme İptal Edildi',
+                text: 'Sayfa yenileme işlemi durduruldu.',
+                timer: 1000,
+                showConfirmButton: false
+            });
+
+            warningTimer = setTimeout(showReloadWarning, 5000); // 10 dakika sonra yeniden başlat
+        }
 
 
 
+
+
+        11.51-12.01
 
 
 
@@ -714,7 +790,7 @@
                         });
 
                         temizle();  // Swal'dan sonra fonksiyonu çağır
-                        location.reload(); 
+                        location.reload();
 
                         $('#bekletBtn')
                             .removeClass('btn-secondary')
@@ -747,18 +823,18 @@
                                 let toplam = (adet * fiyat).toFixed(2);
 
                                 let yeniSatir = `
-        <tr data-barkod="${urunAd}">
-            <!-- İstersen gerçek barkodla değiştir -->
-            <td>${urunAd}</td>
-            <td class="fiyat">${fiyat}</td>
-            <td class="adet">${adet}</td>
-            <td class="satirToplam">${toplam}</td>
-            <td>
-                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-            </td>
-        </tr>`;
+                    <tr data-barkod="${urunAd}">
+                        <!-- İstersen gerçek barkodla değiştir -->
+                        <td>${urunAd}</td>
+                        <td class="fiyat">${fiyat}</td>
+                        <td class="adet">${adet}</td>
+                        <td class="satirToplam">${toplam}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`;
                                 $('#urunListesi tbody').append(yeniSatir);
                             }
                         });
@@ -913,16 +989,16 @@
 
                         $('#urunListesi tbody').prepend(
                             `<tr data-barkod="${barkod}">
-            <td>${res.urunAd}</td>
-            <td class="fiyat">${res.fiyat}</td>
-            <td class="adet">1</td>
-            <td class="satirToplam">${toplamSatir}</td>
-            <td>
-                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-            </td>
-        </tr>`
+                        <td>${res.urunAd}</td>
+                        <td class="fiyat">${res.fiyat}</td>
+                        <td class="adet">1</td>
+                        <td class="satirToplam">${toplamSatir}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -1108,7 +1184,7 @@
             }, 100);
         });
 
-        
+
 
         function hizliUrunEkle(barkod) {
             $('#barkodInput').val(barkod);
@@ -1147,16 +1223,16 @@
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-            <td>${urunAdi}</td>
-            <td class="fiyat">${fiyat.toFixed(2)}</td>
-            <td class="adet">1</td>
-            <td class="satirToplam">${fiyat.toFixed(2)}</td>
-            <td>
-                <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-            </td>
-        </tr>`
+                        <td>${urunAdi}</td>
+                        <td class="fiyat">${fiyat.toFixed(2)}</td>
+                        <td class="adet">1</td>
+                        <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`
             );
 
             updateGenelToplam();
@@ -1322,12 +1398,12 @@
 
             // İskonto satırını ekle
             $('#urunListesi tbody').append(`
-        <tr class="iskonto-satiri" style="background-color: #e9fbe9;">
-            <td colspan="3"><strong>İskonto (%${iskonto})</strong></td>
-            <td class="satirToplam">-${indirimMiktari.toFixed(2)}</td>
-            <td></td>
-        </tr>
-    `);
+                    <tr class="iskonto-satiri" style="background-color: #e9fbe9;">
+                        <td colspan="3"><strong>İskonto (%${iskonto})</strong></td>
+                        <td class="satirToplam">-${indirimMiktari.toFixed(2)}</td>
+                        <td></td>
+                    </tr>
+                `);
 
             $('#toplamFiyat').text(yeniToplam.toFixed(2) + ' ₺');
             $('#barkodInput').val('').focus();
@@ -1375,7 +1451,7 @@
                 input.focus();
             }, 100);
 
-            
+
         }
 
 
