@@ -132,14 +132,14 @@
 
                     <div class="action-buttons d-flex gap-2 flex-wrap mb-3">
 
-                        <!-- Temizle -->
+                        <!-- Temizle - kırmızı -->
                         <button class="btn btn-danger d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold"
                                 onclick="temizle()">
                             <i class="fas fa-trash-alt"></i>
                             <span>Temizle</span>
                         </button>
 
-                        <!-- İşlem Beklet -->
+                        <!-- İşlem Beklet - gri -->
                         <button id="bekletBtn" type="button"
                                 class="btn btn-secondary d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold"
                                 onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
@@ -147,7 +147,7 @@
                             <span>İşlem Beklet</span>
                         </button>
 
-                        <!-- Ürün İşlem -->
+                        <!-- Ürün İşlem - yeşil -->
                         <button type="button"
                                 class="btn btn-success d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold"
                                 data-bs-toggle="modal" data-bs-target="#urunEkleModal">
@@ -155,8 +155,7 @@
                             <span>Ürün İşlem</span>
                         </button>
 
-                        <!-- İskonto -->
-                        <!-- İskonto -->
+                        <!-- İskonto - lacivert -->
                         <button type="button" id="iskontoBtn"
                                 class="btn d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
                                 style="background-color: #003d60;"
@@ -165,23 +164,31 @@
                             <span>İskonto</span>
                         </button>
 
-
-                        <!-- Admin -->
+                        <!-- Admin - sarı -->
                         <a href="/Admin/Index"
                            class="btn btn-warning d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-dark"
                            title="Admin Ekranı">
                             <i class="fas fa-toolbox"></i>
-
                         </a>
 
-                        <!-- Makbuz -->
+                        <!-- Makbuz - açık mavi -->
                         <button type="button"
                                 class="btn btn-info d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
                                 data-bs-toggle="modal" data-bs-target="#makbuzModal"
                                 title="Son İşlemin Makbuzunu Yazdır">
                             🧾
-
                         </button>
+
+                        <!-- Müşteri - turkuaz -->
+                        <button type="button" id="borcOdeModalBtn"
+                                class="btn d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
+                                style="background-color: #ff6a00;"
+                                data-bs-toggle="modal" data-bs-target="#borcOdeModal"
+                                title="Veresiye Borç Ödeme">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span>Veresiye Borç Öde</span>
+                        </button>
+
 
                     </div>
                 </div>
@@ -474,89 +481,121 @@
         </div>
     </div>
 
+    <div class="modal fade" id="borcOdeModal" tabindex="-1" aria-labelledby="borcOdeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header "style="background-color: #003d60; color:white;">
+                    <h5 class="modal-title">Borç Öde</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
 
-    <!-- Uyarı modalı -->
-    <div id="reloadModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-background-color: rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
-        <div style="background-color:white; padding:20px; border-radius:10px; text-align:center;">
-            <p>10 saniye sonra sayfa yenilenecek. Devam etmek istiyor musunuz?</p>
-            <button onclick="cancelReload()">İptal</button>
+                    <!-- Müşteri Seçimi -->
+                    <div class="form-group">
+                        <label>Müşteri Seçin</label>
+                        <select id="borcMusteriSelect" class="form-control" onchange="getMusteriBorc()">
+                            <option selected disabled>Müşteri Seçin</option>
+                            @foreach (var item in Model.Musteriler )
+                            {
+                                <option value="@item.ID">@item.MusteriAdSoyad</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Seçili Müşteri Borcu -->
+                    <div class="form-group mt-2">
+                        <label>Toplam Borç</label>
+                        <input type="text" id="ToplamBorc" class="form-control" readonly />
+                    </div>
+
+                    <!-- Ödenecek Tutar -->
+                    <div class="form-group mt-2">
+                        <label>Ödenen Borç Tutarı</label>
+                        <input type="text" id="OdenenBorcTutar" class="form-control" required />
+                    </div>
+
+                    <!-- Ödeme Tipi -->
+                    <div class="form-group mt-2">
+                        <label>Ödeme Tipi</label>
+                        <select id="OdemeTipi" class="form-control">
+                            <option value="Nakit">Nakit</option>
+                            <option value="Kart">Kart</option>
+                            <option value="RaporaYansitma">Rapora Yansıtma</option>
+                        </select>
+                    </div>
+
+                    <!-- Not -->
+                    <div class="form-group mt-2">
+                        <label>Kısa Not (İsteğe Bağlı)</label>
+                        <textarea id="BorcNot" class="form-control" rows="2" placeholder="Açıklama..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn" style="background-color: #003d60; color:white;" onclick="submitBorcOdeForm()">Kaydet</button>
+
+                </div>
+            </div>
         </div>
     </div>
 
+
     <script>
         let reloadTimer;
-        let warningTimer;
+        let checkInterval;
 
         window.addEventListener('load', function () {
             console.log("Sayfa yüklendi");
-            warningTimer = setTimeout(showReloadWarning, 600000); // 10 dakika
+            checkInterval = setInterval(kontrolVeYenile, 5 * 60 * 1000); 
         });
 
-        function showReloadWarning() {
-            console.log("SweetAlert gösteriliyor");
+        function kontrolVeYenile() {
+            let urunSatirSayisi = $('#urunListesi tbody tr').not('.iskonto-satiri').length;
+            if (urunSatirSayisi === 0) {
+                console.log("Ürün listesi boş, yenileme için onay isteniyor.");
 
-            // SweetAlert uyarısı
-            Swal.fire({
-                title: 'Sayfa Yenilenecek!',
-                text: '10 saniye içinde sayfa otomatik olarak yenilenecek. İptal etmek ister misiniz?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Bekle',
-                cancelButtonText: 'İptal',
-                timer: 10000,
-                timerProgressBar: true,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    // Zamanlayıcı başlat
-                    reloadTimer = setTimeout(() => {
-                        console.log("Sayfa yenileniyor");
+                Swal.fire({
+                    title: 'Sayfa Yenilensin mi?',
+                    text: 'Ürün listesi boş görünüyor. Sayfa 10 saniye içinde yenilenecek.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Evet, yenile',
+                    cancelButtonText: 'İptal',
+                    timer: 10000,
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        reloadTimer = setTimeout(() => {
+                            console.log("Otomatik yenileme gerçekleşiyor.");
+                            location.reload();
+                        }, 10000);
+                        $('#barkodInput').val("").focus();
+                    },
+                    preConfirm: () => {
+                        clearTimeout(reloadTimer);
+                        console.log("Kullanıcı yenilemeyi onayladı.");
                         location.reload();
+                        $('#barkodInput').val("").focus();
+                    },
+                    willClose: () => {
+                        clearTimeout(reloadTimer);
+                    }
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        console.log("Kullanıcı yenilemeyi iptal etti.");
+                        clearTimeout(reloadTimer);
+                        $('#barkodInput').val("").focus();
 
-                    }, 8000);
+                    }
+                });
 
-                },
-
-                preConfirm: () => {
-                    clearTimeout(reloadTimer); // Kullanıcı 'Bekle' derse bile sayfa yenilenmesin
-                    console.log("Yenileme kullanıcı tarafından ertelendi.");
-                    $('#barkodInput').val('').focus();
-                    warningTimer = setTimeout(showReloadWarning, 600000);
-                },
-                willClose: () => {
-                    // Eğer kullanıcı iptal ederse de temizle
-                    clearTimeout(reloadTimer);
-                    console.log("Yenileme iptal edildi.");
-                    $('#barkodInput').val('').focus();
-                    warningTimer = setTimeout(showReloadWarning, 600000);
-                }
-            });
-        }
-
-        function cancelReload() {
-            console.log("Yenileme iptal edildi");
-            clearTimeout(reloadTimer);
-            document.getElementById('reloadModal').style.display = 'none';
-            $('#barkodInput').val('').focus();
-
-            // Swal ile bildirim
-            Swal.fire({
-                icon: 'info',
-                title: 'Yenileme İptal Edildi',
-                text: 'Sayfa yenileme işlemi durduruldu.',
-                timer: 1000,
-                showConfirmButton: false
-            });
-
-            warningTimer = setTimeout(showReloadWarning, 5000); // 10 dakika sonra yeniden başlat
+            } else {
+                console.log("Ürün listesi dolu, yenileme yapılmadı.");
+            }
         }
 
 
-
-
-
-        11.51-12.01
 
 
 
@@ -823,18 +862,18 @@ background-color: rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-i
                                 let toplam = (adet * fiyat).toFixed(2);
 
                                 let yeniSatir = `
-                    <tr data-barkod="${urunAd}">
-                        <!-- İstersen gerçek barkodla değiştir -->
-                        <td>${urunAd}</td>
-                        <td class="fiyat">${fiyat}</td>
-                        <td class="adet">${adet}</td>
-                        <td class="satirToplam">${toplam}</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>`;
+                                    <tr data-barkod="${urunAd}">
+                                        <!-- İstersen gerçek barkodla değiştir -->
+                                        <td>${urunAd}</td>
+                                        <td class="fiyat">${fiyat}</td>
+                                        <td class="adet">${adet}</td>
+                                        <td class="satirToplam">${toplam}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>`;
                                 $('#urunListesi tbody').append(yeniSatir);
                             }
                         });
@@ -989,16 +1028,16 @@ background-color: rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-i
 
                         $('#urunListesi tbody').prepend(
                             `<tr data-barkod="${barkod}">
-                        <td>${res.urunAd}</td>
-                        <td class="fiyat">${res.fiyat}</td>
-                        <td class="adet">1</td>
-                        <td class="satirToplam">${toplamSatir}</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>`
+                                        <td>${res.urunAd}</td>
+                                        <td class="fiyat">${res.fiyat}</td>
+                                        <td class="adet">1</td>
+                                        <td class="satirToplam">${toplamSatir}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -1172,9 +1211,10 @@ background-color: rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-i
             });
         }
 
-        $('#iskontoModal, #makbuzModal').on('hidden.bs.modal', function () {
+        $('#iskontoModal, #makbuzModal, #borcOdeModal').on('hidden.bs.modal', function () {
             $('#iskontoModal').modal('hide');
             $('#makbuzModal').modal('hide');
+            $('#borcOdeModal').modal('hide');
 
             setTimeout(function () {
                 const input = $('#barkodInput');
@@ -1223,16 +1263,16 @@ background-color: rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-i
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-                        <td>${urunAdi}</td>
-                        <td class="fiyat">${fiyat.toFixed(2)}</td>
-                        <td class="adet">1</td>
-                        <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>`
+                                        <td>${urunAdi}</td>
+                                        <td class="fiyat">${fiyat.toFixed(2)}</td>
+                                        <td class="adet">1</td>
+                                        <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                            <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                            <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>`
             );
 
             updateGenelToplam();
@@ -1398,12 +1438,12 @@ background-color: rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-i
 
             // İskonto satırını ekle
             $('#urunListesi tbody').append(`
-                    <tr class="iskonto-satiri" style="background-color: #e9fbe9;">
-                        <td colspan="3"><strong>İskonto (%${iskonto})</strong></td>
-                        <td class="satirToplam">-${indirimMiktari.toFixed(2)}</td>
-                        <td></td>
-                    </tr>
-                `);
+                                    <tr class="iskonto-satiri" style="background-color: #e9fbe9;">
+                                        <td colspan="3"><strong>İskonto (%${iskonto})</strong></td>
+                                        <td class="satirToplam">-${indirimMiktari.toFixed(2)}</td>
+                                        <td></td>
+                                    </tr>
+                                `);
 
             $('#toplamFiyat').text(yeniToplam.toFixed(2) + ' ₺');
             $('#barkodInput').val('').focus();
@@ -1494,7 +1534,52 @@ background-color: rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-i
 
         }
 
+        function getMusteriBorc() {
+            var id = $('#borcMusteriSelect').val();
+            $('#borcMusteriId').val(id); // gizli inputa yaz
+            $.getJSON('/Home/GetMusteriBorc', { id: id }, function (borc) {
+                $('#ToplamBorc').val(borc + ' ₺');
+            });
+        }
 
+        function submitBorcOdeForm() {
+            var id = $('#borcMusteriSelect').val();
+            var tutar = $('#OdenenBorcTutar').val();
+            var not = $('#BorcNot').val();
+            var odemeTipi = $('#OdemeTipi').val();
+
+            if (!id || !tutar) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Eksik Bilgi',
+                    text: 'Lütfen müşteri ve tutar bilgilerini girin.',
+                    timer: 1000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            $.post('/Home/BorcOde', {
+                id: id,
+                OdenenBorcTutar: tutar,
+                Not: not,
+                OdemeTipi: odemeTipi
+            }, function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Başarılı',
+                    text: 'Borç ödeme işlemi başarıyla tamamlandı.',
+                    timer: 1000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
+            });
+        }
+
+      
 
 
     </script>
