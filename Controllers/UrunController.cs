@@ -21,7 +21,7 @@ namespace LordMarket.Controllers
         public ActionResult Urunler()
         {
             //ViewBag.Kategoriler = GetKategoriSelectList();
-            var urunler = db.Urunler.ToList();
+            var urunler = db.Urunler.Where(x=>x.Status==true).ToList();
             return View(urunler);
         }
 
