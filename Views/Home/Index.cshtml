@@ -190,6 +190,21 @@
                         </button>
 
 
+                        <!-- İade -->
+                        <button type="button" id="borcOdeModalBtn"
+                                class="btn d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
+                                style="background-color: #ff006e;"
+                                onclick="iadeYap()"
+                                title="İade Et">
+                            <i class="fas fa-undo-alt"></i>
+                            <span>İade</span>
+                        </button>
+
+
+
+
+
+
                     </div>
                 </div>
 
@@ -1166,17 +1181,20 @@
                 },
                 success: function (res) {
                     if (res.success) {
+                        let odemeTipi = $('#odemeTipi').val(); // Ödeme tipini burada da kontrol et
+                        let baslik = odemeTipi === 'Iade' ? 'İade Tamamlandı!' : 'Satış Tamamlandı!';
+                        let mesaj = odemeTipi === 'Iade' ? 'İade işlemi başarıyla gerçekleştirildi.' : 'Satış işlemi başarıyla gerçekleştirildi.';
+
                         Swal.fire({
                             icon: 'success',
-                            title: 'Satış Tamamlandı!',
-                            text: 'Satış işlemi başarıyla gerçekleştirildi.',
+                            title: baslik,
+                            text: mesaj,
                             timer: 600,
                             timerProgressBar: true,
                             showConfirmButton: false,
                             willClose: () => {
                                 temizle();
                                 location.reload();
-
                             }
                         });
                     } else {
@@ -1578,6 +1596,32 @@
                 });
             });
         }
+
+        function iadeYap() {
+            $('#barkodInput').val('').focus();
+
+            Swal.fire({
+                title: 'İade Onayı',
+                text: 'Ürünler iade edilecektir. Onaylıyor musunuz?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Evet, Onaylıyorum',
+                cancelButtonText: 'İptal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#odemeTipi').val('Iade');
+                    satisYap();
+                }
+
+                $('#barkodInput').val('').focus();
+            });
+            $('#barkodInput').val('').focus();
+
+        }
+
+
+
 
       
 

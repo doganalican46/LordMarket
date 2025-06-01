@@ -49,7 +49,7 @@
 
                 <ul class="list-group shadow">
                     <!-- SATIŞLARDAN GELENLER -->
-                    <li class="list-group-item active fw-bold text-center "style="background-color: #003d60; color:white;"><i class="bi bi-basket me-2"></i>Satışlardan Gelenler</li>
+                    <li class="list-group-item active fw-bold text-center " style="background-color: #003d60; color:white;"><i class="bi bi-basket me-2"></i>Satışlardan Gelenler</li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-cash me-2 text-success"></i>Satış - Nakit</span>
                         <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NakitToplam ?? 0)</span>
@@ -78,6 +78,10 @@
                         <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamKasaGider ?? 0)</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-question-circle me-2 text-dark"></i>İade Toplam</span>
+                        <span class="badge bg-dark text-light rounded-pill">@String.Format("{0:N2} ₺", ViewBag.IadeToplam ?? 0)</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-question-circle me-2 text-dark"></i>Diğer Gider</span>
                         <span class="badge bg-dark text-light rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamDigerGider ?? 0)</span>
                     </li>
@@ -98,7 +102,7 @@
                     </li>
 
                     <!-- TAHMİNİ -->
-                    <li class="list-group-item active fw-bold text-center mt-2 "style="background-color: #003d60; color:white;"><i class="bi bi-calendar2-day me-2"></i>Tahmini & Günlük Bilgiler</li>
+                    <li class="list-group-item active fw-bold text-center mt-2 " style="background-color: #003d60; color:white;"><i class="bi bi-calendar2-day me-2"></i>Tahmini & Günlük Bilgiler</li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span><i class="bi bi-wallet2 me-2 text-info"></i>Kasada Olması Gereken</span>
                         <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KasadaOlmasiGereken ?? 0)</span>
