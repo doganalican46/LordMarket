@@ -26,6 +26,24 @@ namespace LordMarket.Controllers
             public string MusteriAdSoyad { get; set; }
         }
 
+        private static List<Urunler> urunCache;
+
+        private void UrunleriCachedenYukle()
+        {
+            if (urunCache == null || !urunCache.Any())
+            {
+                urunCache = db.Urunler.Where(x => x.Status == true).ToList();
+            }
+        }
+
+        public static void UrunCacheYenile()
+        {
+            
+            urunCache = null;
+        }
+
+
+
         public ActionResult Error()
         {
             return View(); 
@@ -35,6 +53,8 @@ namespace LordMarket.Controllers
         public ActionResult Index()
         {
             UpdateSatisToplamTutar();
+            UrunCacheYenile();
+            UrunleriCachedenYukle();
 
             var satisListesi = db.SatisIslem.Where(h => h.Status == true).OrderByDescending(x => x.ID).ToList();
             var sonSatis = satisListesi.FirstOrDefault();
@@ -72,10 +92,13 @@ namespace LordMarket.Controllers
         [HttpPost]
         public JsonResult BarkodAra(string barkod)
         {
-            var urun = db.Urunler
-                         .Where(x => x.Barkod == barkod && x.Status == true)
-                         .Select(x => new { x.UrunAd, x.UrunFiyat })
-                         .FirstOrDefault();
+            UrunleriCachedenYukle(); 
+
+            var urun = urunCache
+                .Where(x => x.Barkod == barkod && x.Status == true)
+                .Select(x => new { x.UrunAd, x.UrunFiyat })
+                .FirstOrDefault();
+
             if (urun != null)
             {
                 return Json(new
@@ -88,6 +111,7 @@ namespace LordMarket.Controllers
 
             return Json(new { success = false });
         }
+
 
         public JsonResult BarkodAraYeniUrun(string barkod)
         {
@@ -313,9 +337,11 @@ namespace LordMarket.Controllers
                     db.Urunler.Add(urun);
                     db.SaveChanges();
                 }
+                UrunCacheYenile();
 
                 return RedirectToAction("Index");
             }
+            UrunCacheYenile();
 
             return View(urun);
         }
@@ -329,6 +355,7 @@ namespace LordMarket.Controllers
 
             urun.HizliUrunMu = true;
             db.SaveChanges();
+            UrunCacheYenile();
 
             return View("Index");
         }
@@ -388,8 +415,11 @@ namespace LordMarket.Controllers
             {
                 urun.HizliUrunMu = false;
                 db.SaveChanges();
+                UrunCacheYenile();
+
                 return Json(new { success = true });
             }
+            UrunCacheYenile();
 
             return Json(new { success = false });
         }
