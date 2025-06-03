@@ -26,6 +26,47 @@ namespace LordMarket.Controllers
             var bugun = DateTime.Today;
             var yarin = bugun.AddDays(1);
 
+            // Ortalama Günlük Satış Sayısı
+            var gunlukSatisGruplari = satislar
+                .Where(s => s.Tarih.HasValue)
+                .GroupBy(s => s.Tarih.Value.Date)
+                .Select(g => g.Count())
+                .ToList();
+
+            var OrtalamaGunlukSatisSayisi = gunlukSatisGruplari.Any() ? (int)gunlukSatisGruplari.Average() : 0;
+            ViewBag.OrtalamaGunlukSatisSayisi = OrtalamaGunlukSatisSayisi;
+
+            // Günün En Yoğun Saat Aralığı (örnek: 14:00-15:00 gibi)
+            var bugunkuSatislar = satislar
+                .Where(s => s.Tarih.HasValue && s.Tarih.Value.Date == bugun)
+                .ToList();
+
+            var saatGruplari = bugunkuSatislar
+                .GroupBy(s => s.Tarih.Value.Hour)
+                .Select(g => new { Saat = g.Key, Sayi = g.Count() })
+                .OrderByDescending(g => g.Sayi)
+                .ToList();
+
+            string GununEnYogunSaatAraligi = saatGruplari.Any()
+                ? $"{saatGruplari.First().Saat:00}:00 - {saatGruplari.First().Saat + 1:00}:00"
+                : "Veri Yok";
+
+            // Genel En Yoğun Saat Aralığı
+            var saatGruplariGenel = satislar
+                .Where(s => s.Tarih.HasValue)
+                .GroupBy(s => s.Tarih.Value.Hour)
+                .Select(g => new { Saat = g.Key, Sayi = g.Count() })
+                .OrderByDescending(g => g.Sayi)
+                .ToList();
+
+            string GenelEnYogunSaatAraligi = saatGruplariGenel.Any()
+                ? $"{saatGruplariGenel.First().Saat:00}:00 - {saatGruplariGenel.First().Saat + 1:00}:00"
+                : "Veri Yok";
+
+            ViewBag.GenelEnYogunSaatAraligi = GenelEnYogunSaatAraligi;
+
+            ViewBag.GununEnYogunSaatAraligi = GununEnYogunSaatAraligi;
+
             var urunSayilari = new Dictionary<string, int>();
 
             foreach (var satis in satislar)
@@ -58,7 +99,7 @@ namespace LordMarket.Controllers
 
             var enCokSatilanUrunler = urunSayilari
                 .OrderByDescending(x => x.Value)
-                .Take(5)
+                .Take(10)
                 .ToList();
 
             ViewBag.EnCokSatilanUrunler = enCokSatilanUrunler;
