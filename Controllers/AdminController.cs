@@ -245,8 +245,71 @@ namespace LordMarket.Controllers
         }
 
 
+        [Authorize]
+        public ActionResult ResetSatisIslem()
+        {
+            // 1. ToplamTutar'ları gruplara göre al
+            decimal toplamNakitTutar = db.SatisIslem
+                .Where(s => s.Status == true && s.OdemeTipi == "Nakit")
+                .Sum(s => (decimal?)s.ToplamTutar) ?? 0;
 
-        
+            decimal toplamKartTutar = db.SatisIslem
+                .Where(s => s.Status == true && s.OdemeTipi == "Kart")
+                .Sum(s => (decimal?)s.ToplamTutar) ?? 0;
+
+            decimal toplamVeresiyeTutar = db.SatisIslem
+                .Where(s => s.Status == true && s.OdemeTipi == "Veresiye")
+                .Sum(s => (decimal?)s.ToplamTutar) ?? 0;
+
+            // 2. Tablodaki tüm verileri sil
+            var tumSatislar = db.SatisIslem.ToList();
+            db.SatisIslem.RemoveRange(tumSatislar);
+            db.SaveChanges();
+
+            // 3. Yeni özet kayıtları oluştur
+            if (toplamNakitTutar > 0)
+            {
+                db.SatisIslem.Add(new SatisIslem
+                {
+                    OdemeTipi = "Nakit",
+                    ToplamTutar = toplamNakitTutar,
+                    Status = true,
+                    BosAlan = "SatisIslem tablosu temizlendi.",
+                    Tarih = DateTime.Now.AddDays(-1)
+                });
+            }
+
+            if (toplamKartTutar > 0)
+            {
+                db.SatisIslem.Add(new SatisIslem
+                {
+                    OdemeTipi = "Kart",
+                    ToplamTutar = toplamKartTutar,
+                    Status = true,
+                    BosAlan = "SatisIslem tablosu temizlendi.",
+                    Tarih = DateTime.Now.AddDays(-1)
+                });
+            }
+
+            if (toplamVeresiyeTutar > 0)
+            {
+                db.SatisIslem.Add(new SatisIslem
+                {
+                    OdemeTipi = "Veresiye",
+                    ToplamTutar = toplamVeresiyeTutar,
+                    Status = true,
+                    BosAlan = "SatisIslem tablosu temizlendi.",
+                    Tarih = DateTime.Now.AddDays(-1)
+                });
+            }
+
+            db.SaveChanges();
+
+            TempData["Mesaj"] = "SatisIslem tablosu temizlendi ve özet kayıtlar eklendi.";
+            return RedirectToAction("Index"); // veya uygun bir sayfaya yönlendirme
+        }
+
+
 
 
     }

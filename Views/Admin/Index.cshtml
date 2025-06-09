@@ -78,6 +78,32 @@
                         <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-warning w-50 d-flex align-items-center justify-content-center">
                             <i class="bi bi-bar-chart-line me-2"></i> Raporlar
                         </a>
+
+                        <button type="button" class="btn btn-info w-50 d-flex align-items-center justify-content-center"
+                                data-bs-toggle="modal" data-bs-target="#confirmResetModal">
+                            <i class="bi bi-bar-chart-line me-2"></i> Satış Tablosu Sıfırla
+                        </button>
+
+                        <!-- Onay Modalı -->
+                        <div class="modal fade" id="confirmResetModal" tabindex="-1" aria-labelledby="confirmResetModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header tablestyle ">
+                                        <h5 class="modal-title" id="confirmResetModalLabel">Satış Tablosunu Sıfırlama</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Bu işlem tüm satış kayıtlarını ve yoğunluk istatistiklerini sıfırlayacak, bugüne kadar yapılan bütün işlemleri toplayıp kayıt edecek. Sıfırlamak istediğinize emin misiniz?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                                        <a href="@Url.Action("ResetSatisIslem", "Admin")" class="btn btn-danger">Evet, Sıfırla</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
