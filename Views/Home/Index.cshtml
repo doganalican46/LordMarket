@@ -47,6 +47,7 @@
             .numpad-key:hover {
                 background-color: #ccc;
             }
+
     </style>
 
 </head>
@@ -127,86 +128,77 @@
                 <input type="hidden" id="UrunListesiHidden" name="UrunListesi" />
 
                 <!-- Actions Section -->
-                <div class="payment-section">
-                    <h5 class="mb-3"><i class="fas fa-plus me-2"></i>İşlemler</h5>
+                <div class="payment-section mb-4">
+                    <h4 class="fw-bold text-dark mb-3"><i class="fas fa-tools me-2 text-primary"></i>İşlem Paneli</h4>
 
-                    <div class="action-buttons d-flex gap-2 flex-wrap mb-3">
+                    <div class="row g-3">
 
-                        <!-- Temizle - kırmızı -->
-                        <button class="btn btn-danger d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold"
-                                onclick="temizle()">
-                            <i class="fas fa-trash-alt"></i>
-                            <span>Temizle</span>
-                        </button>
+                        <!-- Temizle -->
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <button class="btn btn-danger w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm rounded"
+                                    onclick="temizle()">
+                                <i class="fas fa-trash-alt"></i> Temizle
+                            </button>
+                        </div>
 
-                        <!-- İşlem Beklet - gri -->
-                        <button id="bekletBtn" type="button"
-                                class="btn btn-secondary d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold"
-                                onclick="islemBeklet()" title="İşlemi daha sonra devam etmek üzere beklet">
-                            <i class="fas fa-clock"></i>
-                            <span>İşlem Beklet</span>
-                        </button>
+                        <!-- Beklet -->
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <button id="bekletBtn" class="btn btn-secondary w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm rounded"
+                                    onclick="islemBeklet()">
+                                <i class="fas fa-clock"></i> Beklet
+                            </button>
+                        </div>
 
-                        <!-- Ürün İşlem - yeşil -->
-                        <button type="button"
-                                class="btn btn-success d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold"
-                                data-bs-toggle="modal" data-bs-target="#urunEkleModal">
-                            <i class="fas fa-plus"></i>
-                            <span>Ürün İşlem</span>
-                        </button>
+                        <!-- Ürün İşlem -->
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <button class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm rounded"
+                                    data-bs-toggle="modal" data-bs-target="#urunEkleModal">
+                                <i class="fas fa-box-open"></i> Ürün Ekle
+                            </button>
+                        </div>
 
-                        <!-- İskonto - lacivert -->
-                        <button type="button" id="iskontoBtn"
-                                class="btn d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
-                                style="background-color: #003d60;"
-                                data-bs-toggle="modal" data-bs-target="#iskontoModal">
-                            <i class="fas fa-percent"></i>
-                            <span>İskonto</span>
-                        </button>
+                        <!-- İskonto -->
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <button class="btn w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm rounded text-white"
+                                    style="background-color: #003d60;" data-bs-toggle="modal" data-bs-target="#iskontoModal">
+                                <i class="fas fa-percent"></i> İskonto
+                            </button>
+                        </div>
 
-                        <!-- Admin - sarı -->
-                        <a href="/Admin/Index"
-                           class="btn btn-warning d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-dark"
-                           title="Admin Ekranı">
-                            <i class="fas fa-toolbox"></i>
-                        </a>
+                        <!-- Admin Panel -->
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <a href="/Admin/Index" class="btn btn-warning w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm rounded text-dark">
+                                <i class="fas fa-toolbox"></i> Admin Paneli
+                            </a>
+                        </div>
 
-                        <!-- Makbuz - açık mavi -->
-                        <button type="button"
-                                class="btn btn-info d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
-                                data-bs-toggle="modal" data-bs-target="#makbuzModal"
-                                title="Son İşlemin Makbuzunu Yazdır">
-                            🧾
-                        </button>
+                        <!-- Makbuz Yazdır -->
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <button class="btn btn-info w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm rounded text-white"
+                                    data-bs-toggle="modal" data-bs-target="#makbuzModal">
+                                <i class="fas fa-receipt"></i> Makbuz Yazdır
+                            </button>
+                        </div>
 
-                        <!-- Müşteri - turkuaz -->
-                        <button type="button" id="borcOdeModalBtn"
-                                class="btn d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
-                                style="background-color: #ff6a00;"
-                                data-bs-toggle="modal" data-bs-target="#borcOdeModal"
-                                title="Veresiye Borç Ödeme">
-                            <i class="fas fa-hand-holding-usd"></i>
-                            <span>Veresiye Borç Öde</span>
-                        </button>
-
+                        <!-- Veresiye Öde -->
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <button class="btn w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm rounded text-white"
+                                    style="background-color: #ff6a00;" data-bs-toggle="modal" data-bs-target="#borcOdeModal">
+                                <i class="fas fa-hand-holding-usd"></i> Borç Öde
+                            </button>
+                        </div>
 
                         <!-- İade -->
-                        <button type="button" id="borcOdeModalBtn"
-                                class="btn d-flex align-items-center gap-2 px-4 py-2 rounded-pill shadow-sm fw-semibold text-white"
-                                style="background-color: #ff006e;"
-                                onclick="iadeYap()"
-                                title="İade Et">
-                            <i class="fas fa-undo-alt"></i>
-                            <span>İade</span>
-                        </button>
-
-
-
-
-
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <button class="btn w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm rounded text-white"
+                                    style="background-color: #dc3545;" onclick="iadeYap()">
+                                <i class="fas fa-undo-alt"></i> İade Et
+                            </button>
+                        </div>
 
                     </div>
                 </div>
+
 
             </div>
 
@@ -219,12 +211,12 @@
 
                 <!-- Other Products Section -->
                 <div class="other-product-section">
-                    <h5><i class="fas fa-tag me-2"></i>Diğer Ürün Ekle</h5>
+                    <h5><i class="fas fa-tag me-2"></i>Hızlı İşlem</h5>
 
                     <div class="other-product-container">
                         <!-- Price Display -->
                         <div class="price-display mb-3">
-                            <input type="text" id="digerUrunFiyat" class="form-control form-control-lg text-center" placeholder="₺ Fiyat Girin" readonly>
+                            <input type="text" id="digerUrunFiyat" class="form-control form-control-lg text-center" placeholder="₺" readonly>
                         </div>
 
                         <!-- Combined Numpad and Add Button -->
@@ -257,19 +249,24 @@
                                 </div>
                             </div>
 
-                            <!-- Add Button (now positioned to the right) -->
-                            <div class="add-button-container">
-                                <button class="btn btn-lg w-100 h-100" style="background-color: #003d60; color:white;" onclick="digerUrunEkle()">
+                            <!-- Add Button (alt alta sıralanmış) -->
+                            <div class="add-button-container d-flex flex-column gap-2">
+                                <button class="btn btn-lg w-100" style="background-color: #003d60; color:white;" onclick="digerUrunEkle()">
                                     <i class="fas fa-plus me-2"></i>EKLE
                                 </button>
+                                <button class="btn btn-success btn-lg w-100" type="button" onclick="adetHazirla()">Adet</button>
                             </div>
+
+
+
+
                         </div>
                     </div>
                 </div>
 
                 <!-- Quick Products -->
                 <div class="quick-products">
-                    <h5><i class="fas fa-bolt me-2"></i>Hızlı Ürünler</h5>
+                    <h5><i class="fas fa-bolt me-2"></i>Hızlı Satış</h5>
                     <div class="d-flex flex-wrap">
                         @foreach (var item in Model.HizliUrunler)
                         {
@@ -558,6 +555,17 @@
     <script>
         let reloadTimer;
         let checkInterval;
+        let adetBekleniyor = null;
+        function adetHazirla() {
+            let girilenAdet = parseInt($('#digerUrunFiyat').val());
+            if (!girilenAdet || girilenAdet < 1) {
+                Swal.fire("Geçerli bir adet girin");
+                return;
+            }
+            adetBekleniyor = girilenAdet;
+            $('#digerUrunFiyat').val('');
+            $('#barkodInput').focus();
+        }
 
         window.addEventListener('load', function () {
             console.log("Sayfa yüklendi");
@@ -1016,13 +1024,20 @@
 
 
         function barkodAra() {
+            let eklenecekAdet = adetBekleniyor ?? 1;
+            adetBekleniyor = null;
+
             var barkod = $('#barkodInput').val();
             if (barkod.trim() === "") return;
+
 
             let mevcutSatir = $(`#urunListesi tbody tr[data-barkod='${barkod}']`);
             if (mevcutSatir.length > 0) {
                 let adetCell = mevcutSatir.find('.adet');
-                let yeniAdet = parseInt(adetCell.text()) + 1;
+                let mevcutAdet = parseInt(adetCell.text());
+                let eklenecekAdet = adetBekleniyor ?? 1;
+                let yeniAdet = mevcutAdet + eklenecekAdet;
+                adetBekleniyor = null;
                 adetCell.text(yeniAdet);
 
                 let fiyat = parseFloat(mevcutSatir.find('.fiyat').text());
@@ -1045,8 +1060,8 @@
                             `<tr data-barkod="${barkod}">
                                         <td>${res.urunAd}</td>
                                         <td class="fiyat">${res.fiyat}</td>
-                                        <td class="adet">1</td>
-                                        <td class="satirToplam">${toplamSatir}</td>
+<td class="adet">${eklenecekAdet}</td>
+<td class="satirToplam">${(eklenecekAdet * res.fiyat).toFixed(2)}</td>
                                         <td>
                                             <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
                                             <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
@@ -1622,7 +1637,7 @@
 
 
 
-
+        
       
 
 
