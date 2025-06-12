@@ -249,7 +249,7 @@ namespace LordMarket.Controllers
                     mainTable.AddCell(cell);
 
                     // Sayfa sonu kontrolü
-                    if ((i + 1) % (labelsPerRow * 10) == 0) // Her 10 satırda yeni sayfa
+                    if ((i + 1) % (labelsPerRow * 9) == 0) // Her 10 satırda yeni sayfa
                     {
                         document.Add(mainTable);
                         document.NewPage();
