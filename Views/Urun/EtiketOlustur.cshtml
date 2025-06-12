@@ -6,92 +6,99 @@
 
 <div class="container-fluid px-4">
     <!-- Başlık ve Breadcrumb -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center py-4">
         <div>
-            <h1 class="h3 mb-0"><i class="fas fa-tags me-2 text-dark"></i>Etiket Oluştur</h1>
+            <h1 class="h3 mb-0">
+                <i class="fas fa-tags me-2"></i>Etiket Oluştur
+            </h1>
         </div>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 bg-transparent p-0">
-                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
-                <li class="breadcrumb-item active">Etiket Oluştur</li>
+                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i> Anasayfa</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Etiket Oluştur</li>
             </ol>
         </nav>
     </div>
 
     <!-- Ana Kart -->
-    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <!-- Kart Başlık -->
         <div class="card-header bg-white border-bottom py-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h5 class="mb-0 fw-semibold">Ürün Listesi</h5>
-                <div class="d-flex gap-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-semibold text-primary">Ürün Listesi</h5>
+                <div>
+                    <button type="button" id="tumunuSecBtn" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-check-square me-1"></i> Tümünü Seç
+                    </button>
+                </div>
+            </div>
+        </div>
 
-
-                    <div class="d-flex justify-content-end mb-3">
-                        <button type="button" id="tumunuSecBtn" class="btn btn-outline-secondary">
-                            <i class="fas fa-check-square me-1"></i> Tümünü Seç
-                        </button>
+        @using (Html.BeginForm("EtiketOlusturPDF", "Urun", FormMethod.Post))
+        {
+            <div class="card-body">
+                <!-- Arama ve PDF Butonu -->
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <div class="search-box position-relative" style="width: 300px;">
+                        <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                        <input type="text" id="urunSearch" class="form-control ps-5" placeholder="Ürün ara..." />
                     </div>
 
-
-                </div>
-
-
-            </div>
-
-
-
-
-
-            @using (Html.BeginForm("EtiketOlusturPDF", "Urun", FormMethod.Post))
-            {
-                <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <!-- Sol: PDF Butonu -->
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-file-pdf me-1"></i> PDF Etiket Oluştur
+                    <button type="submit" class="btn btn-danger px-4 py-2 shadow-sm">
+                        <i class="fas fa-file-pdf me-2"></i> PDF Etiket Oluştur
                     </button>
-
-                    <!-- Sağ: Ürün Arama -->
-                    <input type="text" id="urunSearch" class="form-control" placeholder="Ürün ara..." style="max-width: 300px;" />
                 </div>
 
                 <!-- Ürün Listesi -->
-                <div class="row" id="urunListesi">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3" id="urunListesi">
                     @foreach (var item in Model)
                     {
-                        <div class="col-md-4 mb-3 urun-item" data-urunad="@item.UrunAd.ToLower()">
-                            <div class="d-flex align-items-center justify-content-between border rounded p-3 shadow-sm">
-                                <div>
-                                    <div class="form-check">
+                        <div class="col urun-item" data-urunad="@item.UrunAd.ToLower()" data-barkod="@item.Barkod">
+                            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                                <div class="card-body d-flex align-items-center justify-content-between">
+                                    <div class="form-check form-check-lg">
                                         <input class="form-check-input" type="checkbox" name="seciliUrunler" value="@item.ID" id="urun_@item.ID" />
-                                        <label class="form-check-label" for="urun_@item.ID">
-                                            <strong>@item.UrunAd</strong> - @item.UrunFiyat ₺
+                                        <label class="form-check-label ms-2" for="urun_@item.ID">
+                                            <span class="d-block fw-semibold">@item.UrunAd</span>
+                                            <span class="text-muted small">@item.UrunFiyat₺</span>
+                                            
                                         </label>
                                     </div>
-                                </div>
-                                <div>
-                                    <a href="@Url.Action("UrunGetir", "Urun", new { id = item.ID })" class="btn btn-sm btn-primary" title="Ürünü Güncelle">
-                                        <i class="fas fa-edit me-1"></i>
+                                    <a href="@Url.Action("UrunGetir", "Urun", new { id = item.ID })" class="btn btn-sm btn-icon btn-outline-primary rounded-circle" title="Ürünü Düzenle">
+                                        <i class="fas fa-pencil-alt"></i>
                                     </a>
                                 </div>
                             </div>
                         </div>
                     }
                 </div>
-            }
-
-
-
-
-        </div>
-
-
+            </div>
+        }
     </div>
 </div>
 
+<style>
+    .text-gradient {
+        background: linear-gradient(90deg, #4e73df 0%, #224abe 100%);
+        -webkit-background-clip: initial;
+        -webkit-text-fill-color: transparent;
+    }
 
 
 
+    .hover-shadow:hover {
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+    }
+
+    .transition-all {
+        transition: all 0.2s ease;
+    }
+
+    .search-box .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+    }
+</style>
 
 <script>
     document.getElementById('urunSearch').addEventListener('input', function () {
@@ -99,24 +106,21 @@
         const urunListesi = document.getElementById('urunListesi');
         const urunler = Array.from(urunListesi.querySelectorAll('.urun-item'));
 
-        // Eşleşen ürünleri ve eşleşmeyenleri ayır
-        const eslesenler = [];
-        const eslesmeyenler = [];
-
         urunler.forEach(urun => {
             const urunAd = urun.getAttribute('data-urunad');
-            if (urunAd.includes(searchValue)) {
-                eslesenler.push(urun);
+            const barkod = urun.getAttribute('data-barkod');
+
+            if ((urunAd && urunAd.includes(searchValue)) ||
+                (barkod && barkod.toLowerCase().includes(searchValue))) {
+                urun.style.display = 'block';
+                urun.querySelector('.card').classList.add('border-primary');
             } else {
-                eslesmeyenler.push(urun);
+                urun.style.display = 'none';
+                urun.querySelector('.card').classList.remove('border-primary');
             }
         });
-
-        // Önce eşleşenleri ekle, sonra diğerlerini
-        urunListesi.innerHTML = '';
-        eslesenler.forEach(urun => urunListesi.appendChild(urun));
-        eslesmeyenler.forEach(urun => urunListesi.appendChild(urun));
     });
+
 
     let tumSecildi = false;
 
@@ -128,9 +132,8 @@
         this.innerHTML = tumSecildi
             ? '<i class="fas fa-times-circle me-1"></i> Tümünü Bırak'
             : '<i class="fas fa-check-square me-1"></i> Tümünü Seç';
+
+        this.classList.toggle('btn-primary', tumSecildi);
+        this.classList.toggle('btn-outline-primary', !tumSecildi);
     });
 </script>
-
-
-
-

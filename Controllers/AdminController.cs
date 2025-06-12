@@ -306,7 +306,7 @@ namespace LordMarket.Controllers
             db.SaveChanges();
 
             TempData["Mesaj"] = "SatisIslem tablosu temizlendi ve özet kayıtlar eklendi.";
-            return RedirectToAction("Index"); // veya uygun bir sayfaya yönlendirme
+            return RedirectToAction("SatisGecmis", "GelirGider");
         }
 
 
