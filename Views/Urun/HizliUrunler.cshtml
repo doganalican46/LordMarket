@@ -50,7 +50,6 @@
                     <thead class="tablestyle">
                         <tr>
                             <th width="60px" class="text-center">Barkod</th>
-                            <th width="80px">Resim</th>
                             <th>Ürün Adı</th>
                             <th width="120px" class="text-end">Fiyat</th>
                             <th width="100px" class="text-center">Durum</th>
@@ -62,17 +61,7 @@
                         {
                             <tr>
                                 <td class="text-center text-muted">@urun.Barkod</td>
-                                <td>
-                                    <div class="d-flex align-items-center justify-content-center position-relative">
-                                        <img src="@urun.UrunResmi" alt="Ürün Resmi" class="rounded-circle border" style="width: 40px; height: 40px; object-fit: cover;">
-                                        @if (urun.HizliUrunMu == true)
-                                        {
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info" style="font-size: 8px;">
-                                                <i class="fas fa-bolt"></i>
-                                            </span>
-                                        }
-                                    </div>
-                                </td>
+                                
                                 <td class="fw-semibold">@urun.UrunAd</td>
                                 <td class="text-end">@urun.UrunFiyat ₺</td>
                                 
