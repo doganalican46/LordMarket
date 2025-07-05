@@ -80,13 +80,7 @@
 
 
 
-                <div class="mb-3">
-                    <label for="UrunResmi" class="form-label">Ürün Resmi:</label>
-                    @Html.TextBoxFor(k => k.UrunResmi, new { @class = "form-control", id = "UrunResmi", placeholder = "Ürün resmi girin", oninput = "previewImage()" })
-                    <div class="mt-2 text-center">
-                        <img id="preview" class="rounded border" style="max-width: 300px; max-height: 200px; display: none;" />
-                    </div>
-                </div>
+               
 
                 <div class="col-md-6 mt-4 d-flex align-items-center">
                     <div class="form-check">
@@ -133,18 +127,7 @@
 
 
 <script>
-    function previewImage() {
-        var url = document.getElementById('UrunResmi').value;
-        var preview = document.getElementById('preview');
-        if (url) {
-            preview.src = url;
-            preview.style.display = "block";
-        } else {
-            preview.style.display = "none";
-        }
-    }
-    document.addEventListener("DOMContentLoaded", previewImage);
-
+   
     let html5QrCode;
 
     function kameraIleTara() {

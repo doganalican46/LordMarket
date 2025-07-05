@@ -57,7 +57,7 @@
                         <tr>
                             <th width="60px" class="text-center">Barkod</th>
                             <th>Ürün Adı</th>
-
+                            <th>Kategori</th>
                             <th width="120px" class="text-end">Fiyat</th>
                             <th width="150px" class="text-center">İşlemler</th>
                         </tr>
@@ -69,6 +69,8 @@
                                 <td class="text-center text-muted">@urun.Barkod</td>
 
                                 <td class="fw-semibold">@urun.UrunAd</td>
+                                <td class="fw-semibold">@urun.UrunKategori</td>
+
 
                                 <td class="text-end">@urun.UrunFiyat ₺</td>
 
@@ -411,21 +413,52 @@
             }).catch(() => { });
         }
     });
-    document.getElementById("urunArama").addEventListener("keyup", function () {
-        var arama = this.value.toLowerCase();
-        var satirlar = document.querySelectorAll("table tbody tr");
+    function filtreleVeGoster(aranan) {
+        const satirlar = document.querySelectorAll("table tbody tr");
 
         satirlar.forEach(function (satir) {
-            var barkod = satir.cells[0].textContent.toLowerCase();
-            var urunAd = satir.cells[1].textContent.toLowerCase();
+            const barkod = satir.cells[0].textContent.toLowerCase();
+            const urunAd = satir.cells[1].textContent.toLowerCase();
+            const kategori = satir.cells[2].textContent.toLowerCase(); // ⭐️ yeni sütun
 
-            if (barkod.includes(arama) || urunAd.includes(arama)) {
+            if (barkod.includes(aranan) ||
+                urunAd.includes(aranan) ||
+                kategori.includes(aranan)) {
                 satir.style.display = "";
             } else {
                 satir.style.display = "none";
             }
         });
+    }
+
+    /* ------------- KLAVYEDE YAZILDIKÇA ------------- */
+    const aramaInput = document.getElementById("urunArama");
+
+    aramaInput.addEventListener("keyup", function () {
+        const arama = this.value.toLowerCase();
+        sessionStorage.setItem("urunArama", arama); // son değeri sakla
+        filtreleVeGoster(arama);
     });
+
+    /* ------------- SAYFA YÜKLENİRKEN ------------- */
+    window.addEventListener("load", function () {
+        const oncekiArama = sessionStorage.getItem("urunArama");
+        if (oncekiArama) {
+            aramaInput.value = oncekiArama;
+            filtreleVeGoster(oncekiArama);
+        }
+    });
+
+    /* ------------- INPUT TEMİZLENDİĞİNDE ------------- */
+    aramaInput.addEventListener("blur", function () {
+        if (this.value.trim() === "") {
+            sessionStorage.removeItem("urunArama");
+            filtreleVeGoster(""); // tüm satırları geri göster
+        }
+    });
+
+
+
 </script>
 
 

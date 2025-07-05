@@ -125,6 +125,7 @@ namespace LordMarket.Controllers
                 urun.UrunAd = y.UrunAd;
                 urun.UrunFiyat = y.UrunFiyat;
                 urun.UrunResmi = y.UrunResmi;
+                urun.UrunKategori = y.UrunKategori;
                 urun.KDVOran = y.KDVOran;
                 urun.Stok = y.Stok;
                 urun.GuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
