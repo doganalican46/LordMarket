@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LordMarketDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="GelirGider">
           <Key>
             <PropertyRef Name="ID" />
@@ -55,6 +55,7 @@
           <Property Name="MusteriID" Type="int" />
           <Property Name="BosAlan" Type="nvarchar" MaxLength="500" />
           <Property Name="Status" Type="bit" />
+          <Property Name="IslemYapanKullanici" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Urunler">
           <Key>
@@ -105,8 +106,7 @@
             <End Role="SatisIslem" EntitySet="SatisIslem" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LordMarketDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -162,6 +162,7 @@
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Boolean" />
           <NavigationProperty Name="Musteriler" Relationship="Self.FK_SatisIslem_Musteriler" FromRole="SatisIslem" ToRole="Musteriler" />
+          <Property Name="IslemYapanKullanici" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Urunler">
           <Key>
@@ -261,6 +262,7 @@
           <EntitySetMapping Name="SatisIslem">
             <EntityTypeMapping TypeName="LordMarketDBModel.SatisIslem">
               <MappingFragment StoreEntitySet="SatisIslem">
+                <ScalarProperty Name="IslemYapanKullanici" ColumnName="IslemYapanKullanici" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="SatisNo" ColumnName="SatisNo" />
                 <ScalarProperty Name="ToplamTutar" ColumnName="ToplamTutar" />

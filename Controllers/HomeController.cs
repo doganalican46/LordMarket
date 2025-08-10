@@ -139,6 +139,8 @@ namespace LordMarket.Controllers
         {
             try
             {
+                string currentUser = Environment.UserName;
+
                 if (OdemeTipi == "Veresiye" && (MusteriID == null || MusteriID == 0))
                 {
                     return Json(new { success = false, message = "Veresiye satış için müşteri seçimi zorunludur." });
@@ -214,9 +216,10 @@ namespace LordMarket.Controllers
                     UrunListesi = UrunListesi,
                     Tarih = DateTime.Now,
                     Status = true,
-                    MusteriID = (OdemeTipi == "Veresiye") ? MusteriID : null
+                    MusteriID = (OdemeTipi == "Veresiye") ? MusteriID : null,
+                    IslemYapanKullanici = currentUser.ToString()
                 };
-
+                
                 db.SatisIslem.Add(yeniSatis);
                 db.SaveChanges();
 
