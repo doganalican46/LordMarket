@@ -139,7 +139,45 @@ namespace LordMarket.Controllers
         {
             try
             {
-                string currentUser = Environment.UserName;
+                string ipAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+                // Eğer birden fazla IP varsa ilkini al
+                if (!string.IsNullOrEmpty(ipAddress) && ipAddress.Contains(","))
+                {
+                    ipAddress = ipAddress.Split(',')[0].Trim();
+                }
+
+                // Eğer boşsa UserHostAddress kullan
+                if (string.IsNullOrEmpty(ipAddress))
+                {
+                    ipAddress = Request.UserHostAddress;
+                }
+
+                // Localhost IPv6'yı IPv4'e çevir
+                if (ipAddress == "::1")
+                {
+                    ipAddress = "127.0.0.1";
+                }
+
+                // HostName alma — hata fırlamaması için try-catch
+                string hostName = ipAddress;
+                try
+                {
+                    hostName = System.Net.Dns.GetHostEntry(ipAddress).HostName;
+                }
+                catch
+                {
+                    // HostName çözülemezse IP'nin kendisini kullan
+                    hostName = ipAddress;
+                }
+
+                // Tarayıcı adı
+                string browser = Request.Browser.Browser;
+
+                // Log formatı
+                string islemYapanKullanici = $"IP:{ipAddress} -{hostName} - {browser}";
+
+
 
                 if (OdemeTipi == "Veresiye" && (MusteriID == null || MusteriID == 0))
                 {
@@ -217,7 +255,7 @@ namespace LordMarket.Controllers
                     Tarih = DateTime.Now,
                     Status = true,
                     MusteriID = (OdemeTipi == "Veresiye") ? MusteriID : null,
-                    IslemYapanKullanici = currentUser.ToString()
+                    IslemYapanKullanici = islemYapanKullanici
                 };
                 
                 db.SatisIslem.Add(yeniSatis);
