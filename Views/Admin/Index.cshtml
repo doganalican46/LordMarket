@@ -314,155 +314,59 @@
 <script>
     // Sözler
     const quotes = [
-        "Yapamazsın dediler, yaptım. Sonra yine yapamazsın dediler. Biraz dinlenip tekrar yaptım.",
-        "Çay var içersen, dert var çekersen.",
-        "Bugün hiçbir şey yapmadım ama yarın yapacak çok şeyim var.",
-        "Gülümse, yarın daha da kötü olabilir!",
-        "Hayat fena halde kahve gibidir. Ne kadar şeker eklersen ekle, acısı hep kalır.",
-        "Bir işi yapmanın iki yolu vardır: Benim yolum ve yanlış yol.",
-        "Hiçbir şey yapmamak bile bazen yapmaktan iyidir.",
-        "Matrix bir belgeseldi aslında…",
-        "Bir gün herkes 15 dakikalığına kahraman olacak.",
-        "Sabah erken kalkan yol alır, ama uykusuz kalır.",
-        "Düşünmeden konuşmak, nişan almadan ateş etmeye benzer.",
-        "Hayat kısa, kahve iç, kitap oku, bir de fatura öde.",
-        "“Yapamam” deme. Denemedin ki!",
-        "Bugün dünden daha yorgunum ama daha umutluyum.",
-        "Sonsuza kadar yaşamak isteyen ilk kişi, muhtemelen ertelemeyi çok seviyordur.",
-        "Dünya fani, sabah alarmı gerçek.",
-        "Trafikte sabırlı ol, hayat kısa.",
-        "Bir insan en çok kendini kandırır.",
-        "Ofise geldim, çalışıyor gibi yapıyorum. Her zamanki gibi.",
-        "Sınırlarını zorla, sonra kahveni koy ve dinlen.",
-        "Düşünmeden yaşamak kolay, hissetmeden çalışmak zor.",
-        "Bugün hava güzel, ama ben kod yazıyorum.",
-        "Eğer bugün gülemiyorsan, yarına bir espri sakla.",
-        "Zaman her şeyin ilacıdır. Ama bazı şeyler hala ağrıyor.",
-        "Yol uzun, motivasyon az, ama vazgeçmek yok.",
-        "Ya bir yol bul, ya bir kahve koy.",
-        "‘Yarın yaparım’ diyenler, bugünü boş geçirenlerdir.",
-        "Mükemmel değilim, ama kahvemi doğru yaparım.",
-        "Kendi filminde başrol olduğunu unutma!",
-        "Hayaller bedava, ama internet bağlantısı lazım.",
-        "Bazen sessizlik, en yüksek çığlıktır.",
-        "Kendine iyi davran. 7/24 seninlesin.",
-        "Zor günler geçer. Yeter ki geçmesini bekleyecek gücün olsun.",
-        "Yorgun değilim, sadece uykuya yatırım yapıyorum.",
-        "Bir gün her şey güzel olacak. Bugün değilse, çay koy.",
-        "Motivasyon mu? Maaş yatınca geliyorum.",
-        "Film repliği gibi yaşamak istiyorum: “I’m gonna make him an offer he can't refuse.”",
-        "Bazen her şeyden vazgeçmek istersin ama tost bile yapmadan buzdolabını kapatırsın.",
-        "Bilgisayarı kapatırken 'Kapatılıyor...' yazısı kadar huzur veren ne var ki?",
-        "İleri gitmek istiyorsan, önce yataktan çık.",
-        "Bugün de olmadı ama olsun, denedik.",
-        "Hayat bir kahkaha meselesidir, gülmeyi unutma.",
-        "‘Nasılsın?’ sorusu bile bir sınav bazen.",
-        "Yalnız değilsin, ama modem 2 çubuk çekiyor olabilir.",
-        "Sakın pes etme! Sadece biraz es ver.",
-        "Bazen başarısızlık, doğru kapıyı çalmadığın içindir.",
-        "Her şey yolunda gitmiyorsa, başka bir yol dene.",
-        "İşe geç kalmak, zamansız kalkmak değildir; zamansız yatmaktır.",
-        "Bugün enerjin düşükse sorun yok. Yarın şarj oluruz.",
-        "Kendine inandığında her şey mümkündür. İnternet olmasa bile!",
-        "Kahve makinesi bozulduysa, hayat da biraz yavaşlamış demektir.",
-
-        "Yapacaklar listesi uzadıkça, tembellik seviyesi artar.",
-
-        "Sabah alarmı kurmak, her gün kendinle savaşa girmektir.",
-
-        "‘Yarın yaparım’ dedikçe ‘bugün’ uzaktan gülüyor.",
-
-        "Wi-Fi sinyali güçlü değilse, moral de düşer.",
-
-        "Her başarısızlık, bir sonraki denemeye davettir; ya da sadece biraz mola.",
-
-        "E-postalara cevap vermemek, modern dünya protestosudur.",
-
-        "Spor salonuna gitmek için motivasyon ararken, koltuğun çektiğini fark ettin mi?",
-
-        "Yemek yapmayı bilmek, pizza siparişi vermemek değildir."
-        ,
-        "Düşünmek güzeldir, ama bazen sadece ‘kapat ve devam et’ gerekir."
-        ,
-        "Çalışırken aklım hep tatilde; tatildeyken aklım işte.",
-
-        "Yalnızlık iyidir, ama Wi-Fi'siz olmaz.",
-
-        "Hayallerinin peşinden koş, ama önüne bakmayı unutma!",
-
-        "Bazen en büyük kahramanlık, sabah yataktan kalkmaktır.",
-
-        "Telefonun şarjı biterse, dünya da durur gibi olur.",
-
-        "Yemek yapmayı öğrenmek, yangın çıkarmamakla başlar.",
-
-        "Sosyal medya molası, gerçek hayattan kaçış biletidir.",
-
-        "Uyku düzeni kurmak, yetişkin olmanın gizli formülüdür.",
-
-        "Kendine iyi davran, çünkü seninle geçireceğin tek ömür bu.",
-
-        "Bir işi yapmamak için 1000 mazeret bulabilirsin, ama bitirince huzur da 1000 kat olur.",
-
-        "Gülmek, en iyi egzersizdir; üstelik kas yapmaz.",
-
-        "Bazı insanlar ‘çok çalışmak lazım’ der; ben ‘çok uyumak lazım’ derim.",
-
-        "Toplantıların en uzun kısmı ‘başlayalım mı?’ kısmıdır.",
-
-        "Yemek sonrası uyku, vücudun teşekkür mektubudur.",
-
-        "Tembellik, yaratıcılığın kardeşidir.",
-
-        "İşten sonra ‘biraz dinlenmek’ bazen bütün geceye yayılır.",
-
-        "Sabah kahvesi içmeden insan değilim, robotum.",
-
-        "Hayat kısa, uyku uzun; tercih senin.",
-
-        "Evden çalışmak, pijamayla başarı kazanmak demektir.",
-
-        "Günün en zor anı, ‘şimdi kalk’ diyen beyninle savaştır.",
-
-        "Kendi kendine konuşmak, çoğu zaman en iyi terapi yöntemidir.",
-
-        "Başarı, sabah alarmına ilk kez basmamakla başlar.",
-
-        "Motivasyon bazen sadece ‘yine de dene’ demektir.",
-
-        "Bazen kaybetmek, yeni bir yol bulmaktır."
-        ,
-        "Akıllı telefon, hayatımızın uzantısı değil, bir parçası.",
-
-        "Sıkıcı anlarda en iyi dost, internet hızıdır.",
-
-        "Geceleri uyuyamamak, sabah kahvesinin ana sebebidir.",
-
-        "Bir işin zor kısmı, başlamaktır; sonra zaten ‘bitmek’ ister.",
-
-
-        "Telefonu sessize al, hayatın sesini dinle.",
-
-        "Unutma, şarjı biten telefon gibi sen de mola ver.",
-
-        "Hata yapmak insanlıktır, hatadan öğrenmek süper güç.",
-
-        "Bazen ‘yavaş gitmek’ en hızlı yoldur.",
-
-        "Çalışmak önemli, ama ‘ara vermek’ daha da.",
-
-        "Evde yalnızken konuştuğun şeyler, en gerçek sohbetlerdir.",
-
-        "E-posta kutusundaki ‘okunmamış’ mesajlar, hayatın gizli sırlarıdır.",
-
-        "Başarı, denemekten vazgeçmemektir, ya da en azından kahve molası vermektir.",
-
-        "Kendini fazla ciddiye alma, hayat da seni almaz zaten.",
-
-        "Plan yapmak iyidir ama bazen anı yaşamak şarttır.",
-
-        "En güzel anlar, kahkaha patlatırken yakalanır.",
+        "Sabah erken kalkmak sağlıklıdır derler; ben hâlâ araştırma aşamasındayım.",
+        "Ofise gitmek için motivasyon yok ama kahve için var.",
+        "Evden çalışmanın en zor yanı, buzdolabının çok yakın olması.",
+        "Diyet yapıyorum; sadece pizza, hamburger ve tatlı yemiyorum… arada.",
+        "Bugün spor yapacaktım, ama spor da bana gelmedi.",
+        "Bir gün herkesin internetsiz kalacağına inanıyorum… ve o gün çok korkunç olacak.",
+        "Kahve olmadan çalışmak, internetsiz YouTube’a girmek gibi.",
+        "Sabahları uyanmak için üç alarm kurarım: uyumak, biraz daha uyumak, çok uyumak.",
+        "Pazartesi, cuma kılığına girse hayat daha güzel olurdu.",
+        "Ertelemek bir sanattır; ben Picasso’yum.",
+        "Cüzdanım kilo vermiş, farkında olmadan diyet yapıyor.",
+        "Yarın diyete başlıyorum, ama hangi yarın olduğuna karar vermedim.",
+        "Uykusuzluk, benimle uzun süreli bir ilişki yaşıyor.",
+        "Telefonun şarjı %1 ise hayat da %1 motivasyon demektir.",
+        "Toplantıların %80’i ‘başlayalım mı?’ ile geçiyor.",
+        "Bir iş yetişmiyorsa, hemen kahve molası veriyorum.",
+        "Hayat kısa, faturalar uzun.",
+        "Bazen en büyük başarı, bilgisayarı açmadan günü bitirmektir.",
+        "Google, modern çağın anneannesi gibi: her şeyi sorabilirsin.",
+        "Alarm çaldığında tek dileğim, pazartesi olmaması.",
+        "Yemek yapmak istemiyorum; paket servisle güçlü bir bağ kurdum.",
+        "İşe odaklanmaya çalışırken internete odaklanıyorum.",
+        "Evde oturmak güzel, ta ki kapıya kargo gelene kadar.",
+        "En iyi diyet: Dolabın boş olması.",
+        "Motivasyon kayboldu; gören varsa haber versin.",
+        "Kahve içmek çözüm değil ama kahvesiz hiç çözüm yok.",
+        "Tatildeyken iş aklıma geliyor, işteyken tatil.",
+        "Yapacak çok şeyim var, ama önce biraz dinlenmem lazım.",
+        "Mükemmel planım var: Hiçbir şey yapmamak.",
+        "Pijamayla yapılan iş, daha üretken hissettiriyor.",
+        "Dizi izlerken uyuyakaldım, uyanınca kendimi yeni sezonda buldum.",
+        "Hayallerim büyük, yatağım daha büyük.",
+        "Ofiste en hızlı çalışan şey: dedikodular.",
+        "Güne başlamak için en iyi yöntem: yeniden uyumak.",
+        "Para mutluluk getirmez ama kahve aldırır.",
+        "Telefonum sessizde, hayatım gürültüde.",
+        "Üşenmek, aslında enerji tasarrufu yapmaktır.",
+        "Trafikte sabırlıyım… ta ki korna sesini duyana kadar.",
+        "Yemek sonrası uyku, beynin teşekkür notudur.",
+        "Her işin çözümü: ‘Boşver, yarın bakarız.’",
+        "Motivasyonum düştü, şarj cihazı arıyorum.",
+        "Bir insanın gerçek yüzü, açken ortaya çıkar.",
+        "Tembellik yaparken asla hata yapmazsın.",
+        "Bugün erken yatacağım dedim; sabah oldu.",
+        "Ev işi yaparken müzik dinlemek, olimpik bir spordur.",
+        "Birlikte kilo alıp birlikte pişman olmak: arkadaşlık budur.",
+        "Kahkahasız bir gün, internetsiz bir güne benzer.",
+        "Telefon kamerası, yemeği göze daha lezzetli yapar.",
+        "Çalışmak güzel de, maaş günü daha güzel.",
+        "En sevdiğim egzersiz: Buzdolabına yürümek.",
+        "Hayatımı özetle: Yat – kalk – kahve – şikayet."
     ];
+
 
     // Sayfa yüklendiğinde işlem yap
     document.addEventListener("DOMContentLoaded", function () {
