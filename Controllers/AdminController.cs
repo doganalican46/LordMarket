@@ -167,6 +167,15 @@ namespace LordMarket.Controllers
 
             ViewBag.EnCokVeresiyeAlanMusteriBorcu = enCokVeresiyeAlanMusteriBorcu;
 
+
+            var kritikStokluUrunler = db.Urunler
+    .Where(u => u.Status == true && u.Stok < 10)
+    .OrderBy(u => u.Stok)
+    .Take(5)
+    .ToList();
+
+            ViewBag.KritikStokluUrunler = kritikStokluUrunler;
+
             return View();
         }
 

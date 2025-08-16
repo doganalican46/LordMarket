@@ -76,11 +76,14 @@
                     @Html.TextBoxFor(k => k.UrunFiyat, new { @class = "form-control", id = "UrunFiyat", required = "required", placeholder = "Ürün Fiyatı", step = "0.01", type = "number" })
                 </div>
 
+                <div class="mb-3">
+                    <label>Stok:</label>
+                    @Html.TextBoxFor(k => k.Stok, new { @class = "form-control", id = "Stok", required = "required", placeholder = "Stok", type = "text" })
+                </div>
 
 
 
 
-               
 
                 <div class="col-md-6 mt-4 d-flex align-items-center">
                     <div class="form-check">
