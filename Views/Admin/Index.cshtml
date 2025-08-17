@@ -417,23 +417,5 @@
             quoteEl.style.opacity = "1"; // Fade-in efekti
         }, 2500);
     });
-
-
-    window.addEventListener("DOMContentLoaded", function () {
-        
-
-        // Kritik stok bildirimi
-        fetch("/Home/KritikStokBildirimi")
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok (Stok)");
-                }
-                return response.json();
-            })
-            .catch(error => {
-                console.error("Kritik stok mail kontrol hatası:", error);
-            });
-    });
-
 </script>
 
