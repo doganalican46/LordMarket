@@ -675,18 +675,6 @@
                     // Hata olursa sadece konsola yaz
                     console.error("Mail kontrol hatası:", error);
                 });
-
-            // Kritik stok bildirimi
-            fetch("/Home/KritikStokBildirimi")
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok (Stok)");
-                    }
-                    return response.json();
-                })
-                .catch(error => {
-                    console.error("Kritik stok mail kontrol hatası:", error);
-                });
         });
 
 

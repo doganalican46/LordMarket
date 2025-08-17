@@ -176,10 +176,6 @@ namespace LordMarket.Controllers
 
             ViewBag.KritikStokluUrunler = kritikStokluUrunler;
 
-
-
-
-
             return View();
         }
 
