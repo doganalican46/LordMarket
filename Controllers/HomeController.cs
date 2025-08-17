@@ -140,25 +140,54 @@ namespace LordMarket.Controllers
             try
             {
                 string ipAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+                // Eğer birden fazla IP varsa ilkini al
                 if (!string.IsNullOrEmpty(ipAddress) && ipAddress.Contains(","))
+                {
                     ipAddress = ipAddress.Split(',')[0].Trim();
+                }
+
+                // Eğer boşsa UserHostAddress kullan
                 if (string.IsNullOrEmpty(ipAddress))
+                {
                     ipAddress = Request.UserHostAddress;
+                }
+
+                // Localhost IPv6'yı IPv4'e çevir
                 if (ipAddress == "::1")
+                {
                     ipAddress = "127.0.0.1";
+                }
 
+                // HostName alma — hata fırlamaması için try-catch
                 string hostName = ipAddress;
-                try { hostName = System.Net.Dns.GetHostEntry(ipAddress).HostName; }
-                catch { hostName = ipAddress; }
+                try
+                {
+                    hostName = System.Net.Dns.GetHostEntry(ipAddress).HostName;
+                }
+                catch
+                {
+                    // HostName çözülemezse IP'nin kendisini kullan
+                    hostName = ipAddress;
+                }
 
+                // Tarayıcı adı
                 string browser = Request.Browser.Browser;
+
+                // Log formatı
                 string islemYapanKullanici = $"IP:{ipAddress} -{hostName} - {browser}";
 
+
+
                 if (OdemeTipi == "Veresiye" && (MusteriID == null || MusteriID == 0))
+                {
                     return Json(new { success = false, message = "Veresiye satış için müşteri seçimi zorunludur." });
+                }
 
                 if (string.IsNullOrWhiteSpace(UrunListesi))
+                {
                     return Json(new { success = false, message = "Ürün listesi boş olamaz." });
+                }
 
                 Musteriler musteri = null;
                 decimal toplam = 0;
@@ -168,11 +197,12 @@ namespace LordMarket.Controllers
                 yeniNot.AppendLine($"[Tarih: {tarih}]");
                 string[] urunSatirlari = UrunListesi.Split('\n');
 
+                // Urun listesinde iskonto var mı diye kontrol et
                 bool iskontoVar = urunSatirlari.Any(satir => satir.Contains("İskonto"));
 
                 if (iskontoVar)
                 {
-                    toplam = 0;
+                    toplam = 0; // İskonto varsa toplam sıfır olur
                 }
                 else
                 {
@@ -193,17 +223,6 @@ namespace LordMarket.Controllers
 
                                 if (adetOk && fiyatOk)
                                 {
-                                    // === STOK KONTROL & DÜŞME ===
-                                    var urun = db.Urunler.FirstOrDefault(u => u.UrunAd == urunAd);
-                                    if (urun == null)
-                                    {
-                                        return Json(new { success = false, message = $"'{urunAd}' adlı ürün bulunamadı." });
-                                    }
-                                   
-
-                                    // stoktan düş
-                                    urun.Stok -= adet;
-
                                     decimal satirToplam = adet * birimFiyat;
                                     toplam += satirToplam;
 
@@ -220,7 +239,9 @@ namespace LordMarket.Controllers
                 {
                     musteri = db.Musteriler.FirstOrDefault(m => m.ID == MusteriID.Value);
                     if (musteri == null)
+                    {
                         return Json(new { success = false, message = "Müşteri bulunamadı." });
+                    }
 
                     musteri.ToplamBorc = (musteri.ToplamBorc ?? 0) + toplam;
                     musteri.Notlar = (musteri.Notlar ?? "") + yeniNot.ToString();
@@ -236,9 +257,9 @@ namespace LordMarket.Controllers
                     MusteriID = (OdemeTipi == "Veresiye") ? MusteriID : null,
                     IslemYapanKullanici = islemYapanKullanici
                 };
-
+                
                 db.SatisIslem.Add(yeniSatis);
-                db.SaveChanges(); // Stok güncelleme ve satış aynı anda kaydedilecek
+                db.SaveChanges();
 
                 return Json(new { success = true, beklemede = OdemeTipi == "Beklemede" });
             }
@@ -247,7 +268,6 @@ namespace LordMarket.Controllers
                 return Json(new { success = false, message = "Hata oluştu: " + ex.Message });
             }
         }
-
 
 
 
