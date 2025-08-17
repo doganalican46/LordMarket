@@ -79,7 +79,7 @@
                             <i class="bi bi-bar-chart-line me-2"></i> Raporlar
                         </a>
 
-
+                        
 
 
                     </div>
@@ -113,40 +113,6 @@
                 </ul>
             </div>
         </div>
-
-
-        <!-- Kritik Stoklu Ürünler Kartı -->
-        <div class="col-xl-4 col-md-6">
-            <div class="card shadow-lg border-0 rounded-4 h-100 card-custom">
-                <div class="card-header bg-danger text-white py-3 px-4 rounded-top-4">
-                    <h5 class="mb-0 fw-bold">⚠️ Kritik Stoklu Ürünler</h5>
-                </div>
-                <ul class="list-group list-group-flush">
-                    @if (ViewBag.KritikStokluUrunler != null && ((List<LordMarket.Models.Urunler>)ViewBag.KritikStokluUrunler).Count > 0)
-                    {
-                        foreach (var urun in (List<LordMarket.Models.Urunler>)ViewBag.KritikStokluUrunler)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
-                                <span class="text-truncate fw-semibold" style="max-width: 70%;">
-                                    @urun.UrunAd
-                                </span>
-                                <span class="badge bg-warning text-dark rounded-pill px-3 py-1 fs-6">
-                                    Stok: @urun.Stok
-                                </span>
-                            </li>
-                        }
-                    }
-                    else
-                    {
-                        <li class="list-group-item text-center text-muted py-4">
-                            🎉 Kritik stoklu ürün bulunmamaktadır
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-
-
     </div>
     
 

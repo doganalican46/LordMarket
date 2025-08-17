@@ -58,8 +58,7 @@ namespace LordMarket.Controllers
                     mevcutUrun.UrunResmi = urun.UrunResmi;
                     mevcutUrun.HizliUrunMu = urun.HizliUrunMu;
                     mevcutUrun.GuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
-                    mevcutUrun.Status = true; 
-                    mevcutUrun.Stok = urun.Stok;
+                    mevcutUrun.Status = true; // Güncellendiği için aktif olsun
 
                     db.SaveChanges();
                 }
@@ -132,7 +131,7 @@ namespace LordMarket.Controllers
                 urun.GuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                 urun.Status = y.Status;
                 urun.HizliUrunMu = y.HizliUrunMu;
-                urun.Stok = y.Stok;
+
                 db.SaveChanges();
 
                 TempData["GuncellemeBasarili"] = "Ürün başarıyla güncellendi!";

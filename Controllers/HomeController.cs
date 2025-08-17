@@ -347,7 +347,7 @@ namespace LordMarket.Controllers
                     mevcutUrun.HizliUrunMu = urun.HizliUrunMu;
                     mevcutUrun.GuncellenmeTarihi = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
                     mevcutUrun.Status = true; // Güncellendiği için aktif olsun
-                    mevcutUrun.Stok = urun.Stok;
+
                     db.SaveChanges();
                 }
                 else
