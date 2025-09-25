@@ -1837,6 +1837,7 @@
             });
         }
 
+
         function submitToptanciIslemForm() {
             var id = $('#toptanciSelect').val();
             var tutar = $('#IslemTutar').val();
@@ -1869,7 +1870,7 @@
                     timerProgressBar: true,
                     showConfirmButton: false
                 }).then(() => {
-                    location.reload();
+                    getToptanciAlacakVerecek();       // Güncel değerleri göster
                 });
             });
         }
