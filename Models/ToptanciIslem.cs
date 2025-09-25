@@ -12,15 +12,13 @@ namespace LordMarket.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class GelirGider
+    public partial class ToptanciIslem
     {
         public int ID { get; set; }
-        public string Tur { get; set; }
-        public Nullable<decimal> Tutar { get; set; }
-        public string Notlar { get; set; }
-        public Nullable<System.DateTime> Tarih { get; set; }
-        public string BosAlan { get; set; }
-        public Nullable<bool> Status { get; set; }
         public Nullable<int> ToptanciID { get; set; }
+        public Nullable<decimal> AlacakToplam { get; set; }
+        public Nullable<decimal> VerecekToplam { get; set; }
+        public Nullable<System.DateTime> SonGuncellemeTarihi { get; set; }
+        public Nullable<bool> Status { get; set; }
     }
 }

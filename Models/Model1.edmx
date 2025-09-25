@@ -16,6 +16,7 @@
           <Property Name="Tarih" Type="datetime" />
           <Property Name="BosAlan" Type="nvarchar" MaxLength="500" />
           <Property Name="Status" Type="bit" />
+          <Property Name="ToptanciID" Type="int" />
         </EntityType>
         <EntityType Name="Kullanicilar">
           <Key>
@@ -121,6 +122,7 @@
           <Property Name="Tarih" Type="DateTime" Precision="3" />
           <Property Name="BosAlan" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Boolean" />
+          <Property Name="ToptanciID" Type="Int32" />
         </EntityType>
         <EntityType Name="Kullanicilar">
           <Key>
@@ -222,6 +224,7 @@
           <EntitySetMapping Name="GelirGider">
             <EntityTypeMapping TypeName="LordMarketDBModel.GelirGider">
               <MappingFragment StoreEntitySet="GelirGider">
+                <ScalarProperty Name="ToptanciID" ColumnName="ToptanciID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Tur" ColumnName="Tur" />
                 <ScalarProperty Name="Tutar" ColumnName="Tutar" />

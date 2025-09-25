@@ -19,6 +19,7 @@ namespace LordMarket.Controllers
         {
             public List<GelirGider> GelirGider { get; set; }
             public List<Musteriler> Musteriler { get; set; }
+            public List<Kullanicilar> Kullanicilar { get; set; }
             public List<SatisIslem> SatisIslem { get; set; }
             public List<Urunler> Urunler { get; set; }
             public List<Urunler> HizliUrunler { get; set; }
@@ -74,6 +75,7 @@ namespace LordMarket.Controllers
             {
                 GelirGider = db.GelirGider.Where(h => h.Status == true).ToList(),
                 Musteriler = db.Musteriler.Where(h => h.Status == true).ToList(),
+                Kullanicilar = db.Kullanicilar.Where(h => h.Role == "toptanci").ToList(),
                 SatisIslem = satisListesi,
                 Urunler = db.Urunler.Where(h => h.Status == true).ToList(),
                 HizliUrunler = db.Urunler.Where(h => h.Status == true && h.HizliUrunMu == true).ToList(),
@@ -676,6 +678,43 @@ namespace LordMarket.Controllers
             return Json(0, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public JsonResult GetToptanciAlacakVerecek(int id)
+        {
+            // örnek hesaplama, senin mantığına göre değişebilir
+            var alacak = db.GelirGider
+                           .Where(x => x.Tur == "Alacak" && x.ToptanciID == id && x.Status == true)
+                           .Sum(x => (decimal?)x.Tutar) ?? 0;
+
+            var verecek = db.GelirGider
+                            .Where(x => x.Tur == "Verecek" && x.ToptanciID == id && x.Status == true)
+                            .Sum(x => (decimal?)x.Tutar) ?? 0;
+
+            return Json(new { Alacak = alacak, Verecek = verecek }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ResetToptanciIslemleri(int id)
+        {
+            try
+            {
+                var islemler = db.GelirGider.Where(g => g.ToptanciID == id && g.Status == true).ToList();
+                foreach (var islem in islemler)
+                {
+                    islem.Status = false; // pasif yap
+                }
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+
+
         [HttpPost]
         public ActionResult BorcOde(int id, decimal OdenenBorcTutar, string Not, string OdemeTipi)
         {
@@ -711,6 +750,32 @@ namespace LordMarket.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
+        [HttpPost]
+        public ActionResult ToptanciIslem(int id, decimal IslemTutar, string Not, string IslemTipi)
+        {
+            var toptanci = db.Kullanicilar.FirstOrDefault(x => x.ID == id && x.Role == "toptanci");
+            if (toptanci == null) return HttpNotFound();
+
+            // Yeni GelirGider kaydı
+            var gelirGider = new GelirGider
+            {
+                Tur = IslemTipi, // "Alacak" veya "Verecek"
+                Tutar = IslemTutar,
+                Notlar = Not,
+                Tarih = DateTime.Now,
+                Status = true,
+                BosAlan = $"Toptancı İşlem: {toptanci.Username} - {DateTime.Now:yyyy-MM-dd HH:mm}",
+                ToptanciID = toptanci.ID // burayı GelirGider modeline eklemiş olman gerekiyor
+            };
+
+            db.GelirGider.Add(gelirGider);
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
 
 
 
