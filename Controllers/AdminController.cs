@@ -107,9 +107,13 @@ namespace LordMarket.Controllers
 
             // Günün toplam satış tutarı
             var gununToplamSatis = satislar
-                .Where(s => s.Tarih.HasValue && s.Tarih.Value.Date == bugun)
-                .Sum(s => (decimal?)s.ToplamTutar) ?? 0;
+                                    .Where(s => s.Tarih.HasValue
+                                                && s.Tarih.Value.Date == bugun
+                                                && (s.OdemeTipi == "Nakit" || s.OdemeTipi == "Kart"))
+                                    .Sum(s => (decimal?)s.ToplamTutar) ?? 0;
+
             ViewBag.GununToplamSatis = gununToplamSatis;
+
 
             // Tüm zamanlar gelir ve gider toplamları
             var toplamGelir = gelirGiderler
