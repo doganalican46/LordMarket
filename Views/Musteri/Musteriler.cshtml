@@ -50,64 +50,92 @@
         @foreach (var Musteri in Model)
         {
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0 fw-semibold text-truncate">@Musteri.MusteriAdSoyad</h5>
-                        <span class="badge rounded-pill @(Musteri.Status == true ? "bg-success" : "bg-secondary")">
-                            @(Musteri.Status == true ? "Aktif" : "Pasif")
+                <div class="card border-0 shadow-sm h-100 rounded-3 customer-card">
+                    <!-- Header -->
+                    <div class="card-header bg-light border-0 rounded-top-3 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0 fw-semibold text-truncate">
+                            <i class="fas fa-user-circle text-primary me-1"></i>
+                            @Musteri.MusteriAdSoyad
+                        </h5>
+                        <span class="badge rounded-pill px-3 py-2 @(Musteri.Status==true ? "bg-success" : "bg-secondary")">
+                            @(Musteri.Status==true ? "Aktif" : "Pasif")
                         </span>
                     </div>
+
+                    <!-- Body -->
                     <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-light rounded-circle p-3 me-3">
-                                <i class="fas fa-user text-primary fs-4"></i>
+                        <!-- Kullanıcı Avatar -->
+                        <div class="text-center mb-3">
+                            <div class="avatar avatar-lg bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width:60px; height:60px;">
+                                <i class="fas fa-user fs-4"></i>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="text-muted">Toplam Borç</span>
+                        <!-- Borç Bilgisi -->
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">Toplam Borç</span>
                                 <span class="fw-bold text-danger">
                                     @(Musteri.ToplamBorc.HasValue ? Musteri.ToplamBorc.Value.ToString("C2") : "₺0,00")
                                 </span>
                             </div>
-                            <div class="progress" style="height: 6px;">
+                            <div class="progress mt-1" style="height: 8px; border-radius: 6px;">
                                 @{
                                     var borcYuzde = Musteri.ToplamBorc.HasValue && Musteri.ToplamBorc > 0 ?
                                         Math.Min(100, (int)(Musteri.ToplamBorc.Value / 3000 * 100)) : 0;
                                 }
-                                <div class="progress-bar bg-danger" role="progressbar" style="width: @borcYuzde%;"
-                                     aria-valuenow="@borcYuzde" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-gradient bg-danger" role="progressbar" style="width:@borcYuzde%;" aria-valuenow="@borcYuzde" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
-
-                        
                     </div>
-                    <div class="card-footer bg-white border-top-0 pt-0">
-                        <div class="d-flex justify-content-between flex-wrap gap-2">
-                            <a href="/Musteri/MusteriGetir/@Musteri.ID" class="btn btn-sm btn-warning flex-grow-1" title="Düzenle">
-                                <i class="fas fa-edit me-1"></i> Düzenle
-                            </a>
-                            <a href="/Musteri/MusteriSil/@Musteri.ID" class="btn btn-sm btn-danger flex-grow-1"
-                               onclick="return confirm('Müşteriyi silmek istediğinize emin misiniz?');" title="Sil">
-                                <i class="fas fa-trash me-1"></i> Sil
-                            </a>
-                        </div>
-                        <div class="d-flex justify-content-between flex-wrap gap-2 mt-2">
-                            <button type="button" class="btn btn-sm btn-success flex-grow-1"
-                                    data-bs-toggle="modal" data-bs-target="#borcOdeModal" onclick="setMusteriId(@Musteri.ID)">
-                                <i class="fas fa-money-bill-wave me-1"></i> Borç Öde
-                            </button>
-                            <button type="button" class="btn btn-sm btn-info flex-grow-1"
-                                    data-bs-toggle="modal" data-bs-target="#veresiyeModal" onclick="setMusteriId(@Musteri.ID)">
-                                <i class="fas fa-receipt me-1"></i> Veresiye Ekle
-                            </button>
+
+                    <!-- Footer -->
+                    <div class="card-footer bg-white border-0 pt-0">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <a href="/Musteri/MusteriGetir/@Musteri.ID" class="btn btn-sm btn-warning w-100">
+                                    <i class="fas fa-edit me-1"></i> Düzenle
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-sm btn-danger w-100"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#musteriSilModal"
+                                        onclick="setSilMusteriId(@Musteri.ID, '@Musteri.MusteriAdSoyad')">
+                                    <i class="fas fa-trash me-1"></i> Sil
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-sm btn-success w-100"
+                                        data-bs-toggle="modal" data-bs-target="#borcOdeModal" onclick="setMusteriId(@Musteri.ID)">
+                                    <i class="fas fa-money-bill-wave me-1"></i> Borç Öde
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-sm btn-info w-100"
+                                        data-bs-toggle="modal" data-bs-target="#veresiyeModal" onclick="setMusteriId(@Musteri.ID)">
+                                    <i class="fas fa-receipt me-1"></i> Veresiye
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+
+    <!-- Ekstra Hover Efekti -->
+    <style>
+        .customer-card {
+            transition: all 0.2s ease-in-out;
+        }
+
+            .customer-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            }
+    </style>
+
 </div>
 
 
@@ -212,7 +240,7 @@
         });
 
 
-        
+
 
         // Arama fonksiyonu
         document.getElementById('searchInput').addEventListener('input', function () {
@@ -226,45 +254,67 @@
         });
 
 
+        function setSilMusteriId(id, adSoyad) {
+            document.getElementById("silMusteriId").value = id;
+            document.getElementById("silMusteriAd").innerText = adSoyad;
+            document.getElementById("silOnayBtn").setAttribute("href", "/Musteri/MusteriSil/" + id);
+        }
+
+
+
     </script>
 }
 
 
 
 <!-- Modal -->
+<!-- Yeni Müşteri Ekle Modal -->
 <div class="modal fade" id="MusteriEkleModal" tabindex="-1" aria-labelledby="MusteriEkleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header tablestyle text-white">
-                <h5 class="modal-title" id="MusteriEkleModalLabel">Yeni Müşteri Ekle</h5>
+        <div class="modal-content border-0 shadow-lg rounded-3">
+
+            <!-- Header -->
+            <div class="modal-header " style="background-color: #003d60; color:white;">
+                <h5 class="modal-title" id="MusteriEkleModalLabel">
+                    <i class="fas fa-user-plus me-2"></i> Yeni Müşteri Ekle
+                </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
             </div>
 
+            <!-- Form -->
             <form action="/Musteri/YeniMusteri" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
 
-                    <div class="mb-3">
-                        <label for="MusteriAdSoyad" class="form-label">Müşteri Adı Soyadı</label>
-                        <input type="text" id="MusteriAdSoyad" name="MusteriAdSoyad" class="form-control" required placeholder="Müşteri ad soyad girin" />
+                    <!-- Ad Soyad -->
+                    <div class="form-floating mb-3">
+                        <input type="text" id="MusteriAdSoyad" name="MusteriAdSoyad" class="form-control" placeholder="Müşteri Adı Soyadı" required />
+                        <label for="MusteriAdSoyad">Müşteri Adı Soyadı</label>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="Notlar" class="form-label">Notlar</label>
-                        <textarea id="Notlar" name="Notlar" class="form-control" rows="3" placeholder="Varsa notları girin..."></textarea>
+                    <!-- Notlar -->
+                    <div class="form-floating mb-3">
+                        <textarea id="Notlar" name="Notlar" class="form-control" placeholder="Notlar" style="height:100px"></textarea>
+                        <label for="Notlar">Notlar (İsteğe Bağlı)</label>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="ToplamBorc" class="form-label">Toplam Borç</label>
-                        <input type="text" id="ToplamBorc" name="ToplamBorc" class="form-control" required placeholder="0.00" value="0" />
+                    <!-- Toplam Borç -->
+                    <div class="form-floating mb-3">
+                        <input type="number" step="0.01" id="ToplamBorc" name="ToplamBorc" class="form-control" placeholder="0.00" value="0" required />
+                        <label for="ToplamBorc">Toplam Borç</label>
                     </div>
 
+                    <!-- Status -->
                     <input type="hidden" name="Status" value="true" />
-
                 </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" class="btn tablestyle">Kaydet</button>
+                <!-- Footer -->
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> İptal
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check me-1"></i> Kaydet
+                    </button>
                 </div>
             </form>
         </div>
@@ -273,68 +323,128 @@
 
 
 
+<!-- Borç Öde Modal -->
 <div class="modal fade" id="borcOdeModal" tabindex="-1" aria-labelledby="borcOdeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Borç Öde</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-3">
+            <!-- Header -->
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-money-bill-wave me-2"></i> Borç Öde
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
+
+            <!-- Body -->
             <div class="modal-body">
                 <input type="hidden" id="borcMusteriId" />
-                <div class="form-group">
-                    <label>Ödenen Borç Tutarı</label>
-                    <input type="text" id="OdenenBorcTutar" class="form-control" required />
+
+                <div class="form-floating mb-3">
+                    <input type="text" id="OdenenBorcTutar" class="form-control" placeholder="Tutar" required />
+                    <label for="OdenenBorcTutar">Ödenen Borç Tutarı</label>
                 </div>
 
-                <div class="form-group mt-2">
-                    <label>Ödeme Tipi</label>
-                    <select id="OdemeTipi" class="form-control">
+                <div class="form-floating mb-3">
+                    <select id="OdemeTipi" class="form-select">
                         <option value="Nakit">Nakit</option>
                         <option value="Kart">Kart</option>
                         <option value="NoRapor">Rapora Yansıtma</option>
-
                     </select>
+                    <label for="OdemeTipi">Ödeme Tipi</label>
                 </div>
 
-                <div class="form-group mt-2">
-                    <label>Kısa Not (İsteğe Bağlı)</label>
-                    <textarea id="BorcNot" class="form-control" rows="2" placeholder="Açıklama..."></textarea>
+                <div class="form-floating">
+                    <textarea id="BorcNot" class="form-control" placeholder="Açıklama..." style="height:100px"></textarea>
+                    <label for="BorcNot">Kısa Not (İsteğe Bağlı)</label>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-success" onclick="submitBorcOdeForm()">Kaydet</button>
+
+            <!-- Footer -->
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Kapat
+                </button>
+                <button class="btn btn-success" onclick="submitBorcOdeForm()">
+                    <i class="fas fa-check me-1"></i> Kaydet
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 
-
-
-
+<!-- Veresiye Modal -->
 <div class="modal fade" id="veresiyeModal" tabindex="-1" aria-labelledby="veresiyeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Veresiye Ekle</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-3">
+            <!-- Header -->
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-receipt me-2"></i> Veresiye Ekle
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
+
+            <!-- Body -->
             <div class="modal-body">
                 <input type="hidden" id="veresiyeMusteriId" />
-                <div class="form-group">
-                    <label>Veresiye Tutarı</label>
-                    <input type="text" id="VeresiyeTutar" class="form-control" required />
+
+                <div class="form-floating mb-3">
+                    <input type="text" id="VeresiyeTutar" class="form-control" placeholder="Tutar" required />
+                    <label for="VeresiyeTutar">Veresiye Tutarı</label>
                 </div>
-                <div class="form-group mt-2">
-                    <label>Kısa Not (İsteğe Bağlı)</label>
-                    <textarea id="VeresiyeNot" class="form-control" rows="2" placeholder="Açıklama..."></textarea>
+
+                <div class="form-floating">
+                    <textarea id="VeresiyeNot" class="form-control" placeholder="Açıklama..." style="height:100px"></textarea>
+                    <label for="VeresiyeNot">Kısa Not (İsteğe Bağlı)</label>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-info" onclick="submitVeresiyeForm()">Kaydet</button>
+
+            <!-- Footer -->
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> Kapat
+                </button>
+                <button class="btn btn-info text-white" onclick="submitVeresiyeForm()">
+                    <i class="fas fa-check me-1"></i> Kaydet
+                </button>
             </div>
         </div>
     </div>
 </div>
 
+
+<!-- Silme Onay Modal -->
+<div class="modal fade" id="musteriSilModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-3">
+
+            <!-- Header -->
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Müşteri Silme Onayı
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <input type="hidden" id="silMusteriId" />
+                <p class="mb-0">
+                    <strong id="silMusteriAd"></strong> adlı müşteriyi silmek istediğinize emin misiniz?
+                </p>
+                <small class="text-muted">Bu işlem geri alınamaz.</small>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i> İptal
+                </button>
+                <a href="#" id="silOnayBtn" class="btn btn-danger">
+                    <i class="fas fa-trash me-1"></i> Sil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,81 +4,76 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="container-fluid px-4">
-    <!-- Başlık ve Breadcrumb -->
+<div class="container py-4">
+    <!-- Başlık -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0"><i class="fas fa-user-edit me-2 text-dark"></i>Müşteri Güncelle</h1>
-        </div>
+        <h1 class="h4 fw-bold text-dark mb-0">
+            <i class="fas fa-user-edit me-2 text-success"></i> Müşteri Güncelle
+        </h1>
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0 bg-transparent p-0">
-                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="/Musteri/Musteriler">Müşteriler</a></li>
-                <li class="breadcrumb-item active">Güncelle</li>
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item">
+                    <a href="/Admin/Index" class="text-decoration-none"><i class="fas fa-home"></i></a>
+                </li>
+                <li class="breadcrumb-item"><a href="/Musteri/Musteriler" class="text-decoration-none">Müşteriler</a></li>
+                <li class="breadcrumb-item active text-muted">Güncelle</li>
             </ol>
         </nav>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
-        <div class="card-header bg-white border-bottom py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-semibold">@Model.MusteriAdSoyad</h5>
-                <div>
-                    <form action="/Musteri/MusteriTemizle" method="post" onsubmit="return confirm('Müşteriye ait tüm borçları silmek istediğinize emin misiniz?');" class="d-inline">
-                        <input type="hidden" name="ID" value="@Model.ID" />
-                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#temizleModal">
-                            <i class="fas fa-broom me-1"></i> Borçları Temizle
-                        </button>
-                    </form>
-                </div>
-            </div>
+    <!-- Kart -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-semibold text-primary">@Model.MusteriAdSoyad</h5>
+            <button type="button" class="btn btn-danger btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#temizleModal">
+                <i class="fas fa-broom me-1"></i> Borçları Temizle
+            </button>
         </div>
 
-        <div class="card-body">
+        <div class="card-body p-4">
             @using (Html.BeginForm("MusteriGuncelle", "Musteri", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
             {
                 @Html.HiddenFor(k => k.ID)
 
-                <div class="row g-3">
-                    <!-- Müşteri Bilgileri -->
-                    <div class="col-md-6">
+                <div class="row g-4">
+                    <!-- Sol Form -->
+                    <div class="col-lg-6">
                         <div class="mb-3">
-                            <label class="form-label">Müşteri Adı</label>
-                            @Html.TextBoxFor(k => k.MusteriAdSoyad, new { @class = "form-control", required = "required", placeholder = "Müşteri Adı" })
+                            <label class="form-label fw-semibold">Müşteri Adı</label>
+                            @Html.TextBoxFor(k => k.MusteriAdSoyad, new { @class = "form-control rounded-3", required = "required", placeholder = "Müşteri Adı" })
                             <div class="invalid-feedback">Lütfen müşteri adını giriniz.</div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Toplam Borç</label>
+                            <label class="form-label fw-semibold">Toplam Borç</label>
                             <div class="input-group">
-                                <span class="input-group-text">₺</span>
-                                @Html.TextBoxFor(k => k.ToplamBorc, new { @class = "form-control", required = "required", placeholder = "0.00" })
+                                <span class="input-group-text bg-light">₺</span>
+                                @Html.TextBoxFor(k => k.ToplamBorc, new { @class = "form-control rounded-3", required = "required", placeholder = "0.00" })
                             </div>
                             <div class="invalid-feedback">Lütfen borç miktarını giriniz.</div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Durum</label>
+                            <label class="form-label fw-semibold">Durum</label>
                             @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
                             {
                                 new SelectListItem { Text = "Aktif", Value = "true" },
                                 new SelectListItem { Text = "Pasif", Value = "false" }
-                            }, new { @class = "form-select", required = "required" })
+                            }, new { @class = "form-select rounded-3", required = "required" })
                         </div>
                     </div>
 
-                    <!-- Müşteri İstatistikleri -->
-                    <div class="col-md-6">
-                        <div class="card bg-light mb-3">
+                    <!-- Sağ Özet -->
+                    <div class="col-lg-6">
+                        <div class="card bg-light rounded-4 shadow-sm">
                             <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Toplam Borç:</span>
                                     <span class="fw-bold text-danger">@(Model.ToplamBorc.HasValue ? Model.ToplamBorc.Value.ToString("C2") : "₺0,00")</span>
                                 </div>
-
-                                <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between">
                                     <span class="text-muted">Durum:</span>
-                                    <span class="badge @(Model.Status == true ? "bg-success" : "bg-secondary")">
+                                    <span class="badge rounded-pill @(Model.Status == true ? "bg-success" : "bg-secondary")">
                                         @(Model.Status == true ? "Aktif" : "Pasif")
                                     </span>
                                 </div>
@@ -88,16 +83,16 @@
                 </div>
 
                 <!-- Alınan Ürünler -->
-                <div class="mb-4">
-                    <label class="form-label">Alınan Ürünler</label>
-                    <div class="card">
+                <div class="mt-4">
+                    <label class="form-label fw-semibold">Alınan Ürünler</label>
+                    <div class="card rounded-3 shadow-sm">
                         <div class="card-body" style="max-height: 200px; overflow-y: auto;">
                             @if (!string.IsNullOrEmpty(Model.Notlar))
                             {
                                 var urunler = Model.Notlar.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                                 foreach (var urun in urunler.Reverse())
                                 {
-                                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2 list-hover">
                                         <span>@urun.Trim()</span>
                                     </div>
                                 }
@@ -114,16 +109,16 @@
                 </div>
 
                 <!-- Yapılan İşlemler -->
-                <div class="mb-4">
-                    <label class="form-label">Yapılan İşlemler</label>
-                    <div class="card">
+                <div class="mt-4">
+                    <label class="form-label fw-semibold">Yapılan İşlemler</label>
+                    <div class="card rounded-3 shadow-sm">
                         <div class="card-body" style="max-height: 200px; overflow-y: auto;">
                             @if (!string.IsNullOrEmpty(Model.BosAlan))
                             {
                                 var islemler = Model.BosAlan.Split(new[] { "||" }, StringSplitOptions.RemoveEmptyEntries);
                                 foreach (var islem in islemler.Reverse())
                                 {
-                                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2 list-hover">
                                         <span>@islem.Trim()</span>
                                     </div>
                                 }
@@ -140,11 +135,11 @@
                 </div>
 
                 <!-- Butonlar -->
-                <div class="d-flex justify-content-between">
-                    <a href="/Musteri/Musteriler/" class="btn btn-outline-secondary">
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="/Musteri/Musteriler/" class="btn btn-outline-secondary rounded-pill px-4">
                         <i class="fas fa-times me-1"></i> İptal
                     </a>
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-success rounded-pill px-4">
                         <i class="fas fa-save me-1"></i> Güncelle
                     </button>
                 </div>
@@ -155,52 +150,50 @@
 
 @section Scripts {
     <script>
-        // Form validation
-        (function () {
+        // Bootstrap Form Validation
+        (() => {
             'use strict'
-
-            var forms = document.querySelectorAll('.needs-validation')
-
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
         })()
     </script>
 }
 
-
-
-
 <!-- Modal -->
 <div class="modal fade" id="temizleModal" tabindex="-1" aria-labelledby="temizleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-
+        <div class="modal-content rounded-4 shadow-lg">
             <div class="modal-header">
-                <h5 class="modal-title" id="temizleModalLabel">Borçları Temizle</h5>
+                <h5 class="modal-title fw-bold text-danger"><i class="fas fa-exclamation-triangle me-2"></i> Borçları Temizle</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
             </div>
-
             <div class="modal-body">
-                Müşteriye ait <strong>tüm borçları</strong> silmek istediğinize emin misiniz? Bu işlem geri alınamaz!
+                Müşteriye ait <strong>tüm borçları</strong> silmek istediğinize emin misiniz? <br />
+                <span class="text-danger">Bu işlem geri alınamaz!</span>
             </div>
-
             <div class="modal-footer">
                 <form action="/Musteri/MusteriTemizle" method="post" class="d-inline">
                     <input type="hidden" name="ID" value="@Model.ID" />
-                    <button type="submit" class="btn btn-danger">Evet, Sil</button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">Evet, Sil</button>
                 </form>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Vazgeç</button>
+                <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Vazgeç</button>
             </div>
-
         </div>
     </div>
 </div>
+
+<style>
+    .list-hover:hover {
+        background-color: #f8f9fa;
+        border-radius: .5rem;
+        transition: 0.2s ease;
+    }
+</style>
