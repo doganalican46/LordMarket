@@ -3,68 +3,101 @@
     ViewBag.Title = "Toptancı Güncelle";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<div class="card shadow-sm border-light rounded" style="max-width: 700px; margin: 20px auto;">
-    <div class="card-header tablestyle text-white text-center">
-        <h3><b>Toptancı Güncelle</b></h3>
-    </div>
 
-    <div class="card-body">
+<div class="container my-5">
+    <div class="card shadow rounded-lg mx-auto" style="max-width: 800px;">
+        <div class="card-header tablestyle text-white text-center">
+            <h3 class="mb-0"><i class="fas fa-user-edit me-2"></i> Toptancı Güncelle</h3>
+        </div>
 
+        <div class="card-body">
 
-        <!-- Güncelleme Formu -->
-        @using (Html.BeginForm("ToptanciGuncelle", "Kullanici", FormMethod.Post, new { @class = "form-group" }))
-        {
-            @Html.HiddenFor(k => k.ID)
+            <!-- Güncelleme Formu -->
+            @using (Html.BeginForm("ToptanciGuncelle", "Kullanici", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+            {
+                @Html.HiddenFor(k => k.ID)
 
-            <div class="mb-3">
-                <label>Toptancı Adı:</label>
-                @Html.TextBoxFor(k => k.Username, new { @class = "form-control", required = "required", placeholder = "Toptancı Adı" })
-            </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Toptancı Adı</label>
+                    @Html.TextBoxFor(k => k.Username, new { @class = "form-control", required = "required", placeholder = "Toptancı Adı" })
+                </div>
 
-            <div class="mb-3">
-                <label>Toptancının Geldiği Günler:</label>
-                @{
-                    var seciliGunler = Model.Password?.Split(',').Select(g => g.Trim()).ToList() ?? new List<string>();
-                    var gunler = new List<string> { "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar" };
-                }
-                @foreach (var gun in gunler)
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="gunler" value="@gun" id="gun_@gun"
-                               @(seciliGunler.Contains(gun) ? "checked" : "") />
-                        <label class="form-check-label" for="gun_@gun">@gun</label>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Geldiği Günler</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        @{
+                            var seciliGunler = Model.Password?.Split(',').Select(g => g.Trim()).ToList() ?? new List<string>();
+                            var gunler = new List<string> { "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar" };
+                        }
+                        @foreach (var gun in gunler)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="gunler" value="@gun" id="gun_@gun"
+                                       @(seciliGunler.Contains(gun) ? "checked" : "") />
+                                <label class="form-check-label" for="gun_@gun">@gun</label>
+                            </div>
+                        }
+                        <input type="hidden" name="Password" id="Password" />
                     </div>
-                }
-                <!-- Günleri burada toplayacağız -->
-                <input type="hidden" name="Password" id="Password" />
-                
-            </div>
+                </div>
 
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Durum</label>
+                    @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Aktif", Value = "true" },
+                        new SelectListItem { Text = "Pasif", Value = "false" }
+                    }, new { @class = "form-select", required = "required" })
+                </div>
 
+                <div class="d-flex justify-content-between">
+                    <a href="/Kullanici/Toptancilar/" class="btn btn-outline-danger"><i class="fas fa-times me-1"></i> İptal</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i> Güncelle</button>
+                </div>
+            }
 
+            <hr class="my-4" />
 
+            <!-- Alacak / Verecek İşlem Formu -->
+            <h5 class="mb-3 text-primary"><i class="fas fa-exchange-alt me-2"></i> Alacak / Verecek İşlemi</h5>
+            @using (Html.BeginForm("ToptanciIslem", "Kullanici", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+            {
+                @Html.Hidden("id", Model.ID)
 
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">İşlem Tipi</label>
+                    <select name="IslemTipi" class="form-select" required>
+                        <option value="">Seçiniz...</option>
+                        <option value="Alacak">Alacak</option>
+                        <option value="Verecek">Verecek</option>
+                    </select>
+                </div>
 
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Tutar</label>
+                    <input type="number" name="IslemTutar" class="form-control" placeholder="0,00" required step="0.01" />
+                </div>
 
-            <div class="mb-3">
-                <label>Status:</label>
-                @Html.DropDownListFor(k => k.Status, new List<SelectListItem>
-                {
-                    new SelectListItem { Text = "Aktif", Value = "true" },
-                    new SelectListItem { Text = "Pasif", Value = "false" }
-                }, new { @class = "form-select", required = "required" })
-            </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Not</label>
+                    <textarea name="Not" class="form-control" rows="2" placeholder="İşlem açıklaması..."></textarea>
+                </div>
 
-            <div class="text-center">
-                <a href="/Kullanici/Toptancilar/" class="btn btn-danger btn-sm">İptal</a>
-                <button type="submit" class="btn tablestyle btn-sm">Güncelle</button>
-            </div>
-        }
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save me-1"></i> İşlem Kaydet</button>
+                </div>
+            }
+
+            <hr class="my-4" />
+
+            
+
+        </div>
     </div>
 </div>
 
-
 <script>
+    // Günleri hidden alana yaz
     document.querySelector("form").addEventListener("submit", function () {
         const gunler = [];
         document.querySelectorAll("input[name='gunler']:checked").forEach(cb => {
@@ -72,5 +105,20 @@
         });
         document.getElementById("Password").value = gunler.join(", ");
     });
-</script>
 
+    // Bootstrap validation
+    (function () {
+        'use strict'
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>

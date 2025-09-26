@@ -91,9 +91,74 @@ namespace LordMarket.Controllers
         [Authorize]
         public ActionResult Toptancilar()
         {
-            var Toptancilar = db.Kullanicilar.Where(x => x.Role == "toptanci").ToList();
-            return View(Toptancilar);
+            var toptancilar = db.Kullanicilar.Where(x => x.Role == "Toptanci").ToList();
+
+            // ViewBag içine net durum sözlüğü atalım
+            var durumlar = new Dictionary<int, (decimal Alacak, decimal Verecek, decimal Net)>();
+
+            foreach (var t in toptancilar)
+            {
+                var alacak = db.GelirGider
+                               .Where(x => x.Tur == "Alacak" && x.ToptanciID == t.ID && x.Status == true)
+                               .Sum(x => (decimal?)x.Tutar) ?? 0;
+
+                var verecek = db.GelirGider
+                                .Where(x => x.Tur == "Verecek" && x.ToptanciID == t.ID && x.Status == true)
+                                .Sum(x => (decimal?)x.Tutar) ?? 0;
+
+                var net = alacak - verecek;
+                durumlar[t.ID] = (alacak, verecek, net);
+            }
+
+            ViewBag.ToptanciDurumlar = durumlar;
+
+            return View(toptancilar);
         }
+
+        [HttpPost]
+        public ActionResult ToptanciIslem(int id, decimal IslemTutar, string Not, string IslemTipi)
+        {
+            var toptanci = db.Kullanicilar.FirstOrDefault(x => x.ID == id && x.Role == "toptanci");
+            if (toptanci == null) return HttpNotFound();
+
+            // Yeni GelirGider kaydı
+            var gelirGider = new GelirGider
+            {
+                Tur = IslemTipi, // "Alacak" veya "Verecek"
+                Tutar = IslemTutar,
+                Notlar = Not,
+                Tarih = DateTime.Now,
+                Status = true,
+                BosAlan = $"Toptancı İşlem: {toptanci.Username} - {DateTime.Now:yyyy-MM-dd HH:mm}",
+                ToptanciID = toptanci.ID // burayı GelirGider modeline eklemiş olman gerekiyor
+            };
+
+            db.GelirGider.Add(gelirGider);
+            db.SaveChanges();
+
+            return RedirectToAction("Toptancilar");
+        }
+
+        [HttpPost]
+        public JsonResult ResetToptanciIslemleri(int id)
+        {
+            try
+            {
+                var islemler = db.GelirGider.Where(g => g.ToptanciID == id && g.Status == true).ToList();
+                foreach (var islem in islemler)
+                {
+                    islem.Status = false; // pasif yap
+                }
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
 
         [Authorize]
         [HttpGet]
