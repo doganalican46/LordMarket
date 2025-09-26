@@ -504,68 +504,85 @@
     </div>
 
     <div class="modal fade" id="borcOdeModal" tabindex="-1" aria-labelledby="borcOdeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header " style="background-color: #003d60; color:white;">
-                    <h5 class="modal-title">Borç Öde</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg border-0 rounded-3">
 
-                    <!-- Müşteri Seçimi -->
-                    <div class="form-group">
-                        <label>Müşteri Seçin</label>
-                        <select id="borcMusteriSelect" class="form-control" onchange="getMusteriBorc()">
-                            <option selected disabled>Müşteri Seçin</option>
-                            @foreach (var item in Model.Musteriler)
-                            {
-                                <option value="@item.ID">@item.MusteriAdSoyad</option>
-                            }
-                        </select>
-                    </div>
-
-                    <!-- Seçili Müşteri Borcu -->
-                    <div class="form-group mt-2">
-                        <label>Toplam Borç</label>
-                        <input type="text" id="ToplamBorc" class="form-control" readonly />
-                    </div>
-
-                    <!-- Ödenecek Tutar -->
-                    <div class="form-group mt-2">
-                        <label>Ödenen Borç Tutarı</label>
-                        <input type="text" id="OdenenBorcTutar" class="form-control" required />
-                    </div>
-
-                    <!-- Ödeme Tipi -->
-                    <div class="form-group mt-2">
-                        <label>Ödeme Tipi</label>
-                        <select id="OdemeTipi" class="form-control">
-                            <option value="Nakit">Nakit</option>
-                            <option value="Kart">Kart</option>
-                            <option value="RaporaYansitma">Rapora Yansıtma</option>
-                        </select>
-                    </div>
-
-                    <!-- Not -->
-                    <div class="form-group mt-2">
-                        <label>Kısa Not (İsteğe Bağlı)</label>
-                        <textarea id="BorcNot" class="form-control" rows="2" placeholder="Açıklama..."></textarea>
-                    </div>
+                <!-- Header -->
+                <div class="modal-header "style="background-color: #003d60; color:white;">
+                    <h5 class="modal-title fw-bold" id="borcOdeModalLabel">
+                        <i class="bi bi-cash-coin me-2"></i> Borç Öde
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
-                <div class="modal-footer">
-                    <button class="btn" style="background-color: #003d60; color:white;" onclick="submitBorcOdeForm()">Kaydet</button>
+                <!-- Body -->
+                <div class="modal-body p-4">
+                    <form id="borcOdeForm">
 
+                        <!-- Müşteri Seçimi -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Müşteri Seçin</label>
+                            <select id="borcMusteriSelect" class="form-select shadow-sm" onchange="getMusteriBorc()" required>
+                                <option selected disabled value="">Müşteri Seçin...</option>
+                                @foreach (var item in Model.Musteriler)
+                                {
+                                    <option value="@item.ID">@item.MusteriAdSoyad</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Seçili Müşteri Borcu -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Toplam Borç</label>
+                            <input type="text" id="ToplamBorc" class="form-control shadow-sm" readonly />
+                        </div>
+
+                        <!-- Ödenecek Tutar -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Ödenecek Tutar</label>
+                            <div class="input-group shadow-sm">
+                                <span class="input-group-text">₺</span>
+                                <input type="text"  id="OdenenBorcTutar" class="form-control" placeholder="0" required />
+                            </div>
+                        </div>
+
+                        <!-- Ödeme Tipi -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Ödeme Tipi</label>
+                            <select id="OdemeTipi" class="form-select shadow-sm">
+                                <option value="Nakit">Nakit</option>
+                                <option value="Kart">Kart</option>
+                                <option value="RaporaYansitma">Rapora Yansıtma</option>
+                            </select>
+                        </div>
+
+                        <!-- Not -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Kısa Not (İsteğe Bağlı)</label>
+                            <textarea id="BorcNot" class="form-control shadow-sm" rows="2" placeholder="Açıklama..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-light border shadow-sm" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> İptal
+                    </button>
+                    <button type="button" class="btn "style="background-color: #003d60; color:white;" onclick="submitBorcOdeForm()">
+                        <i class="bi bi-check2-circle me-1"></i> Kaydet
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
+
     <div class="modal fade" id="toptanciModal" tabindex="-1" aria-labelledby="toptanciModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg">
                 <!-- Modal Header -->
-                <div class="modal-header  rounded-top-3"style="background-color: #003d60; color:white;">
+                <div class="modal-header  rounded-top-3" style="background-color: #003d60; color:white;">
                     <div class="d-flex align-items-center">
                         <i class="bi bi-building me-2 fs-4"></i>
                         <h5 class="modal-title mb-0 fw-bold">Toptancı İşlemleri</h5>
@@ -1036,18 +1053,18 @@
                                 let toplam = (adet * fiyat).toFixed(2);
 
                                 let yeniSatir = `
-                                            <tr data-barkod="${urunAd}">
-                                                <!-- İstersen gerçek barkodla değiştir -->
-                                                <td>${urunAd}</td>
-                                                <td class="fiyat">${fiyat}</td>
-                                                <td class="adet">${adet}</td>
-                                                <td class="satirToplam">${toplam}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                </td>
-                                            </tr>`;
+                                                <tr data-barkod="${urunAd}">
+                                                    <!-- İstersen gerçek barkodla değiştir -->
+                                                    <td>${urunAd}</td>
+                                                    <td class="fiyat">${fiyat}</td>
+                                                    <td class="adet">${adet}</td>
+                                                    <td class="satirToplam">${toplam}</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>`;
                                 $('#urunListesi tbody').append(yeniSatir);
                             }
                         });
@@ -1209,16 +1226,16 @@
 
                         $('#urunListesi tbody').prepend(
                             `<tr data-barkod="${barkod}">
-                                                <td>${res.urunAd}</td>
-                                                <td class="fiyat">${res.fiyat}</td>
+                                                    <td>${res.urunAd}</td>
+                                                    <td class="fiyat">${res.fiyat}</td>
 <td class="adet">${eklenecekAdet}</td>
 <td class="satirToplam">${(eklenecekAdet * res.fiyat).toFixed(2)}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                </td>
-                                            </tr>`
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -1447,16 +1464,16 @@
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-                                                <td>${urunAdi}</td>
-                                                <td class="fiyat">${fiyat.toFixed(2)}</td>
-                                                <td class="adet">1</td>
-                                                <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                </td>
-                                            </tr>`
+                                                    <td>${urunAdi}</td>
+                                                    <td class="fiyat">${fiyat.toFixed(2)}</td>
+                                                    <td class="adet">1</td>
+                                                    <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>`
             );
 
             updateGenelToplam();
@@ -1555,6 +1572,12 @@
             input.value = input.value.slice(0, -1);
         }
 
+        $('#toptanciModal').on('hidden.bs.modal', function () {
+            $('#barkodInput').focus();
+            location.reload(); // ekranı yenile
+
+        });
+
 
         let iskontoUygulandi = false;
         let oncekiToplam = 0;
@@ -1622,12 +1645,12 @@
 
             // İskonto satırını ekle
             $('#urunListesi tbody').append(`
-                                            <tr class="iskonto-satiri" style="background-color: #e9fbe9;">
-                                                <td colspan="3"><strong>İskonto (%${iskonto})</strong></td>
-                                                <td class="satirToplam">-${indirimMiktari.toFixed(2)}</td>
-                                                <td></td>
-                                            </tr>
-                                        `);
+                                                <tr class="iskonto-satiri" style="background-color: #e9fbe9;">
+                                                    <td colspan="3"><strong>İskonto (%${iskonto})</strong></td>
+                                                    <td class="satirToplam">-${indirimMiktari.toFixed(2)}</td>
+                                                    <td></td>
+                                                </tr>
+                                            `);
 
             $('#toplamFiyat').text(yeniToplam.toFixed(2) + ' ₺');
             $('#barkodInput').val('').focus();
@@ -1720,7 +1743,7 @@
 
         function getMusteriBorc() {
             var id = $('#borcMusteriSelect').val();
-            $('#borcMusteriId').val(id); 
+            $('#borcMusteriId').val(id);
             $.getJSON('/Home/GetMusteriBorc', { id: id }, function (borc) {
                 $('#ToplamBorc').val(borc + ' ₺');
             });
