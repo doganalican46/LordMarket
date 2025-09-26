@@ -330,19 +330,31 @@ namespace LordMarket.Controllers
 
 
 
-        
 
-            [Authorize]
+
+        [Authorize]
         public ActionResult SatisIslemSil(int id)
         {
             var satis = db.SatisIslem.Find(id);
             if (satis != null)
             {
+                if (satis.MusteriID != null)
+                { 
+                    var musteri = db.Musteriler.Find(satis.MusteriID);
+                    if (musteri != null)
+                    {
+                        musteri.ToplamBorc -= satis.ToplamTutar ?? 0;
+                        string bilgi = $" {satis.ID} nolu satış kaldırıldı: {DateTime.Now:yyyy-MM-dd HH:mm} - {satis.ToplamTutar} ₺||";
+                        musteri.BosAlan += bilgi;
+                    }
+                }
+
                 db.SatisIslem.Remove(satis);
                 db.SaveChanges();
             }
             return RedirectToAction("SatisGecmis");
         }
+
 
 
 
