@@ -21,6 +21,7 @@ namespace LordMarket.Controllers
             if (Session["Role"] == null || Session["Role"].ToString() != "admin") { return RedirectToAction("Login", "Home"); }
 
             var GelirGider = db.GelirGider.ToList();
+            
             return View(GelirGider);
         }
 

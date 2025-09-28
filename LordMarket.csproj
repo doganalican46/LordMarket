@@ -283,7 +283,6 @@
     <Content Include="Views\GelirGider\SatisGecmis.cshtml" />
     <Content Include="Views\Kullanici\Toptancilar.cshtml" />
     <Content Include="Views\Kullanici\ToptanciGetir.cshtml" />
-    <Content Include="Views\Home\deneme.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
