@@ -776,7 +776,12 @@ namespace LordMarket.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult deneme()
+        {
+           
 
+            return View();
+        }
 
 
 

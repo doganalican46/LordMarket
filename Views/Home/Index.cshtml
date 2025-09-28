@@ -48,6 +48,7 @@
                 background-color: #ccc;
             }
 
+
     </style>
 
 </head>
@@ -197,10 +198,12 @@
                         </div>
 
                         <!-- Toptancı İşlem -->
+                        
+
                         <div class="col-6 col-md-4 col-lg-3">
                             <button class="btn w-100 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm rounded text-white"
                                     style="background-color: #6f42c1;"
-                                    data-bs-toggle="modal" data-bs-target="#toptanciModal">
+                                    data-bs-toggle="modal" data-bs-target="#toptanciWizardModal">
                                 <i class="fas fa-truck-loading"></i> Toptancı İşlem
                             </button>
                         </div>
@@ -508,7 +511,7 @@
             <div class="modal-content shadow-lg border-0 rounded-3">
 
                 <!-- Header -->
-                <div class="modal-header "style="background-color: #003d60; color:white;">
+                <div class="modal-header " style="background-color: #003d60; color:white;">
                     <h5 class="modal-title fw-bold" id="borcOdeModalLabel">
                         <i class="bi bi-cash-coin me-2"></i> Borç Öde
                     </h5>
@@ -542,7 +545,7 @@
                             <label class="form-label fw-semibold">Ödenecek Tutar</label>
                             <div class="input-group shadow-sm">
                                 <span class="input-group-text">₺</span>
-                                <input type="text"  id="OdenenBorcTutar" class="form-control" placeholder="0" required />
+                                <input type="text" id="OdenenBorcTutar" class="form-control" placeholder="0" required />
                             </div>
                         </div>
 
@@ -569,7 +572,7 @@
                     <button type="button" class="btn btn-light border shadow-sm" data-bs-dismiss="modal">
                         <i class="bi bi-x-circle me-1"></i> İptal
                     </button>
-                    <button type="button" class="btn "style="background-color: #003d60; color:white;" onclick="submitBorcOdeForm()">
+                    <button type="button" class="btn " style="background-color: #003d60; color:white;" onclick="submitBorcOdeForm()">
                         <i class="bi bi-check2-circle me-1"></i> Kaydet
                     </button>
                 </div>
@@ -577,139 +580,174 @@
         </div>
     </div>
 
-
-    <div class="modal fade" id="toptanciModal" tabindex="-1" aria-labelledby="toptanciModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    
+    <!-- Wizard Modal -->
+    <div class="modal fade" id="toptanciWizardModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
-                <!-- Modal Header -->
-                <div class="modal-header  rounded-top-3" style="background-color: #003d60; color:white;">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-building me-2 fs-4"></i>
-                        <h5 class="modal-title mb-0 fw-bold">Toptancı İşlemleri</h5>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                <div class="modal-header rounded-top-3" style="background-color:#003d60;color:white;">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-gear me-2"></i>Toptancı İşlem Sihirbazı</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
-                <!-- Modal Body -->
                 <div class="modal-body p-4">
-                    <div class="row g-4">
-                        <!-- Sol Taraf: Toptancı Seçimi ve Finansal Durum -->
-                        <div class="col-md-6">
-                            <!-- Toptancı Seçimi -->
-                            <div class="mb-4">
-                                <label for="toptanciSelect" class="form-label fw-semibold text-primary">
-                                    <i class="bi bi-person-badge me-1"></i>Toptancı Seçin
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0">
-                                        <i class="bi bi-search text-muted"></i>
-                                    </span>
-                                    <select id="toptanciSelect" class="form-select border-start-0 ps-0" onchange="getToptanciAlacakVerecek()">
-                                        <option selected disabled>Toptancı Seçin</option>
-                                        @foreach (var item in Model.Kullanicilar)
-                                        {
-                                            <option value="@item.ID">@item.Username</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
+                    <!-- Step Indicator -->
+                    <div class="progress mb-4" style="height: 10px;">
+                        <div id="wizardProgress" class="progress-bar bg-primary" role="progressbar" style="width: 33%;"></div>
+                    </div>
 
-                            <!-- Finansal Durum Kartı -->
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-header bg-light py-3">
-                                    <h6 class="card-title mb-0 fw-semibold">
-                                        <i class="bi bi-graph-up me-1"></i>Finansal Durum
-                                    </h6>
-                                </div>
-                                <div class="card-body p-3">
-                                    <!-- Alacak -->
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge bg-success bg-opacity-10 text-success p-2 me-2">
-                                                <i class="bi bi-arrow-down-left"></i>
-                                            </span>
-                                            <span class="fw-medium">Toplam Alacak:</span>
-                                        </div>
-                                        <span id="ToplamAlacak" class="fw-bold text-success fs-6">0 ₺</span>
-                                    </div>
+                    <!-- Step 1: Toptancı Seçimi -->
+                    <div class="wizard-step" id="step1">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-person-badge me-2"></i>Toptancı Seçimi</h6>
 
-                                    <!-- Verecek -->
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge bg-danger bg-opacity-10 text-danger p-2 me-2">
-                                                <i class="bi bi-arrow-up-right"></i>
-                                            </span>
-                                            <span class="fw-medium">Toplam Verecek:</span>
-                                        </div>
-                                        <span id="ToplamVerecek" class="fw-bold text-danger fs-6">0 ₺</span>
-                                    </div>
-
-                                    <!-- Net Durum -->
-                                    <div class="d-flex justify-content-between align-items-center border-top pt-3">
-                                        <div class="d-flex align-items-center">
-                                            <span class="badge bg-primary bg-opacity-10 text-primary p-2 me-2">
-                                                <i class="bi bi-calculator"></i>
-                                            </span>
-                                            <span class="fw-semibold">Net Durum:</span>
-                                        </div>
-                                        <span id="NetDurum" class="fw-bold text-primary fs-5">0 ₺</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Sağ Taraf: İşlem Detayları -->
-                        <div class="col-md-6">
-                            <div class="card border-0 shadow-sm h-100">
-                                <div class="card-header bg-light py-3">
-                                    <h6 class="card-title mb-0 fw-semibold">
-                                        <i class="bi bi-pencil-square me-1"></i>İşlem Detayları
-                                    </h6>
-                                </div>
-                                <div class="card-body">
-                                    <!-- İşlem Tutarı -->
-                                    <div class="mb-3">
-                                        <label for="IslemTutar" class="form-label fw-semibold">
-                                            <i class="bi bi-currency-dollar me-1"></i>İşlem Tutarı
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-light">₺</span>
-                                            <input type="text" id="IslemTutar" class="form-control" placeholder="0.00" required />
-                                        </div>
-                                    </div>
-
-                                    <!-- İşlem Tipi -->
-                                    <div class="mb-3">
-                                        <label for="IslemTipi" class="form-label fw-semibold">
-                                            <i class="bi bi-arrow-left-right me-1"></i>İşlem Tipi
-                                        </label>
-                                        <select id="IslemTipi" class="form-select">
-                                            <option value="Alacak">Alacak Ekle</option>
-                                            <option value="Verecek">Verecek Ekle</option>
+                        <!-- Kart -->
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <!-- Toptancı Select -->
+                                <div class="mb-4">
+                                    <label for="wizardToptanciSelect" class="form-label fw-semibold text-primary">
+                                        <i class="bi bi-search me-1"></i> Toptancı Seçin
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="bi bi-person"></i>
+                                        </span>
+                                        <select id="wizardToptanciSelect" class="form-select border-start-0 ps-0" onchange="getToptanciAlacakVerecekWizard()">
+                                            <option selected disabled>Bir toptancı seçin...</option>
+                                            @foreach (var item in Model.Kullanicilar)
+                                            {
+                                                <option value="@item.ID">@item.Username</option>
+                                            }
                                         </select>
                                     </div>
+                                </div>
 
-                                    <!-- Not -->
-                                    <div class="mb-0">
-                                        <label for="ToptanciIslemNot" class="form-label fw-semibold">
-                                            <i class="bi bi-chat-text me-1"></i>Kısa Not (İsteğe Bağlı)
-                                        </label>
-                                        <textarea id="ToptanciIslemNot" class="form-control" rows="3" placeholder="İşlem açıklaması..."></textarea>
+                                <!-- Finansal Durum (Kartçıklar) -->
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-success bg-opacity-10 rounded shadow-sm d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <div class="text-success fw-semibold">Alacak</div>
+                                                <div id="WizardAlacak" class="fw-bold fs-6">0 ₺</div>
+                                            </div>
+                                            <i class="bi bi-arrow-down-left-circle text-success fs-3"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-danger bg-opacity-10 rounded shadow-sm d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <div class="text-danger fw-semibold">Verecek</div>
+                                                <div id="WizardVerecek" class="fw-bold fs-6">0 ₺</div>
+                                            </div>
+                                            <i class="bi bi-arrow-up-right-circle text-danger fs-3"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-3 bg-primary bg-opacity-10 rounded shadow-sm d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <div class="text-primary fw-semibold">Net Durum</div>
+                                                <div id="WizardNetDurum" class="fw-bold fs-5">0 ₺</div>
+                                            </div>
+                                            <i class="bi bi-calculator text-primary fs-3"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
+                    <!-- Step 2: İşlem Detayları -->
+                    <div class="wizard-step d-none" id="step2">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-pencil-square me-2"></i>İşlem Detayları</h6>
+
+                        <!-- Güncel Net Durum -->
+                        <div class="alert alert-info d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-calculator me-2"></i> Güncel Net Durum</span>
+                            <strong id="WizardNetDurumStep2">0 ₺</strong>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="WizardTutar" class="form-label fw-semibold">
+                                <i class="bi bi-currency-dollar me-1"></i> İşlem Tutarı
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">₺</span>
+                                <input type="number" id="WizardTutar" class="form-control"
+                                       placeholder="0.00" required />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">İşlem Tipi</label>
+                            <select id="WizardTipi" class="form-select">
+                                <option value="Alacak">Alacak Ekle</option>
+                                <option value="Verecek">Verecek Ekle</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label fw-semibold">Not</label>
+                            <textarea id="WizardNot" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+
+
+                    <!-- Step 3: Özet & Onay -->
+                    <div class="wizard-step d-none" id="step3">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-check2-circle me-2"></i>Özet & Onay</h6>
+
+                        <div class="row g-3">
+                            <!-- Sol: İşlem Özeti -->
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-primary bg-opacity-10 fw-semibold text-primary">
+                                        <i class="bi bi-file-text me-1"></i> İşlem Özeti
+                                    </div>
+                                    <div class="card-body">
+                                        <p><i class="bi bi-person me-2 text-secondary"></i><strong>Toptancı:</strong> <span id="SummaryToptanci"></span></p>
+                                        <p><i class="bi bi-cash-coin me-2 text-success"></i><strong>Tutar:</strong> <span id="SummaryTutar"></span></p>
+                                        <p><i class="bi bi-repeat me-2 text-warning"></i><strong>İşlem Tipi:</strong> <span id="SummaryTipi"></span></p>
+                                        <p><i class="bi bi-pencil-square me-2 text-info"></i><strong>Not:</strong> <span id="SummaryNot"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sağ: Güncel Durum -->
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-success bg-opacity-10 fw-semibold text-success">
+                                        <i class="bi bi-graph-up me-1"></i> Güncel Durum
+                                    </div>
+                                    <div class="card-body">
+                                        <p><i class="bi bi-arrow-down-left-circle text-success me-2"></i><strong>Toplam Alacak:</strong> <span id="SummaryAlacak">0 ₺</span></p>
+                                        <p><i class="bi bi-arrow-up-right-circle text-danger me-2"></i><strong>Toplam Verecek:</strong> <span id="SummaryVerecek">0 ₺</span></p>
+                                        <p class="border-top pt-2">
+                                            <i class="bi bi-calculator me-2"></i>
+                                            <strong>Net Durum:</strong>
+                                            <span id="SummaryNetDurum" class="fw-bold">0 ₺</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Alt bilgi -->
+                        <div class="alert alert-light border mt-4 d-flex align-items-center shadow-sm">
+                            <i class="bi bi-info-circle-fill text-primary me-2 fs-5"></i>
+                            <div>
+                                Lütfen bilgileri kontrol edin. <strong>Onayla</strong> dediğinizde işlem kaydedilecektir.
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="modal-footer bg-light rounded-bottom-3">
-                    <button type="button" class="btn btn-danger px-4" onclick="resetToptanci()">
-                        <i class="bi bi-arrow-clockwise me-1"></i>Tümünü Sıfırla
-                    </button>
-                    <button type="button" class="btn  px-4" style="background-color: #003d60; color:white;" onclick="submitToptanciIslemForm()">
-                        <i class="bi bi-check-lg me-1"></i>Kaydet
-                    </button>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary d-none" id="prevStepBtn"><i class="bi bi-arrow-left"></i> Geri</button>
+                    <button type="button" class="btn btn-primary" id="nextStepBtn">İleri <i class="bi bi-arrow-right"></i></button>
+                    <button type="button" class="btn btn-success d-none" id="confirmBtn"><i class="bi bi-check-lg"></i> Onayla</button>
                 </div>
             </div>
         </div>
@@ -1053,18 +1091,18 @@
                                 let toplam = (adet * fiyat).toFixed(2);
 
                                 let yeniSatir = `
-                                                <tr data-barkod="${urunAd}">
-                                                    <!-- İstersen gerçek barkodla değiştir -->
-                                                    <td>${urunAd}</td>
-                                                    <td class="fiyat">${fiyat}</td>
-                                                    <td class="adet">${adet}</td>
-                                                    <td class="satirToplam">${toplam}</td>
-                                                    <td>
-                                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                    </td>
-                                                </tr>`;
+                                                            <tr data-barkod="${urunAd}">
+                                                                <!-- İstersen gerçek barkodla değiştir -->
+                                                                <td>${urunAd}</td>
+                                                                <td class="fiyat">${fiyat}</td>
+                                                                <td class="adet">${adet}</td>
+                                                                <td class="satirToplam">${toplam}</td>
+                                                                <td>
+                                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                </td>
+                                                            </tr>`;
                                 $('#urunListesi tbody').append(yeniSatir);
                             }
                         });
@@ -1226,16 +1264,16 @@
 
                         $('#urunListesi tbody').prepend(
                             `<tr data-barkod="${barkod}">
-                                                    <td>${res.urunAd}</td>
-                                                    <td class="fiyat">${res.fiyat}</td>
+                                                                <td>${res.urunAd}</td>
+                                                                <td class="fiyat">${res.fiyat}</td>
 <td class="adet">${eklenecekAdet}</td>
 <td class="satirToplam">${(eklenecekAdet * res.fiyat).toFixed(2)}</td>
-                                                    <td>
-                                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                    </td>
-                                                </tr>`
+                                                                <td>
+                                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                </td>
+                                                            </tr>`
                         );
                         updateGenelToplam();
                         $('#barkodInput').val("").focus();
@@ -1464,16 +1502,16 @@
 
             $('#urunListesi tbody').append(
                 `<tr data-barkod="${barkodDegeri}">
-                                                    <td>${urunAdi}</td>
-                                                    <td class="fiyat">${fiyat.toFixed(2)}</td>
-                                                    <td class="adet">1</td>
-                                                    <td class="satirToplam">${fiyat.toFixed(2)}</td>
-                                                    <td>
-                                                        <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
-                                                        <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
-                                                        <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
-                                                    </td>
-                                                </tr>`
+                                                                <td>${urunAdi}</td>
+                                                                <td class="fiyat">${fiyat.toFixed(2)}</td>
+                                                                <td class="adet">1</td>
+                                                                <td class="satirToplam">${fiyat.toFixed(2)}</td>
+                                                                <td>
+                                                                    <button class="btn btn-sm btn-primary" onclick="adetDegistir(this, 1)"><i class="fas fa-plus"></i></button>
+                                                                    <button class="btn btn-sm btn-warning" onclick="adetDegistir(this, -1)"><i class="fas fa-minus"></i></button>
+                                                                    <button class="btn btn-sm btn-danger" onclick="sil(this)"><i class="fas fa-trash"></i></button>
+                                                                </td>
+                                                            </tr>`
             );
 
             updateGenelToplam();
@@ -1645,12 +1683,12 @@
 
             // İskonto satırını ekle
             $('#urunListesi tbody').append(`
-                                                <tr class="iskonto-satiri" style="background-color: #e9fbe9;">
-                                                    <td colspan="3"><strong>İskonto (%${iskonto})</strong></td>
-                                                    <td class="satirToplam">-${indirimMiktari.toFixed(2)}</td>
-                                                    <td></td>
-                                                </tr>
-                                            `);
+                                                            <tr class="iskonto-satiri" style="background-color: #e9fbe9;">
+                                                                <td colspan="3"><strong>İskonto (%${iskonto})</strong></td>
+                                                                <td class="satirToplam">-${indirimMiktari.toFixed(2)}</td>
+                                                                <td></td>
+                                                            </tr>
+                                                        `);
 
             $('#toplamFiyat').text(yeniToplam.toFixed(2) + ' ₺');
             $('#barkodInput').val('').focus();
@@ -1923,10 +1961,126 @@
 
         }
 
+        let currentStep = 1;
+
+        function showStep(step) {
+            $(".wizard-step").addClass("d-none");
+            $("#step" + step).removeClass("d-none");
+
+            // Buton yönetimi
+            $("#prevStepBtn").toggleClass("d-none", step === 1);
+            $("#nextStepBtn").toggleClass("d-none", step === 3);
+            $("#confirmBtn").toggleClass("d-none", step !== 3);
+
+            // Progress bar
+            $("#wizardProgress").css("width", (step * 33) + "%");
+        }
+
+        $("#nextStepBtn").on("click", function () {
+            if (currentStep === 1 && !$("#wizardToptanciSelect").val()) {
+                Swal.fire("Uyarı", "Lütfen toptancı seçin!", "warning");
+                return;
+            }
+            if (currentStep === 2) {
+                // Sol taraftaki özet
+                $("#SummaryToptanci").text($("#wizardToptanciSelect option:selected").text());
+                $("#SummaryTutar").text($("#WizardTutar").val() + " ₺");
+                $("#SummaryTipi").text($("#WizardTipi").val());
+                $("#SummaryNot").text($("#WizardNot").val());
+
+                // Sağ taraftaki güncel finansal durum
+                var alacak = parseFloat($("#WizardAlacak").text()) || 0;
+                var verecek = parseFloat($("#WizardVerecek").text()) || 0;
+                var net = alacak - verecek;
+                var tutar = parseFloat($("#WizardTutar").val()) || 0;
+                var tip = $("#WizardTipi").val();
+
+                if (tip === "Alacak") {
+                    alacak += tutar;
+                } else {
+                    verecek += tutar;
+                }
+                net = alacak - verecek;
+
+                $("#SummaryAlacak").text(alacak + " ₺");
+                $("#SummaryVerecek").text(verecek + " ₺");
+                $("#SummaryNetDurum").text(net + " ₺");
+            }
+
+            currentStep++;
+            showStep(currentStep);
+        });
 
 
+        $("#prevStepBtn").on("click", function () {
+            currentStep--;
+            showStep(currentStep);
+        });
+
+        $("#confirmBtn").on("click", function () {
+            $.post("/Home/ToptanciIslem", {
+                id: $("#wizardToptanciSelect").val(),
+                IslemTutar: $("#WizardTutar").val(),
+                Not: $("#WizardNot").val(),
+                IslemTipi: $("#WizardTipi").val()
+            }, function () {
+                Swal.fire({
+                    icon: "success",
+                    title: "Başarılı",
+                    text: "Toptancı işlemi kaydedildi",
+                    timer: 1000,               // 1 saniye
+                    timerProgressBar: true,    // ilerleme çubuğu
+                    showConfirmButton: false,  // OK butonu yok
+                    willClose: () => {
+                        $("#toptanciWizardModal").modal("hide");
+                    }
+                });
+            });
+        });
 
 
+        // Finansal durum getirme (wizard için)
+        function getToptanciAlacakVerecekWizard() {
+            var id = $('#wizardToptanciSelect').val();
+            $.getJSON('/Home/GetToptanciAlacakVerecek', { id: id }, function (data) {
+                var net = data.Alacak - data.Verecek;
+                $('#WizardAlacak').text(data.Alacak + ' ₺');
+                $('#WizardVerecek').text(data.Verecek + ' ₺');
+                $('#WizardNetDurum').text(net + ' ₺');
+                $('#WizardNetDurumStep2').text(net + ' ₺');
+            });
+        }
+
+        // Modal açıldığında step 1’e dön
+        $('#toptanciWizardModal').on('shown.bs.modal', function () {
+            currentStep = 1;
+            showStep(currentStep);
+        });
+
+
+        // Modal açıldığında her şeyi sıfırla
+        $('#toptanciWizardModal').on('show.bs.modal', function () {
+            // Step 1’e dön
+            currentStep = 1;
+            showStep(currentStep);
+
+            // Alanları temizle
+            $('#wizardToptanciSelect').val('');
+            $('#WizardAlacak').text('0 ₺');
+            $('#WizardVerecek').text('0 ₺');
+            $('#WizardNetDurum').text('0 ₺');
+            $('#WizardNetDurumStep2').text('0 ₺');
+            $('#WizardTutar').val('');
+            $('#WizardTipi').val('Alacak');
+            $('#WizardNot').val('');
+            $('#SummaryToptanci').text('');
+            $('#SummaryTutar').text('');
+            $('#SummaryTipi').text('');
+            $('#SummaryNot').text('');
+        });
+
+
+        
 
 
     </script>
