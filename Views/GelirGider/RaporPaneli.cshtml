@@ -4,118 +4,209 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
+<style>
+    /* Layout'taki renkleri burada da kullanıyoruz */
+    :root {
+        --primary-color: #007bff; /* Mavi - Vurgu Rengi */
+        --success-color: #198754; /* Yeşil */
+        --danger-color: #dc3545; /* Kırmızı */
+        --warning-color: #ffc107; /* Sarı */
+        --info-color: #0dcaf0; /* Turkuaz */
+        --net-kazanc-color: #6f42c1; /* Mor - Yeni Vurgu Rengi */
+    }
+
+    .report-card {
+        border-left: 4px solid var(--primary-color);
+        border-radius: 0.5rem;
+        transition: transform 0.2s;
+    }
+
+        .report-card:hover {
+            transform: translateY(-2px);
+        }
+
+    .report-list-group-item {
+        border-left: 3px solid transparent;
+        transition: background-color 0.2s;
+    }
+
+        .report-list-group-item.list-group-item-success {
+            border-left-color: var(--success-color);
+        }
+
+        .report-list-group-item.list-group-item-danger {
+            border-left-color: var(--danger-color);
+        }
+
+        .report-list-group-item.list-group-item-warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .report-list-group-item.net-kazanc {
+            border-left-color: var(--net-kazanc-color);
+            background-color: #e9ecef; /* Hafif arka plan */
+        }
+
+    .filter-card {
+        background-color: #ffffff;
+        border-radius: 0.5rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    /* Filtrele butonu için Layout'tan gelen stili uygulayalım (Mavi ile değiştirdim) */
+    .btn-filter {
+        background-color: var(--primary-color);
+        color: white;
+        transition: background-color 0.2s;
+    }
+
+        .btn-filter:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+</style>
+
 <div class="container-fluid px-3 px-md-4">
     <div class="row justify-content-between align-items-center mb-4">
         <div class="col-md-6">
-            <h1 class="h3 mb-0">
-                <i class="fas fa-file-alt me-2 text-dark"></i>Rapor Paneli
+            <h1 class="h3 mb-0 text-dark">
+                <i class="fas fa-chart-pie me-2 text-primary"></i>Rapor Paneli
             </h1>
         </div>
-        <div class="col-md-auto">
+        <div class="col-md-auto d-none d-md-block">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 bg-transparent p-0">
-                    <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i></a></li>
-                    <li class="breadcrumb-item active">Rapor Paneli</li>
+                    <li class="breadcrumb-item"><a href="/Admin/Index" class="text-decoration-none"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Rapor Paneli</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-    <form method="get" class="row gy-2 gx-3 align-items-end mb-4">
-        <div class="col-12 col-md-auto">
-            <label for="baslangicTarihi" class="form-label"><strong>Başlangıç:</strong></label>
-            <input id="baslangicTarihi" type="date" name="baslangicTarihi" value="@(((DateTime?)ViewBag.Baslangic)?.ToString("yyyy-MM-dd"))" class="form-control" />
+    <div class="card shadow-sm mb-5 filter-card">
+        <div class="card-body py-4">
+            <h5 class="card-title mb-3"><i class="fas fa-filter me-2 text-secondary"></i>Tarih Aralığı Seçimi</h5>
+            <form method="get" class="row gy-3 gx-4 align-items-end">
+                <div class="col-12 col-lg-3 col-md-6">
+                    <label for="baslangicTarihi" class="form-label small fw-bold">Başlangıç Tarihi</label>
+                    <input id="baslangicTarihi" type="date" name="baslangicTarihi" value="@(((DateTime?)ViewBag.Baslangic)?.ToString("yyyy-MM-dd"))" class="form-control" />
+                </div>
+                <div class="col-12 col-lg-3 col-md-6">
+                    <label for="bitisTarihi" class="form-label small fw-bold">Bitiş Tarihi</label>
+                    <input id="bitisTarihi" type="date" name="bitisTarihi" value="@(((DateTime?)ViewBag.Bitis)?.ToString("yyyy-MM-dd"))" class="form-control" />
+                </div>
+                <div class="col-6 col-lg-2 col-md-4">
+                    <button type="submit" class="btn btn-filter w-100"><i class="fas fa-check-circle me-1"></i> Filtrele</button>
+                </div>
+                <div class="col-6 col-lg-2 col-md-4">
+                    <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-outline-secondary w-100"><i class="fas fa-redo me-1"></i> Sıfırla</a>
+                </div>
+            </form>
         </div>
-        <div class="col-12 col-md-auto">
-            <label for="bitisTarihi" class="form-label"><strong>Bitiş:</strong></label>
-            <input id="bitisTarihi" type="date" name="bitisTarihi" value="@(((DateTime?)ViewBag.Bitis)?.ToString("yyyy-MM-dd"))" class="form-control" />
-        </div>
-        <div class="col-12 col-md-auto">
-            <button type="submit" class="btn tablestyle w-100">Filtrele</button>
-        </div>
-        <div class="col-12 col-md-auto">
-            <a href="@Url.Action("RaporPaneli", "GelirGider")" class="btn btn-secondary w-100">Sıfırla</a>
-        </div>
-        @*<div class="col-12 col-md-auto">
-            <a href="@Url.Action("DatabaseTemizligi", "GelirGider")" class="btn btn-secondary w-100">Database Temizliği</a>
-        </div>*@
-    </form>
+    </div>
+
 
     @if (Model != null && Model.Any())
     {
+        <div class="row mb-5">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card report-card text-white bg-success shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-white-50 mb-2">TOPLAM GELİR</h6>
+                                <h2 class="mb-0 fw-bold">@String.Format("{0:N2} ₺", ViewBag.ToplamGelir ?? 0)</h2>
+                            </div>
+                            <i class="fas fa-arrow-up fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card report-card text-white bg-danger shadow-sm" style="border-left-color: var(--danger-color);">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-white-50 mb-2">TOPLAM GİDER</h6>
+                                <h2 class="mb-0 fw-bold">@String.Format("{0:N2} ₺", ViewBag.ToplamGider ?? 0)</h2>
+                            </div>
+                            <i class="fas fa-arrow-down fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+
         <div class="row">
             <div class="col-12 col-lg-8 col-xl-6 mb-4">
-                <h5 class="mb-3"><i class="bi bi-cash-coin me-2 text-primary"></i>Detaylı Rapor (Seçilen Tarih Aralığı)</h5>
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white fw-bold">
+                        <i class="bi bi-bar-chart-fill me-2"></i>Detaylı Finansal Döküm
+                    </div>
+                    <ul class="list-group list-group-flush">
 
-                <ul class="list-group shadow">
-                    <!-- SATIŞLARDAN GELENLER -->
-                    <li class="list-group-item active fw-bold text-center " style="background-color: #003d60; color:white;"><i class="bi bi-basket me-2"></i>Satışlardan Gelenler</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-cash me-2 text-success"></i>Satış - Nakit</span>
-                        <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NakitToplam ?? 0)</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-credit-card me-2 text-primary"></i>Satış - Kart</span>
-                        <span class="badge bg-primary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KartToplam ?? 0)</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-journal-bookmark me-2 text-warning"></i>Satış - Veresiye</span>
-                        <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.VeresiyeToplam ?? 0)</span>
-                    </li>
+                        <li class="list-group-item list-group-item-secondary fw-bold bg-light">
+                            <i class="bi bi-basket me-2 text-primary"></i>SATIŞ GELİRLERİ
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item list-group-item-success">
+                            <span><i class="bi bi-cash me-2 text-success"></i>Satış - Nakit</span>
+                            <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NakitToplam ?? 0)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item">
+                            <span><i class="bi bi-credit-card me-2 text-info"></i>Satış - Kart</span>
+                            <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KartToplam ?? 0)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item list-group-item-warning">
+                            <span><i class="bi bi-journal-bookmark me-2 text-warning"></i>Satış - Veresiye</span>
+                            <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.VeresiyeToplam ?? 0)</span>
+                        </li>
 
-                    <!-- GİDERLER -->
-                    <li class="list-group-item active fw-bold text-center mt-2 " style="background-color: #003d60; color:white;"><i class="bi bi-cart-x me-2"></i>Giderler</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-cash me-2 text-danger"></i>Nakit Gider</span>
-                        <span class="badge bg-danger rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamNakitGider ?? 0)</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-credit-card-2-back me-2 text-secondary"></i>Kart Gider</span>
-                        <span class="badge bg-secondary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamKartGider ?? 0)</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-bank me-2 text-info"></i>Kasa Gider</span>
-                        <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamKasaGider ?? 0)</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-question-circle me-2 text-dark"></i>İade Toplam</span>
-                        <span class="badge bg-dark text-light rounded-pill">@String.Format("{0:N2} ₺", ViewBag.IadeToplam ?? 0)</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-question-circle me-2 text-dark"></i>Diğer Gider</span>
-                        <span class="badge bg-dark text-light rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamDigerGider ?? 0)</span>
-                    </li>
+                        <li class="list-group-item list-group-item-secondary fw-bold bg-light mt-2">
+                            <i class="bi bi-cart-x me-2 text-danger"></i>GİDERLER
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item list-group-item-danger">
+                            <span><i class="bi bi-dash-circle me-2 text-danger"></i>Toplam Nakit Gider</span>
+                            <span class="badge bg-danger rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamNakitGider ?? 0)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item">
+                            <span><i class="bi bi-credit-card-2-back me-2 text-secondary"></i>Toplam Kart Gider</span>
+                            <span class="badge bg-secondary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamKartGider ?? 0)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item">
+                            <span><i class="bi bi-bank me-2 text-primary"></i>Toplam Kasa Gider</span>
+                            <span class="badge bg-primary rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamKasaGider ?? 0)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item">
+                            <span><i class="bi bi-arrow-left-right me-2 text-dark"></i>İade Toplamı</span>
+                            <span class="badge bg-dark text-light rounded-pill">@String.Format("{0:N2} ₺", ViewBag.IadeToplam ?? 0)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item">
+                            <span><i class="bi bi-three-dots me-2 text-secondary"></i>Diğer Giderler</span>
+                            <span class="badge bg-secondary text-light rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamDigerGider ?? 0)</span>
+                        </li>
 
-                    <!-- GENEL DURUM -->
-                    <li class="list-group-item active fw-bold text-center mt-2 " style="background-color: #003d60; color:white;"><i class="bi bi-bar-chart me-2"></i>Günlük Finansal Durum</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-piggy-bank me-2 text-success"></i>Toplam Gelir</span>
-                        <span class="badge bg-success rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamGelir ?? 0)</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-cart-x me-2 text-danger"></i>Toplam Gider</span>
-                        <span class="badge bg-danger-subtle text-dark border rounded-pill">@String.Format("{0:N2} ₺", ViewBag.ToplamGider ?? 0)</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
-                        <span><i class="bi bi-graph-up-arrow me-2 text-dark"></i>NET KAZANÇ</span>
-                        <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.NetKazanc ?? 0)</span>
-                    </li>
-
-                    <!-- TAHMİNİ -->
-                    <li class="list-group-item active fw-bold text-center mt-2 " style="background-color: #003d60; color:white;"><i class="bi bi-calendar2-day me-2"></i>Tahmini & Günlük Bilgiler</li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-wallet2 me-2 text-info"></i>Kasada Olması Gereken</span>
-                        <span class="badge bg-info text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KasadaOlmasiGereken ?? 0)</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="bi bi-bar-chart-line me-2 text-warning"></i>Tahmini Kar (%15)</span>
-                        <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.TahminiKar ?? 0)</span>
-                    </li>
-                </ul>
+                        <li class="list-group-item list-group-item-secondary fw-bold bg-light mt-2">
+                            <i class="bi bi-lightning-charge me-2 text-danger"></i>TAHMİNİ & KRİTİK BİLGİLER
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item">
+                            <span><i class="bi bi-piggy-bank me-2 text-success"></i>Kasada Olması Gereken</span>
+                            <span class="badge bg-success text-white rounded-pill">@String.Format("{0:N2} ₺", ViewBag.KasadaOlmasiGereken ?? 0)</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center report-list-group-item">
+                            <span><i class="bi bi-graph-up me-2 text-warning"></i>Tahmini Brüt Kâr (Gelir - Maliyet)</span>
+                            <span class="badge bg-warning text-dark rounded-pill">@String.Format("{0:N2} ₺", ViewBag.TahminiKar ?? 0)</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <!-- DataTables ve Scriptler -->
+       
+
+
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
         <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css" />
 
@@ -138,13 +229,13 @@
                     buttons: [
                         {
                             extend: 'excelHtml5',
-                            text: '<i class="fas fa-file-excel"></i> Excel',
+                            text: '<i class="fas fa-file-excel me-1"></i> Excel',
                             className: 'btn btn-success btn-sm',
                             title: 'Satış_Raporu'
                         },
                         {
                             extend: 'pdfHtml5',
-                            text: '<i class="fas fa-file-pdf"></i> PDF',
+                            text: '<i class="fas fa-file-pdf me-1"></i> PDF',
                             className: 'btn btn-danger btn-sm',
                             title: 'Satış_Raporu',
                             orientation: 'landscape',
@@ -160,6 +251,9 @@
     }
     else
     {
-        <div class="alert alert-warning mt-4">Seçilen tarihler arasında satış bulunamadı.</div>
+        <div class="alert alert-warning mt-4 shadow" role="alert">
+            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Veri Bulunamadı</h4>
+            <p class="mb-0">Seçilen tarihler arasında herhangi bir satış işlemi kaydı bulunamamıştır.</p>
+        </div>
     }
 </div>
