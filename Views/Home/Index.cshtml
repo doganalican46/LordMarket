@@ -48,6 +48,26 @@
                 background-color: #ccc;
             }
 
+        .customer-card {
+            padding: 10px 14px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #fff;
+            transition: all .2s ease;
+        }
+
+            .customer-card:hover {
+                background: #f1f5ff;
+                border-color: #0d6efd;
+            }
+
+            .customer-card.active {
+                background: #0d6efd;
+                color: #fff;
+                border-color: #0d6efd;
+            }
+
 
     </style>
 
@@ -99,16 +119,25 @@
 
                     <input type="hidden" id="odemeTipi" value="Nakit">
 
-                    <div class="customer-select" id="customerSelectContainer" style="display: none;">
-                        <label for="musteriSelect" class="form-label"><i class="fas fa-user me-2"></i>Müşteri Seçin:</label>
-                        <select id="musteriSelect" class="form-select">
-                            <option value="">Müşteri Seçin</option>
+                    <div class="customer-select mt-3" id="customerSelectContainer" style="display:none;">
+                        <label class="form-label d-block mb-2">
+                            <i class="fas fa-user-check me-2"></i>Müşteri Seçin:
+                        </label>
+
+                        <div id="customerGrid" class="d-flex flex-wrap gap-2">
                             @foreach (var musteri in Model.Musteriler)
                             {
-                                <option value="@musteri.ID">@musteri.MusteriAdSoyad</option>
+                                <div class="customer-card"
+                                     data-id="@musteri.ID">
+                                    <i class="fas fa-user me-2"></i>
+                                    @musteri.MusteriAdSoyad
+                                </div>
                             }
-                        </select>
+                        </div>
+
+                        <input type="hidden" id="musteriSelect" />
                     </div>
+
                 </div>
 
                 <!-- Product Table -->
@@ -1533,6 +1562,16 @@
                 $('#musteriSelect').val('');
             }
         });
+        $(document).on("click", ".customer-card", function () {
+            $(".customer-card").removeClass("active");
+            $(this).addClass("active");
+
+            let id = $(this).data("id");
+            $("#musteriSelect").val(id);
+
+            satisYap();
+        });
+
 
         $(document).ready(function () {
             $('#barkodInput').focus();
