@@ -14,8 +14,45 @@ namespace LordMarket.Controllers
         [Authorize]
         public ActionResult Musteriler()
         {
-            var Musteriler = db.Musteriler.Where(x => x.Status == true).ToList();
-            return View(Musteriler);
+            var musteriler = db.Musteriler.ToList();
+
+            decimal toplamBorc = musteriler
+                .Where(x => x.ToplamBorc.HasValue)
+                .Sum(x => x.ToplamBorc.Value);
+
+            // ViewBag'e at
+            ViewBag.ToplamVeresiyeTutari = Math.Round(toplamBorc, 2);
+
+
+            decimal toplamVeresiye = db.SatisIslem
+            .Where(x => x.MusteriID != null && x.ToplamTutar.HasValue)
+            .Select(x => x.ToplamTutar.Value)
+            .DefaultIfEmpty(0)
+            .Sum();
+
+            ViewBag.ToplamVeresiyeSatis = Math.Round(toplamVeresiye, 2);
+
+            var enCokVeresiyeAlan = db.SatisIslem
+            .Where(x => x.MusteriID != null && x.ToplamTutar.HasValue)
+            .GroupBy(x => new
+            {
+                x.MusteriID,
+                x.Musteriler.MusteriAdSoyad
+            })
+            .Select(g => new
+            {
+                MusteriAdSoyad = g.Key.MusteriAdSoyad,
+                ToplamVeresiye = g.Sum(x => x.ToplamTutar.Value)
+            })
+            .OrderByDescending(x => x.ToplamVeresiye)
+            .FirstOrDefault();
+
+            ViewBag.EnCokVeresiyeAlanMusteri = enCokVeresiyeAlan?.MusteriAdSoyad;
+            ViewBag.EnCokVeresiyeTutari = enCokVeresiyeAlan?.ToplamVeresiye ?? 0;
+
+
+
+            return View(musteriler);
         }
 
         [Authorize]
