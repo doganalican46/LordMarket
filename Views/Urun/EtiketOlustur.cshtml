@@ -1,139 +1,128 @@
 ﻿@model IEnumerable<LordMarket.Models.Urunler>
 @{
-    ViewBag.Title = "Etiket Oluştur";
+    ViewBag.Title = "Etiketler";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
 <div class="container-fluid px-4">
-    <!-- Başlık ve Breadcrumb -->
-    <div class="d-flex justify-content-between align-items-center py-4">
-        <div>
-            <h1 class="h3 mb-0">
-                <i class="fas fa-tags me-2"></i>Etiket Oluştur
-            </h1>
-        </div>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0 bg-transparent p-0">
-                <li class="breadcrumb-item"><a href="/Admin/Index"><i class="fas fa-home"></i> Anasayfa</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Etiket Oluştur</li>
-            </ol>
-        </nav>
-    </div>
 
-    <!-- Ana Kart -->
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-        <!-- Kart Başlık -->
-        <div class="card-header bg-white border-bottom py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-semibold text-primary">Ürün Listesi</h5>
-                <div>
-                    <button type="button" id="tumunuSecBtn" class="btn btn-sm btn-outline-primary">
-                        <i class="fas fa-check-square me-1"></i> Tümünü Seç
-                    </button>
-                </div>
-            </div>
+    <h3 class="mb-3">Etiket Oluştur</h3>
+
+    @using (Html.BeginForm("EtiketOlusturPDF", "Urun", FormMethod.Post))
+    {
+        <!-- ÜST BAR -->
+        <div class="d-flex flex-wrap gap-2 mb-3">
+
+            <!-- KATEGORİ -->
+            <select id="kategoriFilter" class="form-select w-auto">
+                <option value="">Tüm Kategoriler</option>
+                @foreach (var k in ViewBag.Kategoriler)
+                {
+                    <option value="@k" @(ViewBag.SeciliKategori == k ? "selected" : "")>@k</option>
+                }
+            </select>
+
+            <!-- ARAMA -->
+            <input type="text" id="urunSearch" class="form-control w-auto" placeholder="Ara..." />
+
+            <!-- BUTONLAR -->
+            <button type="button" id="tumunuSecBtn" class="btn btn-outline-primary">Tümünü Seç</button>
+
+            <button type="submit" class="btn btn-danger ms-auto">
+                PDF Oluştur
+            </button>
         </div>
 
-        @using (Html.BeginForm("EtiketOlusturPDF", "Urun", FormMethod.Post))
-        {
-            <div class="card-body">
-                <!-- Arama ve PDF Butonu -->
-                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                    <div class="search-box position-relative" style="width: 300px;">
-                        <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                        <input type="text" id="urunSearch" class="form-control ps-5" placeholder="Ürün ara..." />
+        <!-- SEÇİLEN SAYISI -->
+        <div class="mb-2">
+            <b>Seçilen Ürün:</b> <span id="seciliAdet">0</span>
+        </div>
+
+        <!-- ÜRÜN LİSTESİ -->
+        <div class="row" id="urunListesi">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-2 urun-item"
+                     data-kategori="@item.UrunKategori"
+                     data-urunad="@item.UrunAd.ToLower()"
+                     data-barkod="@item.Barkod">
+
+                    <div class="card p-2">
+                        <input type="checkbox" class="form-check-input me-2"
+                               name="seciliUrunler" value="@item.ID" />
+
+                        <b>@item.UrunAd</b>
+                        <small>@item.UrunKategori</small>
+                        <span>@item.UrunFiyat ₺</span>
                     </div>
-
-                    <button type="submit" class="btn btn-danger px-4 py-2 shadow-sm">
-                        <i class="fas fa-file-pdf me-2"></i> PDF Etiket Oluştur
-                    </button>
                 </div>
-
-                <!-- Ürün Listesi -->
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3" id="urunListesi">
-                    @foreach (var item in Model)
-                    {
-                        <div class="col urun-item" data-urunad="@item.UrunAd.ToLower()" data-barkod="@item.Barkod">
-                            <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
-                                <div class="card-body d-flex align-items-center justify-content-between">
-                                    <div class="form-check form-check-lg">
-                                        <input class="form-check-input" type="checkbox" name="seciliUrunler" value="@item.ID" id="urun_@item.ID" />
-                                        <label class="form-check-label ms-2" for="urun_@item.ID">
-                                            <span class="d-block fw-semibold">@item.UrunAd</span>
-                                            <span class="text-muted small">@item.UrunFiyat₺</span>
-                                            
-                                        </label>
-                                    </div>
-                                    <a href="@Url.Action("UrunGetir", "Urun", new { id = item.ID })" class="btn btn-sm btn-icon btn-outline-primary rounded-circle" title="Ürünü Düzenle">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
 </div>
 
-<style>
-    .text-gradient {
-        background: linear-gradient(90deg, #4e73df 0%, #224abe 100%);
-        -webkit-background-clip: initial;
-        -webkit-text-fill-color: transparent;
-    }
-
-
-
-    .hover-shadow:hover {
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
-    }
-
-    .transition-all {
-        transition: all 0.2s ease;
-    }
-
-    .search-box .form-control:focus {
-        border-color: #4e73df;
-        box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
-    }
-</style>
-
 <script>
+    // KATEGORİ FİLTRE
+    document.getElementById('kategoriFilter').addEventListener('change', function () {
+        const kategori = this.value;
+        window.location.href = kategori ? `?kategori=${kategori}` : window.location.pathname;
+    });
+
+    // ARAMA
     document.getElementById('urunSearch').addEventListener('input', function () {
-        const searchValue = this.value.toLowerCase();
-        const urunListesi = document.getElementById('urunListesi');
-        const urunler = Array.from(urunListesi.querySelectorAll('.urun-item'));
+        const val = this.value.toLowerCase();
 
-        urunler.forEach(urun => {
-            const urunAd = urun.getAttribute('data-urunad');
-            const barkod = urun.getAttribute('data-barkod');
+        document.querySelectorAll('.urun-item').forEach(item => {
+            const ad = item.dataset.urunad;
+            const barkod = item.dataset.barkod;
 
-            if ((urunAd && urunAd.includes(searchValue)) ||
-                (barkod && barkod.toLowerCase().includes(searchValue))) {
-                urun.style.display = 'block';
-                urun.querySelector('.card').classList.add('border-primary');
-            } else {
-                urun.style.display = 'none';
-                urun.querySelector('.card').classList.remove('border-primary');
-            }
+            item.style.display =
+                (ad.includes(val) || barkod.includes(val)) ? 'block' : 'none';
         });
     });
 
+    // TÜMÜNÜ SEÇ
+    let tumSecili = false;
+    document.getElementById('tumunuSecBtn').onclick = function () {
+        document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = !tumSecili);
+        tumSecili = !tumSecili;
+        sayacGuncelle();
+    };
 
-    let tumSecildi = false;
+    // KATEGORİYE GÖRE SEÇ
+    document.getElementById('kategoriSecBtn').onclick = function () {
+        const kategori = document.getElementById('kategoriFilter').value;
 
-    document.getElementById('tumunuSecBtn').addEventListener('click', function () {
-        const checkboxlar = document.querySelectorAll('.form-check-input');
-        checkboxlar.forEach(cb => cb.checked = !tumSecildi);
+        if (!kategori) {
+            alert("Kategori seç!");
+            return;
+        }
 
-        tumSecildi = !tumSecildi;
-        this.innerHTML = tumSecildi
-            ? '<i class="fas fa-times-circle me-1"></i> Tümünü Bırak'
-            : '<i class="fas fa-check-square me-1"></i> Tümünü Seç';
+        document.querySelectorAll('.urun-item').forEach(item => {
+            if (item.dataset.kategori === kategori)
+                item.querySelector('input').checked = true;
+        });
 
-        this.classList.toggle('btn-primary', tumSecildi);
-        this.classList.toggle('btn-outline-primary', !tumSecildi);
+        sayacGuncelle();
+    };
+
+    // SADECE SEÇİLENLER
+    let sadeceSecili = false;
+    document.getElementById('seciliGosterBtn').onclick = function () {
+        sadeceSecili = !sadeceSecili;
+
+        document.querySelectorAll('.urun-item').forEach(item => {
+            const checked = item.querySelector('input').checked;
+            item.style.display = (sadeceSecili && !checked) ? 'none' : 'block';
+        });
+    };
+
+    // SEÇİM SAYACI
+    document.querySelectorAll('input[type=checkbox]').forEach(cb => {
+        cb.addEventListener('change', sayacGuncelle);
     });
+
+    function sayacGuncelle() {
+        const count = document.querySelectorAll('input[type=checkbox]:checked').length;
+        document.getElementById('seciliAdet').innerText = count;
+    }
 </script>

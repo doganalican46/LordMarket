@@ -159,11 +159,22 @@ namespace LordMarket.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult EtiketOlustur(int[] seciliUrunler)
+        public ActionResult EtiketOlustur(string kategori)
         {
-            var urunler = db.Urunler.Where(m=>m.Status==true).ToList();
-            return View(urunler);
+            var urunler = db.Urunler.Where(m => m.Status == true);
 
+            if (!string.IsNullOrEmpty(kategori))
+                urunler = urunler.Where(x => x.UrunKategori == kategori);
+
+            ViewBag.Kategoriler = db.Urunler
+                .Where(x => x.Status == true)
+                .Select(x => x.UrunKategori)
+                .Distinct()
+                .ToList();
+
+            ViewBag.SeciliKategori = kategori;
+
+            return View(urunler.ToList());
         }
 
 
